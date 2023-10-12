@@ -40,10 +40,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.univallealtoque.presentation.sign_in.GoogleAuthUiClient
+import com.example.univallealtoque.presentation.sign_in.SignInViewModel
+import android.widget.Toast
+import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import com.example.univallealtoque.ui.ProfileScreen
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     HomePage(title = R.string.app_name),
     Login(title = R.string.login),
+    Profile(title = R.string.profile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,9 +72,11 @@ fun UnivalleAlToqueAppBar(
     TopAppBar(
         title = {
             Text(
+
                 text = stringResource(currentScreenTitle),
                 style = MaterialTheme.typography.displaySmall,
                 ) },
+
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -79,7 +96,7 @@ fun UnivalleAlToqueAppBar(
 @Composable
 fun UnivalleAlToqueBottomBar(
     navigateLogin: () -> Unit
-){
+) {
     // Íconos de navegación
     Row(
         modifier = Modifier
@@ -87,36 +104,69 @@ fun UnivalleAlToqueBottomBar(
             .background(color = Color.Red)
             .padding(horizontal = 32.dp),
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         IconButton(
-            onClick = {  }
+            onClick = { }
         ) {
-            Icon(imageVector = Icons.Default.Home, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
+
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+
         }
         IconButton(
             onClick = { /* Acción de navegación */ }
         ) {
-            Icon(imageVector = Icons.Default.Search, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
+
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+
         }
         IconButton(
             onClick = { /* Acción adicional */ }
         ) {
-            Icon(imageVector = Icons.Default.Favorite, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
+
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+
         }
         IconButton(
-            onClick =  navigateLogin
+            onClick = navigateLogin
         ) {
-            Icon(imageVector = Icons.Default.AccountCircle, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
+
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
+
         }
     }
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UnivalleAlToqueApp(){
+fun UnivalleAlToqueApp() {
+    val context = LocalContext.current
+
+    val googleAuthUiClient by remember {
+        mutableStateOf(
+            GoogleAuthUiClient(
+                context = context,
+                oneTapClient = Identity.getSignInClient(context)
+            )
+        )
+    }
     //Create NavController
     val navController = rememberNavController()
     // Get current back stack entry
@@ -125,6 +175,10 @@ fun UnivalleAlToqueApp(){
     val currentScreen = UnivalleAlToqueScreen.valueOf(
         backStackEntry?.destination?.route ?: UnivalleAlToqueScreen.HomePage.name
     )
+
+    val coroutineScope = rememberCoroutineScope()
+    val viewModel: SignInViewModel = viewModel()
+    val signInState by viewModel.state.collectAsState()
 
     Scaffold(
         topBar = {
@@ -136,23 +190,47 @@ fun UnivalleAlToqueApp(){
         bottomBar = {
             UnivalleAlToqueBottomBar(navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) })
         }
-    ){innerPadding ->
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = UnivalleAlToqueScreen.HomePage.name,
         ) {
+
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
                 HomePageScreen(
-                     modifier = Modifier
-                         .fillMaxSize()
-                        .padding(innerPadding)
-                    )
-                }
-            composable(route = UnivalleAlToqueScreen.Login.name) {
-                LoginScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
+                )
+            }
+
+
+            composable(route = UnivalleAlToqueScreen.Login.name) {
+                LoginScreen(
+                    navController = navController,
+                    signInState = signInState,
+                    coroutineScope = coroutineScope,
+                    viewModel = viewModel,
+                    googleAuthUiClient = googleAuthUiClient,
+                    context = context
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.Profile.name) {
+                ProfileScreen(
+                    userData = googleAuthUiClient.getSignedInUser(),
+                    onSignOut = {
+                        coroutineScope.launch {
+                            googleAuthUiClient.signOut()
+                            Toast.makeText(
+                                context,
+                                "Signed out",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            navController.popBackStack()
+                        }
+                    }
                 )
             }
         }
