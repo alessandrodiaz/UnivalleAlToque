@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Univalle Al Toque</string>
     <string name="login">Login</string>
+    <string name="profile">Profile</string>
     <string name="back_button">Atrás</string>
 
 
