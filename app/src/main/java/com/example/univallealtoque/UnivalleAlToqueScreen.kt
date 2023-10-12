@@ -58,7 +58,7 @@ fun UnivalleAlToqueAppBar(
         title = {
             Text(
                 text = stringResource(currentScreenTitle),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.displaySmall,
                 ) },
         modifier = modifier
             .fillMaxWidth()
