@@ -135,10 +135,6 @@ fun UnivalleAlToqueApp(){
         ) {
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
                 HomePageScreen(
-                    /**onStartOrderButtonClicked = {
-                         navController.navigate(UnivalleAlToqueScreen.Login.name)
-                     },*/
-
                      modifier = Modifier
                          .fillMaxSize()
                         .padding(innerPadding)
@@ -146,9 +142,6 @@ fun UnivalleAlToqueApp(){
                 }
             composable(route = UnivalleAlToqueScreen.Login.name) {
                 LoginScreen(
-                    onStartOrderButtonClicked = {
-                        /**navController.navigate(UnivalleAlToqueScreen.Login.name)*/
-                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)

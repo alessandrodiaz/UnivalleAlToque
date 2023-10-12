@@ -6,7 +6,6 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun LoginScreen (
-    onStartOrderButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Text(
