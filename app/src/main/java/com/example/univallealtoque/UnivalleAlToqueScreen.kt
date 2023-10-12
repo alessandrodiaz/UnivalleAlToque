@@ -52,7 +52,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import com.example.univallealtoque.ui.ProfileScreen
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
