@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
@@ -29,10 +31,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
@@ -68,10 +72,11 @@ fun UnivalleAlToqueAppBar(
     TopAppBar(
         title = {
             Text(
-                stringResource(currentScreenTitle),
+
+                text = stringResource(currentScreenTitle),
                 style = MaterialTheme.typography.displaySmall,
-            )
-        },
+                ) },
+
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -103,38 +108,46 @@ fun UnivalleAlToqueBottomBar(
         IconButton(
             onClick = { }
         ) {
+
             Icon(
                 imageVector = Icons.Default.Home,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp)
             )
+
         }
         IconButton(
             onClick = { /* Acción de navegación */ }
         ) {
+
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp)
             )
+
         }
         IconButton(
             onClick = { /* Acción adicional */ }
         ) {
+
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp)
             )
+
         }
         IconButton(
             onClick = navigateLogin
         ) {
+
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp)
             )
+
         }
     }
 }
