@@ -83,22 +83,22 @@ fun UnivalleAlToqueBottomBar(
         IconButton(
             onClick = {  }
         ) {
-            Icon(imageVector = Icons.Default.Home, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(imageVector = Icons.Default.Home, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
         }
         IconButton(
             onClick = { /* Acción de navegación */ }
         ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(imageVector = Icons.Default.Search, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
         }
         IconButton(
             onClick = { /* Acción adicional */ }
         ) {
-            Icon(imageVector = Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(imageVector = Icons.Default.Favorite, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
         }
         IconButton(
             onClick =  navigateLogin
         ) {
-            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(imageVector = Icons.Default.AccountCircle, tint = Color.White, contentDescription = null, modifier = Modifier.size(32.dp))
         }
     }
 }

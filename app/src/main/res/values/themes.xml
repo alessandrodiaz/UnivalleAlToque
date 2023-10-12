@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.UnivalleAlToque" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.UnivalleAlToque" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name="android:statusBarColor">#FF0000</item> <!-- Cambia el color a rojo (#FF0000) o el color que desees -->
+        <item name="android:navigationBarColor">#FFFFFF</item> <!-- Cambia el color a rojo (#FF0000) o el color que desees -->
+
+    </style>
 </resources>
