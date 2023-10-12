@@ -1,6 +1,6 @@
 package com.example.univallealtoque.presentation.sign_in
 
 data class SignInState(
-    val isSignInSucessful: Boolean = false,
+    val isSignInSuccessful: Boolean = false,
     val signInError: String? = null
 )

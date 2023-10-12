@@ -67,6 +67,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.univallealtoque.presentation.sign_in.GoogleAuthUiClient
 import com.example.univallealtoque.presentation.sign_in.SignInScreen
 import com.example.univallealtoque.presentation.sign_in.SignInViewModel
+import com.example.univallealtoque.presentation.sign_in.SignInState
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -85,6 +86,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.identity.Identity
 import com.example.univallealtoque.presentation.sign_in.SignInScreen
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import kotlinx.coroutines.launch
+import kotlin.math.sign
+import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.univallealtoque.presentation.sign_in.SignInScreen
 import kotlinx.coroutines.launch
 import kotlin.math.sign
 
@@ -102,7 +123,12 @@ fun UnivalleAlToqueAppBar(
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
-        title = { Text(stringResource(currentScreenTitle),style = MaterialTheme.typography.displaySmall,) },
+        title = {
+            Text(
+                stringResource(currentScreenTitle),
+                style = MaterialTheme.typography.displaySmall,
+            )
+        },
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -122,7 +148,7 @@ fun UnivalleAlToqueAppBar(
 @Composable
 fun UnivalleAlToqueBottomBar(
     navigateLogin: () -> Unit
-){
+) {
     // Íconos de navegación
     Row(
         modifier = Modifier
@@ -130,36 +156,61 @@ fun UnivalleAlToqueBottomBar(
             .background(color = Color.Red)
             .padding(horizontal = 32.dp),
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         IconButton(
-            onClick = {  }
+            onClick = { }
         ) {
-            Icon(imageVector = Icons.Default.Home, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
         }
         IconButton(
             onClick = { /* Acción de navegación */ }
         ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
         }
         IconButton(
             onClick = { /* Acción adicional */ }
         ) {
-            Icon(imageVector = Icons.Default.Favorite, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
         }
         IconButton(
-            onClick =  navigateLogin
+            onClick = navigateLogin
         ) {
-            Icon(imageVector = Icons.Default.AccountCircle, contentDescription = null, modifier = Modifier.size(32.dp))
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
         }
     }
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UnivalleAlToqueApp(){
+fun UnivalleAlToqueApp() {
+    val context = LocalContext.current
+
+    val googleAuthUiClient by remember {
+        mutableStateOf(
+            GoogleAuthUiClient(
+                context = context,
+                oneTapClient = Identity.getSignInClient(context)
+            )
+        )
+    }
     //Create NavController
     val navController = rememberNavController()
     // Get current back stack entry
@@ -169,12 +220,11 @@ fun UnivalleAlToqueApp(){
         backStackEntry?.destination?.route ?: UnivalleAlToqueScreen.HomePage.name
     )
 
-    /*val googleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
-    }*/
+    val coroutineScope = rememberCoroutineScope()
+    val viewModel: SignInViewModel = viewModel()
+    val signInState by viewModel.state.collectAsState()
+
+    /*val currentScreen by remember { mutableStateOf("sign_in") }*/
 
     Scaffold(
         topBar = {
@@ -186,56 +236,55 @@ fun UnivalleAlToqueApp(){
         bottomBar = {
             UnivalleAlToqueBottomBar(navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) })
         }
-    ){innerPadding ->
+    ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = UnivalleAlToqueScreen.HomePage.name,
         ) {
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
                 HomePageScreen(
-                     modifier = Modifier
-                         .fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(innerPadding)
-                    )
-                }
+                )
+            }
 
 
 
 
 
             composable(route = UnivalleAlToqueScreen.Login.name) {
-                LoginScreen(
+                /*LoginScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
-                )
+                )*/
                 val viewModel = viewModel<SignInViewModel>()
-                val state by viewModel.state.collectAsStateWithLifecycle()
+                val state by viewModel.state.collectAsState()
 
-                /*LaunchedEffect(key1 = Unit) {
-                    if(googleAuthUiClient.getSignedInUser() != null) {
+                LaunchedEffect(key1 = Unit) {
+                    if (googleAuthUiClient.getSignedInUser() != null) {
                         navController.navigate("profile")
                     }
                 }
 
                 val launcher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.StartIntentSenderForResult(),
-                    onResult = { result ->
-                        if(result.resultCode == RESULT_OK) {
-                            lifecycleScope.launch {
-                                val signInResult = googleAuthUiClient.signInWithIntent(
-                                    intent = result.data ?: return@launch
-                                )
-                                viewModel.onSignInResult(signInResult)
-                            }
+                    contract = ActivityResultContracts.StartIntentSenderForResult()
+                ) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                        coroutineScope.launch {
+                            val signInResult = googleAuthUiClient.signInWithIntent(
+                                intent = result.data ?: return@launch
+                            )
+                            viewModel.onSignInResult(signInResult)
                         }
                     }
-                )
+                }
 
-                LaunchedEffect(key1 = state.isSignInSuccessful) {
-                    if(state.isSignInSuccessful) {
+                LaunchedEffect(key1 = signInState.isSignInSuccessful) {
+                    if (signInState.isSignInSuccessful) {
                         Toast.makeText(
-                            applicationContext,
+                            context,
                             "Sign in successful",
                             Toast.LENGTH_LONG
                         ).show()
@@ -248,7 +297,7 @@ fun UnivalleAlToqueApp(){
                 SignInScreen(
                     state = state,
                     onSignInClick = {
-                        lifecycleScope.launch {
+                        coroutineScope.launch {
                             val signInIntentSender = googleAuthUiClient.signIn()
                             launcher.launch(
                                 IntentSenderRequest.Builder(
@@ -257,7 +306,7 @@ fun UnivalleAlToqueApp(){
                             )
                         }
                     }
-                )*/
+                )
             }
         }
     }
