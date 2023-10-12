@@ -36,44 +36,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
-import android.app.Activity.RESULT_OK
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-/*import com.example.univallealtoque.presentation.profile.ProfileScreen*/
 import com.example.univallealtoque.presentation.sign_in.GoogleAuthUiClient
-import com.example.univallealtoque.presentation.sign_in.SignInScreen
 import com.example.univallealtoque.presentation.sign_in.SignInViewModel
-import com.example.univallealtoque.presentation.sign_in.SignInState
 import android.widget.Toast
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.runtime.LaunchedEffect
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.univallealtoque.presentation.sign_in.UserData
 import com.example.univallealtoque.ui.ProfileScreen
-import kotlin.math.sign
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     HomePage(title = R.string.app_name),
     Login(title = R.string.login),
-    Profile(title=R.string.profile)
+    Profile(title = R.string.profile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -186,10 +167,6 @@ fun UnivalleAlToqueApp() {
     val viewModel: SignInViewModel = viewModel()
     val signInState by viewModel.state.collectAsState()
 
-
-
-    /*val currentScreen by remember { mutableStateOf("sign_in") }*/
-
     Scaffold(
         topBar = {
             UnivalleAlToqueAppBar(
@@ -205,6 +182,7 @@ fun UnivalleAlToqueApp() {
             navController = navController,
             startDestination = UnivalleAlToqueScreen.HomePage.name,
         ) {
+
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
                 HomePageScreen(
                     modifier = Modifier
@@ -214,66 +192,17 @@ fun UnivalleAlToqueApp() {
             }
 
 
-
             composable(route = UnivalleAlToqueScreen.Login.name) {
-                /*LoginScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                )*/
-                val viewModel = viewModel<SignInViewModel>()
-                val state by viewModel.state.collectAsState()
-
-
-
-                LaunchedEffect(key1 = Unit) {
-                    if (googleAuthUiClient.getSignedInUser() != null) {
-                        navController.navigate(UnivalleAlToqueScreen.Profile.name)
-                    }
-                }
-
-                val launcher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.StartIntentSenderForResult()
-                ) { result ->
-                    if (result.resultCode == RESULT_OK) {
-                        coroutineScope.launch {
-                            val signInResult = googleAuthUiClient.signInWithIntent(
-                                intent = result.data ?: return@launch
-                            )
-                            viewModel.onSignInResult(signInResult)
-                        }
-                    }
-                }
-
-                LaunchedEffect(key1 = signInState.isSignInSuccessful) {
-                    if (signInState.isSignInSuccessful) {
-                        Toast.makeText(
-                            context,
-                            "Sign in successful",
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        navController.navigate(UnivalleAlToqueScreen.Profile.name)
-                        viewModel.resetState()
-                    }
-                }
-
-                SignInScreen(
-                    state = state,
-                    onSignInClick = {
-                        coroutineScope.launch {
-                            val signInIntentSender = googleAuthUiClient.signIn()
-                            launcher.launch(
-                                IntentSenderRequest.Builder(
-                                    signInIntentSender ?: return@launch
-                                ).build()
-                            )
-                        }
-                    }
+                LoginScreen(
+                    navController = navController,
+                    signInState = signInState,
+                    coroutineScope = coroutineScope,
+                    viewModel = viewModel,
+                    googleAuthUiClient = googleAuthUiClient,
+                    context = context
                 )
-
-
             }
+
             composable(route = UnivalleAlToqueScreen.Profile.name) {
                 ProfileScreen(
                     userData = googleAuthUiClient.getSignedInUser(),
