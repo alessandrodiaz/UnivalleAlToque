@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
@@ -111,7 +110,8 @@ fun UnivalleAlToqueBottomBar(
             Icon(
                 imageVector = Icons.Default.Home,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.White,
             )
 
         }
@@ -122,7 +122,8 @@ fun UnivalleAlToqueBottomBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.White,
             )
 
         }
@@ -133,7 +134,8 @@ fun UnivalleAlToqueBottomBar(
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.White,
             )
 
         }
@@ -144,7 +146,8 @@ fun UnivalleAlToqueBottomBar(
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = null,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.White,
             )
 
         }
