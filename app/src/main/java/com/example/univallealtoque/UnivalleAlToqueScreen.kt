@@ -70,8 +70,8 @@ fun UnivalleAlToqueAppBar(
     TopAppBar(
         title = {
             Text(
-
-                text = stringResource(currentScreenTitle),
+                //text = stringResource(currentScreenTitle),
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displaySmall,
                 ) },
 
@@ -201,11 +201,11 @@ fun UnivalleAlToqueApp() {
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
                 HomePageScreen(
                     modifier = Modifier
+                        .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding)
                 )
             }
-
 
             composable(route = UnivalleAlToqueScreen.Login.name) {
                 LoginScreen(
