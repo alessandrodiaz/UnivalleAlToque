@@ -98,7 +98,8 @@ fun UnivalleAlToqueAppBar(
 
 @Composable
 fun UnivalleAlToqueBottomBar(
-    navigateLogin: () -> Unit
+    navigateLogin: () -> Unit,
+    navigateHome: () -> Unit,
 ) {
     // Íconos de navegación
     Row(
@@ -109,7 +110,7 @@ fun UnivalleAlToqueBottomBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconButton(
-            onClick = { }
+            onClick = navigateHome
         ) {
 
             Icon(
@@ -191,11 +192,14 @@ fun UnivalleAlToqueApp() {
         topBar = {
             UnivalleAlToqueAppBar(
                 currentScreenTitle = currentScreen.title,
-                canNavigateBack = navController.previousBackStackEntry != null,
+                canNavigateBack = (navController.previousBackStackEntry != null) and (backStackEntry?.destination?.route != UnivalleAlToqueScreen.HomePage.name),
                 navigateUp = { navController.navigateUp() })
         },
         bottomBar = {
-            UnivalleAlToqueBottomBar(navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) })
+            UnivalleAlToqueBottomBar(
+                navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) },
+                navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name)}
+            )
         }
     ) { innerPadding ->
         NavHost(
