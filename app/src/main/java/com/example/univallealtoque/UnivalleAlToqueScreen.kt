@@ -205,7 +205,8 @@ fun UnivalleAlToqueApp() {
                 HomePageScreen(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(innerPadding),
+                    userData = googleAuthUiClient.getSignedInUser()
                 )
             }
 

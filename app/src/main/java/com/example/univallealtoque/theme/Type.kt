@@ -35,5 +35,10 @@ val Typography = Typography(
         fontFamily = Raleway,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = Raleway,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp
     )
 )
