@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -32,7 +33,10 @@ import androidx.compose.ui.unit.sp
 import com.example.univallealtoque.R
 import com.example.univallealtoque.presentation.sign_in.UserData
 import com.example.univallealtoque.ui.components.Greeting
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 
+data class Semilleros(val name: String, val time: String, val imageRes: Int)
 @Composable
 fun HomePageScreen(
     modifier: Modifier,
@@ -47,6 +51,13 @@ fun HomePageScreen(
         "In English",
         "Taekwondo"
     )
+
+    val semilleros = listOf(
+        Semilleros("Fútbol", "Lunes 10:00 AM", R.drawable.futbol),
+        Semilleros("Natación", "Miércoles 3:30 PM", R.drawable.natacion),
+        Semilleros("Rugby", "Viernes 5:00 PM", R.drawable.rugby),
+    )
+
     LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -75,11 +86,51 @@ fun HomePageScreen(
                 Modifier.size(width = 380.dp, height = 248.dp)
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
-            CardComponent("Semilleros", listOf(), Modifier.size(width = 380.dp, height = 248.dp))
+            CardComponent("Semilleros", listOf(), Modifier.size(width = 380.dp, height = 30.dp))
+            semilleros.forEach { semillero ->
+                SemilleroItem(semillero = semillero, modifier = Modifier)
+            }
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
         }
     }
+
 }
+
+@Composable
+fun SemilleroItem(semillero: Semilleros, modifier: Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .clickable { /* Acción cuando se hace clic en el semillero */ }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painterResource(id = semillero.imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(75.dp) // Ajusta la altura de la imagen
+            )
+
+            // Nombre y hora del semillero
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = semillero.name, fontSize = 16.sp)
+                Text(text = semillero.time, fontSize = 12.sp, color = Color.Gray)
+            }
+        }
+    }
+}
+
+
+
 
 @Composable
 fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifier) {
