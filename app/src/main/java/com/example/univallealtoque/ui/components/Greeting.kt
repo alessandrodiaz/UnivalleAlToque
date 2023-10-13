@@ -3,6 +3,7 @@ package com.example.univallealtoque.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -26,24 +27,22 @@ fun Greeting(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(30.dp))
         if (userData?.username != null) {
             val formattedUsername = userData.username.formatUsername()
             Text(
                 text = stringResource(R.string.greeting_username) + " $formattedUsername",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 20.dp)
             )
-            Spacer(modifier = Modifier.height(120.dp))
         } else {
             Text(
                 text = stringResource(R.string.greeting_empty),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 20.dp)
             )
-            Spacer(modifier = Modifier.height(120.dp))
         }
     }
 
