@@ -62,12 +62,9 @@ fun HomePageScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp, top = 0.dp)
-
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CardComponent("Esta semana",
-                listOf(),
-                Modifier.size(width = 380.dp, height = 280.dp))
+            EventsComponent("Esta semana",Modifier.size(width = 380.dp, height = 280.dp))
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
             CardComponent(
                 "¿Qué querés hacer?",
@@ -152,5 +149,55 @@ fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
                 .fillMaxWidth()
                 .height(18.dp),
         )
+    }
+}
+@Composable
+fun EventsComponent(myText: String,modifier: Modifier){
+    val data = listOf("a", "b", "c", "d", "e", "f")
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
+        //border = BorderStroke(2.dp,Color.Gray),
+        modifier = modifier
+
+    ) {
+        Text(
+            text = myText,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Start,
+        )
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            items(data) { item ->
+                val imageRes = when (item) {
+                    "a" -> R.drawable.aa // Reemplaza con el recurso adecuado
+                    "b" -> R.drawable.bb // Reemplaza con el recurso adecuado
+                    "c" -> R.drawable.cc // Reemplaza con el recurso adecuado
+                    "d" -> R.drawable.dd // Reemplaza con el recurso adecuado
+                    "e" -> R.drawable.ee // Reemplaza con el recurso adecuado
+                    "f" -> R.drawable.ff // Reemplaza con el recurso adecuado
+                    else -> R.drawable.c // Reemplaza con una imagen predeterminada
+                }
+                Card(
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = imageRes),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(RoundedCornerShape(0.dp))
+                    )
+                }
+            }
+        }
     }
 }
