@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">Univalle Al Toque</string>
+    <string name="app_name">Univalle AlToque</string>
     <string name="login">Login</string>
     <string name="profile">Profile</string>
     <string name="back_button">Atrás</string>
 
 
     <string name="login_title">Iniciar sesión</string>
-    <string name="login_description">Inicia sesión para guardar tus preferencias, grupos y más</string>
+    <string name="login_description">Inicia sesión con tu cuenta de Google para guardar tus preferencias, unirte a grupos y disfrutar de una experiencia personalizada</string>
     <string name="web_client_id">131190348598-o3f4f8l0n1lprkq39f93mml03rg1n36f.apps.googleusercontent.com</string>
+    <string name="login_button">Iniciar sesión con Google</string>
+    <string name="logout_button">Cerrar sesión</string>
 </resources>
