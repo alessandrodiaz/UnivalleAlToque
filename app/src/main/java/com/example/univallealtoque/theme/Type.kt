@@ -19,7 +19,7 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = Raleway,
         fontWeight = FontWeight.Bold,
-        fontSize = 26.sp
+        fontSize = 24.sp
     ),
     displayMedium = TextStyle(
         fontFamily = Raleway,
@@ -35,6 +35,11 @@ val Typography = Typography(
         fontFamily = Raleway,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = Raleway,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp
     ),
     titleMedium = TextStyle(
         fontFamily = Raleway,
