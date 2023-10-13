@@ -52,6 +52,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import com.example.univallealtoque.ui.ProfileScreen
+import androidx.compose.material3.Typography
+
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     HomePage(title = R.string.app_name),
@@ -70,10 +72,12 @@ fun UnivalleAlToqueAppBar(
     TopAppBar(
         title = {
             Text(
+
                 //text = stringResource(currentScreenTitle),
                 text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.displaySmall,
                 ) },
+
 
         modifier = modifier
             .fillMaxWidth()
