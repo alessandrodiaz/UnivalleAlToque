@@ -247,7 +247,7 @@ fun UnivalleAlToqueApp() {
                             googleAuthUiClient.signOut()
                             Toast.makeText(
                                 context,
-                                "Signed out",
+                                R.string.signed_out,
                                 Toast.LENGTH_LONG
                             ).show()
 

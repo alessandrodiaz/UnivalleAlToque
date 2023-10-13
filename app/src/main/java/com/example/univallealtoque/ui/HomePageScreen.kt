@@ -26,10 +26,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.res.TypedArrayUtils.getString
 import com.example.univallealtoque.R
 import com.example.univallealtoque.presentation.sign_in.UserData
 import com.example.univallealtoque.ui.components.Greeting
@@ -66,7 +68,7 @@ fun HomePageScreen(
             Greeting(userData = userData)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Próximos eventos",
+                text = stringResource(id = R.string.proximos_eventos),
                 textAlign = TextAlign.Start,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -75,10 +77,10 @@ fun HomePageScreen(
                     .padding(start = 20.dp, top = 0.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            EventsComponent("Esta semana",Modifier.size(width = 380.dp, height = 280.dp))
+            EventsComponent(stringResource(id = R.string.esta_semana),Modifier.size(width = 380.dp, height = 280.dp))
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
             CardComponent(
-                "¿Qué querés hacer?",
+                stringResource(id = R.string.que_queres_hacer),
                 categoryNames,
                 Modifier.size(width = 380.dp, height = 248.dp)
             )
