@@ -173,7 +173,7 @@ fun EventsComponent(myText: String,modifier: Modifier){
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(8.dp)
         ) {
             items(data) { item ->
                 val imageRes = when (item) {
@@ -186,15 +186,15 @@ fun EventsComponent(myText: String,modifier: Modifier){
                     else -> R.drawable.c // Reemplaza con una imagen predeterminada
                 }
                 Card(
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp,end=8.dp,)
                 ) {
                     Image(
                         painter = painterResource(id = imageRes),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(120.dp)
-                            .clip(RoundedCornerShape(0.dp))
+                            .size(114.dp)
+
                     )
                 }
             }
