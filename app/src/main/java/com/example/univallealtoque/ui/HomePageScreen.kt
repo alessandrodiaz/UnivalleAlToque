@@ -39,7 +39,6 @@ fun HomePageScreen(
     userData: UserData?
 ) {
 
-
     var categoryNames = listOf(
         "Gym",
         "Rumba",
@@ -66,7 +65,9 @@ fun HomePageScreen(
 
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CardComponent("Esta semana", listOf(), Modifier.size(width = 380.dp, height = 280.dp))
+            CardComponent("Esta semana",
+                listOf(),
+                Modifier.size(width = 380.dp, height = 280.dp))
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
             CardComponent(
                 "¿Qué querés hacer?",
@@ -127,14 +128,12 @@ fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifie
         }
 
     }
-
-
 }
 
 @Composable
 fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(top  = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
