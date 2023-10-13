@@ -1,6 +1,5 @@
 package com.example.univallealtoque.ui
 
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -31,33 +30,33 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.univallealtoque.R
+import com.example.univallealtoque.presentation.sign_in.UserData
+import com.example.univallealtoque.ui.components.Greeting
 
 @Composable
-fun HomePageScreen(modifier: Modifier){
+fun HomePageScreen(
+    modifier: Modifier,
+    userData: UserData?
+) {
+
+
     var categoryNames = listOf(
         "Gym",
         "Rumba",
         "Lectura",
         "Piscina",
         "In English",
-        "Taekwondo")
+        "Taekwondo"
+    )
     LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            Greeting(userData = userData)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Benvenido de nuevo!",
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, top = 0.dp)
-
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Próximos eventos!",
+                text = "Próximos eventos",
                 textAlign = TextAlign.Start,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -67,17 +66,22 @@ fun HomePageScreen(modifier: Modifier){
 
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CardComponent("Esta semana", listOf(),Modifier.size(width = 380.dp, height = 280.dp))
+            CardComponent("Esta semana", listOf(), Modifier.size(width = 380.dp, height = 280.dp))
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
-            CardComponent("¿Qué querés hacer?",categoryNames,Modifier.size(width = 380.dp, height = 248.dp))
+            CardComponent(
+                "¿Qué querés hacer?",
+                categoryNames,
+                Modifier.size(width = 380.dp, height = 248.dp)
+            )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
-            CardComponent("Semilleros", listOf(),Modifier.size(width = 380.dp, height = 248.dp))
+            CardComponent("Semilleros", listOf(), Modifier.size(width = 380.dp, height = 248.dp))
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
         }
     }
 }
+
 @Composable
-fun CardComponent(myText: String,categoryNames:  List<String>,modifier: Modifier) {
+fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifier) {
     // Aquí puedes definir el contenido y la apariencia de tu tarjeta
     // Puedes usar el composable Card y personalizarlo según tus necesidades
 
@@ -93,7 +97,7 @@ fun CardComponent(myText: String,categoryNames:  List<String>,modifier: Modifier
             text = myText,
             fontSize = 20.sp,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(start = 8.dp)
                 .fillMaxWidth(),
             textAlign = TextAlign.Start,
         )
@@ -101,10 +105,10 @@ fun CardComponent(myText: String,categoryNames:  List<String>,modifier: Modifier
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 68.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement= Arrangement.spacedBy(40.dp),
+            horizontalArrangement = Arrangement.spacedBy(40.dp),
             contentPadding = PaddingValues(start = 40.dp, end = 40.dp)
-        ){
-            items (categoryNames){ item ->
+        ) {
+            items(categoryNames) { item ->
                 val imageRes = when (item) {
                     "Gym" -> R.drawable.a // Reemplaza con el recurso adecuado
                     "Rumba" -> R.drawable.b // Reemplaza con el recurso adecuado
@@ -128,11 +132,11 @@ fun CardComponent(myText: String,categoryNames:  List<String>,modifier: Modifier
 }
 
 @Composable
-fun ImageAndTextComponent(imageRes: Int, text:String,modifier: Modifier){
+fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Image(
             painter = painterResource(id = imageRes),
             contentDescription = null,
