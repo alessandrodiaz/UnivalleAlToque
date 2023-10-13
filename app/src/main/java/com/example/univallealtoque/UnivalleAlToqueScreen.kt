@@ -73,14 +73,16 @@ fun UnivalleAlToqueAppBar(
         title = {
             Text(
                 text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.displayLarge,
+                modifier = Modifier
+                    .padding(vertical = 2.dp)
             )
         },
 
 
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp),
+            .height(52.dp),
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
@@ -102,7 +104,7 @@ fun UnivalleAlToqueBottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color.Red)
+            .background(color = colorResource(id = R.color.red))
             .padding(horizontal = 32.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
