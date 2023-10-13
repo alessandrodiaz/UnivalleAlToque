@@ -24,16 +24,16 @@ val Typography = Typography(
     displayMedium = TextStyle(
         fontFamily = Raleway,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+        fontSize = 22.sp
     ),
     displaySmall = TextStyle(
         fontFamily = Raleway,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 18.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = Raleway,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 18.sp
     )
 )
