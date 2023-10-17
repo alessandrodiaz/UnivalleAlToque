@@ -51,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement.Vertical
+import androidx.navigation.NavHostController
 import com.example.univallealtoque.ui.ProfileScreen
 
 
@@ -175,7 +176,9 @@ fun UnivalleAlToqueBottomBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UnivalleAlToqueApp() {
+fun UnivalleAlToqueApp(
+    navController: NavHostController = rememberNavController()
+) {
     val context = LocalContext.current
 
     val googleAuthUiClient by remember {
@@ -187,7 +190,6 @@ fun UnivalleAlToqueApp() {
         )
     }
     //Create NavController
-    val navController = rememberNavController()
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
