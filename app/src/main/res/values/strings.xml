@@ -17,4 +17,6 @@
     <string name="proximos_eventos">Próximos eventos</string>
     <string name="esta_semana">Esta semana</string>
     <string name="que_queres_hacer">¿Qué querés hacer?</string>
+    <string name="content_description_profile">Boton perfil</string>
+    <string name="content_description_home">Boton home</string>
 </resources>

@@ -42,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.presentation.sign_in.GoogleAuthUiClient
 import com.example.univallealtoque.presentation.sign_in.SignInViewModel
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.google.android.gms.auth.api.identity.Identity
@@ -77,9 +78,9 @@ fun UnivalleAlToqueAppBar(
         title = {
             Column(
                 modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(color = colorResource(id = R.color.red)),
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(color = colorResource(id = R.color.red)),
             ){
                 Text(
                     text = stringResource(R.string.app_name),
@@ -90,9 +91,6 @@ fun UnivalleAlToqueAppBar(
                     ),
                 )
             }
-
-
-
         },
 
         navigationIcon = {
@@ -124,14 +122,12 @@ fun UnivalleAlToqueBottomBar(
         IconButton(
             onClick = navigateHome
         ) {
-
             Icon(
                 imageVector = Icons.Default.Home,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.content_description_home),
                 modifier = Modifier.size(32.dp),
                 tint = Color.White,
             )
-
         }
         IconButton(
             onClick = { /* Acción de navegación */ }
@@ -155,15 +151,13 @@ fun UnivalleAlToqueBottomBar(
                 modifier = Modifier.size(32.dp),
                 tint = Color.White,
             )
-
         }
         IconButton(
-            onClick = navigateLogin
+            onClick = navigateLogin,
         ) {
-
             Icon(
                 imageVector = Icons.Default.AccountCircle,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.content_description_profile),
                 modifier = Modifier.size(32.dp),
                 tint = Color.White,
             )
@@ -171,7 +165,6 @@ fun UnivalleAlToqueBottomBar(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
