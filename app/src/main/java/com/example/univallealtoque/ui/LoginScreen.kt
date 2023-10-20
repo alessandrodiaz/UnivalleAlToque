@@ -48,10 +48,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
 
-    Text(
-        text = "Login",
-        modifier = modifier
-    )
+
 
     /*val viewModel = viewModel<SignInViewModel>()*/
     val state by viewModel.state.collectAsState()
@@ -89,19 +86,6 @@ fun LoginScreen(
             viewModel.resetState()
         }
     }
-
-
-    /*Box(contentAlignment = Alignment.Center){Text(
-        text = stringResource(R.string.login_title),
-        fontSize = 18.sp
-    )
-
-        Text(
-            text = stringResource(R.string.login_description),
-            fontSize = 18.sp
-        )}*/
-
-
     SignInScreen(
         state = state,
         onSignInClick = {
@@ -115,5 +99,4 @@ fun LoginScreen(
             }
         }
     )
-
 }

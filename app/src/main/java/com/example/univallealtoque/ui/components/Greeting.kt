@@ -48,7 +48,7 @@ fun Greeting(
 
 }
 
-// Extensión para formatear el nombre de usuario
+// Format username text
 fun String.formatUsername(): String {
     val firstWord = this.split(" ").firstOrNull() ?: ""
     return firstWord.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }

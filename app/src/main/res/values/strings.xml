@@ -11,6 +11,7 @@
     <string name="login_button">Iniciar sesión con Google</string>
     <string name="logout_button">Cerrar sesión</string>
     <string name="signed_out">Cerrar sesión</string>
+    <string name="profile_picture_description">Profile picture</string>
     <!-- HOME -->
     <string name="greeting_username">Bienvenido, </string>
     <string name="greeting_empty">Bienvenido</string>
@@ -19,4 +20,20 @@
     <string name="que_queres_hacer">¿Qué querés hacer?</string>
     <string name="content_description_profile">Boton perfil</string>
     <string name="content_description_home">Boton home</string>
+    <!-- CATEGORIAS -->
+    <string name="gym">Gym</string>
+    <string name="rumba">Rumba</string>
+    <string name="lectura">Lectura</string>
+    <string name="piscina">Piscina</string>
+    <string name="in_english">In English</string>
+    <string name="taekwondo">Taekwondo</string>
+    <!-- SEMILLEROS -->
+    <string name="semilleros">Semilleros</string>
+    <string name="futbol">Fútbol</string>
+    <string name="natacion">Natación</string>
+    <string name="rugby">Rugby</string>
+    <string name="futbol_time">Lunes 10:00 AM</string>
+    <string name="natacion_time">Miércoles 3:30 PM</string>
+    <string name="rugby_time">Viernes 5:00 PM</string>
+
 </resources>

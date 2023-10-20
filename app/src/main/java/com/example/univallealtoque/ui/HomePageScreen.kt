@@ -46,18 +46,18 @@ fun HomePageScreen(
 ) {
 
     var categoryNames = listOf(
-        "Gym",
-        "Rumba",
-        "Lectura",
-        "Piscina",
-        "In English",
-        "Taekwondo"
+        stringResource(id = R.string.gym),
+        stringResource(id = R.string.rumba),
+        stringResource(id = R.string.lectura),
+        stringResource(id = R.string.piscina),
+        stringResource(id = R.string.in_english),
+        stringResource(id = R.string.taekwondo),
     )
 
     val semilleros = listOf(
-        Semilleros("Fútbol", "Lunes 10:00 AM", R.drawable.futbol),
-        Semilleros("Natación", "Miércoles 3:30 PM", R.drawable.natacion),
-        Semilleros("Rugby", "Viernes 5:00 PM", R.drawable.rugby),
+        Semilleros(stringResource(id = R.string.futbol), stringResource(id = R.string.futbol_time), R.drawable.futbol),
+        Semilleros(stringResource(id = R.string.natacion), stringResource(id = R.string.natacion_time), R.drawable.natacion),
+        Semilleros(stringResource(id = R.string.rugby), stringResource(id = R.string.rugby_time), R.drawable.rugby),
     )
 
     LazyColumn(
@@ -85,7 +85,7 @@ fun HomePageScreen(
                 Modifier.size(width = 380.dp, height = 248.dp)
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
-            CardComponent("Semilleros", listOf(), Modifier.size(width = 380.dp, height = 30.dp))
+            CardComponent(stringResource(id = R.string.semilleros), listOf(), Modifier.size(width = 380.dp, height = 30.dp))
             semilleros.forEach { semillero ->
                 SemilleroItem(semillero = semillero, modifier = Modifier)
             }
@@ -161,12 +161,12 @@ fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifie
         ) {
             items(categoryNames) { item ->
                 val imageRes = when (item) {
-                    "Gym" -> R.drawable.a // Reemplaza con el recurso adecuado
-                    "Rumba" -> R.drawable.b // Reemplaza con el recurso adecuado
-                    "Lectura" -> R.drawable.c // Reemplaza con el recurso adecuado
-                    "Piscina" -> R.drawable.d // Reemplaza con el recurso adecuado
-                    "In English" -> R.drawable.e // Reemplaza con el recurso adecuado
-                    "Taekwondo" -> R.drawable.f // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.gym) -> R.drawable.a // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.rumba) -> R.drawable.b // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.lectura) -> R.drawable.c // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.piscina) -> R.drawable.d // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.in_english) -> R.drawable.e // Reemplaza con el recurso adecuado
+                    stringResource(id = R.string.taekwondo) -> R.drawable.f // Reemplaza con el recurso adecuado
                     else -> R.drawable.c // Reemplaza con una imagen predeterminada
                 }
                 ImageAndTextComponent(

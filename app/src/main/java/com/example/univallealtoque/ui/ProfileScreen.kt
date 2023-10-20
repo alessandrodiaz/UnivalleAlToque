@@ -32,7 +32,7 @@ fun ProfileScreen(
         if (userData?.profilePictureUrl != null) {
             AsyncImage(
                 model = userData.profilePictureUrl,
-                contentDescription = "Profile picture",
+                contentDescription = stringResource(id = R.string.profile_picture_description),
                 modifier = Modifier
                     .size(150.dp)
                     .clip(CircleShape),
