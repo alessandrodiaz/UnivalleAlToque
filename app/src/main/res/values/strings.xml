@@ -6,12 +6,13 @@
 
     <!-- GOOGLE LOGIN -->
     <string name="login_title">Iniciar sesión</string>
-    <string name="login_description">Inicia sesión con tu cuenta de Google para guardar tus preferencias, unirte a grupos y disfrutar de una experiencia personalizada</string>
+    <string name="login_description">Inicia sesión con tu cuenta para guardar tus preferencias, unirte a grupos y disfrutar de una experiencia personalizada</string>
     <string name="web_client_id">131190348598-o3f4f8l0n1lprkq39f93mml03rg1n36f.apps.googleusercontent.com</string>
     <string name="login_button">Iniciar sesión con Google</string>
     <string name="logout_button">Cerrar sesión</string>
     <string name="signed_out">Cerrar sesión</string>
     <string name="profile_picture_description">Profile picture</string>
+    <string name="login_google_description">O continúa con</string>
     <!-- HOME -->
     <string name="greeting_username">Bienvenido, </string>
     <string name="greeting_empty">Bienvenido</string>
