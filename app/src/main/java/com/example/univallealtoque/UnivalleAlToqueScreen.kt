@@ -94,7 +94,7 @@ fun UnivalleAlToqueAppBar(
         },
 
         navigationIcon = {
-            if (canNavigateBack) {
+            if (false) {//canNavigateBack shange if arrow back wanted
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
@@ -248,7 +248,11 @@ fun UnivalleAlToqueApp(
 
                             navController.popBackStack()
                         }
-                    }
+                    },
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
                 )
             }
         }

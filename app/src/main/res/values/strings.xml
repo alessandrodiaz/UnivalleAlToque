@@ -35,5 +35,7 @@
     <string name="futbol_time">Lunes 10:00 AM</string>
     <string name="natacion_time">Miércoles 3:30 PM</string>
     <string name="rugby_time">Viernes 5:00 PM</string>
+    <!-- PERFIL -->
+    <string name="logout">Logout</string>
 
 </resources>
