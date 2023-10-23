@@ -1,4 +1,4 @@
-package com.example.univallealtoque.presentation.sign_in
+package com.example.univallealtoque.sign_in
 
 import android.content.Context
 import android.content.Intent

@@ -29,7 +29,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -39,10 +38,9 @@ import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.univallealtoque.presentation.sign_in.GoogleAuthUiClient
-import com.example.univallealtoque.presentation.sign_in.SignInViewModel
+import com.example.univallealtoque.sign_in.GoogleAuthUiClient
+import com.example.univallealtoque.sign_in.SignInViewModel
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.google.android.gms.auth.api.identity.Identity
@@ -51,15 +49,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.layout.Arrangement.Vertical
 import androidx.navigation.NavHostController
 import com.example.univallealtoque.ui.ProfileScreen
+import com.example.univallealtoque.ui.RegisterScreen
 
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     HomePage(title = R.string.app_name),
     Login(title = R.string.login),
-    Profile(title = R.string.profile)
+    Profile(title = R.string.profile),
+    Register(title = R.string.register)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -251,6 +250,19 @@ fun UnivalleAlToqueApp(
                     },
                     modifier = Modifier
                         .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.Register.name) {
+                RegisterScreen(
+                    navController = navController,
+                    coroutineScope = coroutineScope,
+                    viewModel = viewModel,
+                    context = context,
+                    modifier = Modifier
+                        .background(Color.Gray)
                         .fillMaxSize()
                         .padding(innerPadding),
                 )

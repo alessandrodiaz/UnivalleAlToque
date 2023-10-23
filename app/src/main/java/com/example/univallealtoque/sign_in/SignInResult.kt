@@ -1,4 +1,4 @@
-package com.example.univallealtoque.presentation.sign_in
+package com.example.univallealtoque.sign_in
 
 data class SignInResult (
     val data: UserData?,

@@ -1,10 +1,10 @@
-package com.example.univallealtoque.presentation.sign_in
+package com.example.univallealtoque.sign_in
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import com.example.univallealtoque.presentation.sign_in.SignInState
+import com.example.univallealtoque.sign_in.SignInResult
 
 class SignInViewModel: ViewModel() {
 

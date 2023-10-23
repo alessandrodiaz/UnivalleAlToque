@@ -2,6 +2,7 @@
     <string name="app_name">Univalle AlToque</string>
     <string name="login">Login</string>
     <string name="profile">Profile</string>
+    <string name="register">Register</string>
     <string name="back_button">Atrás</string>
 
     <!-- LOGIN -->
@@ -15,7 +16,15 @@
     <string name="login_google_description">O continúa con Google</string>
     <string name="login_email">Correo electrónico</string>
     <string name="login_password">Contraseña</string>
-    <string name="login_registered">Ya estoy registrado</string>
+    <string name="login_register_description">¿No tienes una cuenta? </string>
+    <string name="login_register"> Registrarme</string>
+    <!-- REGISTER -->
+    <string name="register_title">Registrarse</string>
+    <string name="register_password">Contraseña</string>
+    <string name="register_email">Correo electrónico</string>
+    <string name="register_name">Nombre</string>
+    <string name="register_registered">Ya estoy registrado</string>
+
     <!-- HOME -->
     <string name="greeting_username">Bienvenido, </string>
     <string name="greeting_empty">Bienvenido</string>
