@@ -92,7 +92,7 @@ fun SignInScreen(
         Spacer(
             modifier = modifier.size(40.dp)
         )
-        Text(
+        /*Text(
             text = stringResource(R.string.login_description),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.displaySmall,
@@ -100,72 +100,64 @@ fun SignInScreen(
         )
         Spacer(
             modifier = modifier.size(40.dp)
-        )
-
+        )*/
 
         OutlinedTextField(
             value = text,
-            onValueChange = { text = it },
-            shape = RoundedCornerShape(12.dp),
             textStyle = TextStyle(
-                color = Color.Black,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                color = Color.Black
             ),
+            onValueChange = { text = it },
+            label = { Text(text= stringResource(id = R.string.login_email)) },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
                 .fillMaxWidth()
-                .height(height = 52.dp)
-                .border(
-                    width = 1.dp,
-                    color = Color.Gray,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .background(color = Color.White)
         )
 
+
         Spacer(
-            modifier = modifier.size(20.dp)
+            modifier = modifier.size(10.dp)
         )
 
         OutlinedTextField(
             value = password,
-            onValueChange = { text = it },
-            shape = RoundedCornerShape(12.dp),
             textStyle = TextStyle(
-                color = Color.Black,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                color = Color.Black
             ),
+            onValueChange = { password = it },
+            label = { Text(text= stringResource(id = R.string.login_password)) },
+            shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth()
-                .height(height = 52.dp)
-                .border(
-                    width = 1.dp,
-                    color = Color.Gray,
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .background(color = Color.White),
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                .fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation(),
         )
 
         Spacer(
             modifier = modifier.size(20.dp)
         )
 
-        Button(
-            onClick = { },
+        Box(
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(6.dp))
+                .height(52.dp)
+                .background(
+                    color = Color.Red,
+                    shape = RoundedCornerShape(16.dp) // Ajusta el valor para redondear las esquinas
+                )
         ) {
-            Text(
-                text = stringResource(R.string.login_title),
-                style = MaterialTheme.typography.displaySmall,
-            )
+            Button(
+                onClick = { /* Tu acción al hacer clic */ },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = stringResource(R.string.login_title),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Color.White // Color del texto
+                )
+            }
         }
 
         Spacer(
@@ -183,7 +175,7 @@ fun SignInScreen(
 
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(26.dp))
+                .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable { onSignInClick() }
                 .padding(8.dp)
@@ -210,20 +202,17 @@ fun SignInScreen(
             }
         }
 
-        Button(
-            onClick = { },
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(6.dp))
-        ) {
-            Text(
-                text = stringResource(R.string.login_title),
-                style = MaterialTheme.typography.displaySmall,
-            )
-        }
         Spacer(
             modifier = modifier.size(50.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.login_registered),
+            style = MaterialTheme.typography.displaySmall,
+        )
+
+        Spacer(
+            modifier = modifier.size(40.dp)
         )
     }
 }
