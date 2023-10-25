@@ -10,6 +10,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.example.univallealtoque.R
+import com.example.univallealtoque.model.SignInResult
+import com.example.univallealtoque.model.UserData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 

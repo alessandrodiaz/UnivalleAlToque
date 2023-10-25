@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import com.example.univallealtoque.sign_in.SignInResult
+import com.example.univallealtoque.model.SignInResult
 
 class SignInViewModel: ViewModel() {
 

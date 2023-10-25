@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
-import com.example.univallealtoque.sign_in.UserData
+import com.example.univallealtoque.model.UserData
 import java.util.Locale
 
 @Composable

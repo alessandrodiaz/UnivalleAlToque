@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
-import com.example.univallealtoque.sign_in.UserData
+import com.example.univallealtoque.model.UserData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

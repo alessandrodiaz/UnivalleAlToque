@@ -49,7 +49,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
+import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 
@@ -166,7 +168,7 @@ fun UnivalleAlToqueBottomBar(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun UnivalleAlToqueApp(
     navController: NavHostController = rememberNavController()
@@ -192,6 +194,13 @@ fun UnivalleAlToqueApp(
     val coroutineScope = rememberCoroutineScope()
     val viewModel: SignInViewModel = viewModel()
     val signInState by viewModel.state.collectAsState()
+
+    val service= AlToqueServiceFactory.makeAlToqueService()
+
+    coroutineScope.launch{
+        val movies = service.getUsers()
+        println(movies)
+    }
 
     Scaffold(
         topBar = {

@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.univallealtoque.R
-import com.example.univallealtoque.sign_in.UserData
+import com.example.univallealtoque.model.UserData
 import com.example.univallealtoque.ui.components.Greeting
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
