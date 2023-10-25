@@ -45,6 +45,7 @@ import com.example.univallealtoque.sign_in.SignInState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
+    navigateRegister: () -> Unit,
     navController: NavController,
     state: SignInState,
     onSignInClick: () -> Unit,
@@ -53,7 +54,7 @@ fun SignInScreen(
 ) {
     var text by remember { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    var navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) }
+    /*var navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) }*/
 
 
     val context = LocalContext.current
@@ -92,7 +93,7 @@ fun SignInScreen(
                 color = Color.Black
             ),
             onValueChange = { text = it },
-            label = { Text(text= stringResource(id = R.string.login_email)) },
+            label = { Text(text = stringResource(id = R.string.login_email)) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
@@ -110,12 +111,12 @@ fun SignInScreen(
                 color = Color.Black
             ),
             onValueChange = { password = it },
-            label = { Text(text= stringResource(id = R.string.login_password)) },
+            label = { Text(text = stringResource(id = R.string.login_password)) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
                 .fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = PasswordVisualTransformation(),
         )
 
         Spacer(
@@ -134,7 +135,8 @@ fun SignInScreen(
         ) {
             Button(
                 onClick = { /* Tu acción al hacer clic */ },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
                     text = stringResource(R.string.login_title),
@@ -192,7 +194,7 @@ fun SignInScreen(
 
         Row(
             modifier = Modifier.clickable { navigateRegister() }
-        ){
+        ) {
             Text(
                 text = stringResource(R.string.login_register_description),
                 style = MaterialTheme.typography.displaySmall,
@@ -203,7 +205,7 @@ fun SignInScreen(
             Text(
                 text = stringResource(R.string.login_register),
                 style = MaterialTheme.typography.titleSmall,
-                color=Color.Red
+                color = Color.Red
             )
         }
 

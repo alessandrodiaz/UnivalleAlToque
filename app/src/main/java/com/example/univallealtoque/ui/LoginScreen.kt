@@ -43,6 +43,7 @@ fun LoginScreen(
 
 
 
+
     LaunchedEffect(key1 = Unit) {
         if (googleAuthUiClient.getSignedInUser() != null) {
             navController.navigate(UnivalleAlToqueScreen.Profile.name)
@@ -75,6 +76,7 @@ fun LoginScreen(
         }
     }
     SignInScreen(
+        navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name)},
         navController= navController,
         state = state,
         onSignInClick = {

@@ -258,11 +258,8 @@ fun UnivalleAlToqueApp(
             composable(route = UnivalleAlToqueScreen.Register.name) {
                 RegisterScreen(
                     navController = navController,
-                    coroutineScope = coroutineScope,
-                    viewModel = viewModel,
-                    context = context,
                     modifier = Modifier
-                        .background(Color.Gray)
+                        .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding),
                 )
