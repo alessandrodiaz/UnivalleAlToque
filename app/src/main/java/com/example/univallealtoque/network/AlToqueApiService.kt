@@ -1,20 +1,26 @@
 package com.example.univallealtoque.network
 
-import com.example.univallealtoque.model.RemoteResult
+import com.example.univallealtoque.sign_in.RegisterViewModel
+import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
+import retrofit2.http.Body
+import retrofit2.http.POST
+
 
 private const val BASE_URL =
-    "https://roma-interactiva-back-edinsonuwu.vercel.app"
+    "https://univalle-al-toque-backend.vercel.app"
 
 interface AlToqueService {
 
 
-    @GET("users")
-    suspend fun getUsers(
+//    @GET("users")
+//    suspend fun getUsers(): RemoteResult
 
-    ): RemoteResult
+    @POST("register/user")
+    suspend fun registerUser(@Body jsonBody: RequestBody): String
+
 }
 
 object AlToqueServiceFactory {

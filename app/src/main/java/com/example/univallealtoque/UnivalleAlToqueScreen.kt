@@ -40,6 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.sign_in.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in.SignInViewModel
+import com.example.univallealtoque.sign_in.RegisterViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -50,7 +51,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
@@ -195,12 +198,18 @@ fun UnivalleAlToqueApp(
     val viewModel: SignInViewModel = viewModel()
     val signInState by viewModel.state.collectAsState()
 
-    val service= AlToqueServiceFactory.makeAlToqueService()
-
-    coroutineScope.launch{
-        val movies = service.getUsers()
-        println(movies)
-    }
+    //////////////////////////////////////////////////////
+//    val viewModelRegister: RegisterViewModel = viewModel()
+//
+//    val name = "ALEX"
+//    val email = "YOLANDA@gmail.com"
+//    val password = "12345678"
+//
+//    val registerData = RegisterModel(name, email, password)
+//    viewModelRegister.viewModelScope.launch {
+//        viewModelRegister.registerUser(registerData)
+//    }
+    ////////////////////////////////////////////////
 
     Scaffold(
         topBar = {
@@ -266,6 +275,7 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.Register.name) {
                 RegisterScreen(
+
                     navController = navController,
                     modifier = Modifier
                         .background(Color.White)
