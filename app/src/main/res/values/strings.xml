@@ -4,6 +4,7 @@
     <string name="profile">Profile</string>
     <string name="register">Register</string>
     <string name="back_button">Atrás</string>
+    <string name="aviso">Aviso</string>
 
     <!-- LOGIN -->
     <string name="login_title">Iniciar sesión</string>
@@ -25,6 +26,16 @@
     <string name="register_email">Correo electrónico</string>
     <string name="register_name">Nombre</string>
     <string name="register_registered">Ya estoy registrado</string>
+
+    <string name="register_invalid_email">El correo no es válido</string>
+    <string name="register_invalid_password">La contraseña es muy corta</string>
+    <string name="register_invalid_name">El nombre es demasiado corto</string>
+    <string name="register_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="register_invalid_data">Datos inválidos</string>
+    <string name="register_title_success">Registro exitoso</string>
+    <string name="register_text_success">Te has registrado en Univalle AlToque</string>
+    <string name="register_text_error">Este correo electrónico ya se encuentra en uso</string>
+
 
     <!-- HOME -->
     <string name="greeting_username">Bienvenido, </string>
