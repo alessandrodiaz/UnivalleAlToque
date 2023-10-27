@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.UserData
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,9 +40,6 @@ fun LoginScreen(
 
     /*val viewModel = viewModel<SignInViewModel>()*/
     val state by viewModel.state.collectAsState()
-
-
-
 
 
     LaunchedEffect(key1 = Unit) {

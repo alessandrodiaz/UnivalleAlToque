@@ -53,8 +53,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.univallealtoque.model.LoginRequest
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
+import com.example.univallealtoque.sign_in.LoginViewModel
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 
@@ -199,16 +201,16 @@ fun UnivalleAlToqueApp(
     val signInState by viewModel.state.collectAsState()
 
     //////////////////////////////////////////////////////
-//    val viewModelRegister: RegisterViewModel = viewModel()
-//
+    val viewModelLogin: LoginViewModel = viewModel()
+
 //    val name = "ALEX"
-//    val email = "YOLANDA@gmail.com"
-//    val password = "12345678"
-//
-//    val registerData = RegisterModel(name, email, password)
-//    viewModelRegister.viewModelScope.launch {
-//        viewModelRegister.registerUser(registerData)
-//    }
+    val email = "claudia@gmail.com"
+    val password = "123456"
+
+    val loginData = LoginRequest(email, password)
+    viewModelLogin.viewModelScope.launch {
+        viewModelLogin.loginUser(loginData)
+    }
     ////////////////////////////////////////////////
 
     Scaffold(

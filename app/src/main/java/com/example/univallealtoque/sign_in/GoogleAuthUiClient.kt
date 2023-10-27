@@ -26,9 +26,9 @@ class GoogleAuthUiClient(
             oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
+            if (e is CancellationException) throw e
             null
         }
         return result?.pendingIntent?.intentSender
@@ -43,16 +43,21 @@ class GoogleAuthUiClient(
             SignInResult(
                 data = user?.run {
                     UserData(
-                        userId = uid,
-                        username = displayName,
-                        profilePictureUrl = photoUrl?.toString()
+                        user_id = null,
+                        name = displayName,
+                        last_name = null,
+                        profile_photo = photoUrl?.toString(),
+                        email = email,
+                        program = null,
+                        phone = null,
+                        password = null
                     )
                 },
                 errorMessage = null
             )
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
+            if (e is CancellationException) throw e
             SignInResult(
                 data = null,
                 errorMessage = e.message
@@ -64,17 +69,25 @@ class GoogleAuthUiClient(
         try {
             oneTapClient.signOut().await()
             auth.signOut()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
+            if (e is CancellationException) throw e
         }
     }
 
     fun getSignedInUser(): UserData? = auth.currentUser?.run {
         UserData(
-            userId = uid,
-            username = displayName,
-            profilePictureUrl = photoUrl?.toString()
+//            user_id = uid,
+//            name = displayName,
+//            profile_photo = photoUrl?.toString()
+            user_id = null,
+            name = displayName,
+            last_name = null,
+            profile_photo = photoUrl?.toString(),
+            email = email,
+            program = null,
+            phone = null,
+            password = null
         )
     }
 

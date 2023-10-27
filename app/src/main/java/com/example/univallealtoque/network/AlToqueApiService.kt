@@ -1,5 +1,7 @@
 package com.example.univallealtoque.network
 
+import com.example.univallealtoque.model.LoginRequest
+import com.example.univallealtoque.model.LoginResponse
 import com.example.univallealtoque.sign_in.RegisterViewModel
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -14,12 +16,16 @@ private const val BASE_URL =
 
 interface AlToqueService {
 
-
 //    @GET("users")
 //    suspend fun getUsers(): RemoteResult
 
+    @POST("login") // Reemplaza con la ruta correcta de tu servicio
+    suspend fun loginUser(@Body jsonBody: RequestBody): LoginResponse
+
     @POST("register/user")
     suspend fun registerUser(@Body jsonBody: RequestBody): String
+
+
 
 }
 

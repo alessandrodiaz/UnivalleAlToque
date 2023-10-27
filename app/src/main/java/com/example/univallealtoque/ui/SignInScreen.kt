@@ -1,5 +1,6 @@
 package com.example.univallealtoque.ui
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,14 +15,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,10 +41,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.LoginRequest
+import com.example.univallealtoque.model.RegisterModel
+import com.example.univallealtoque.sign_in.LoginViewModel
+import com.example.univallealtoque.sign_in.RegisterViewModel
 import com.example.univallealtoque.sign_in.SignInState
+import kotlinx.coroutines.delay
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,11 +69,13 @@ fun SignInScreen(
     navController: NavController,
     state: SignInState,
     onSignInClick: () -> Unit,
-
     modifier: Modifier = Modifier
 ) {
-    var text by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
+    val viewModel: LoginViewModel = viewModel()
+    val loginState by viewModel.state.collectAsState()
     /*var navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) }*/
 
 
@@ -88,11 +110,11 @@ fun SignInScreen(
         )
 
         OutlinedTextField(
-            value = text,
+            value = email,
             textStyle = TextStyle(
                 color = Color.Black
             ),
-            onValueChange = { text = it },
+            onValueChange = { email = it },
             label = { Text(text = stringResource(id = R.string.login_email)) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
@@ -134,7 +156,10 @@ fun SignInScreen(
                 )
         ) {
             Button(
-                onClick = { /* Tu acción al hacer clic */ },
+                onClick = {
+                    val loginData = LoginRequest(email, password)
+                    viewModel.loginUser(loginData)
+                },
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -143,6 +168,49 @@ fun SignInScreen(
                     style = MaterialTheme.typography.displaySmall,
                     color = Color.White // Color del texto
                 )
+            }
+        }
+
+        val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        if (loginState.isLoginSuccessful) {
+            navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+            viewModel.resetState()
+        }
+
+        if (loginState.loginError) {
+            var showDialog by remember { mutableStateOf(true) }
+
+            if (showDialog) {
+                LaunchedEffect(true) {
+                    delay(4000)
+                    showDialog = false
+                }
+            }
+
+            if (showDialog) {
+                Dialog(
+                    onDismissRequest = {}
+                ) {
+                    Box() {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(16.dp),
+                            shape = RoundedCornerShape(16.dp),
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.login_invalid),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .wrapContentSize(Alignment.Center),
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
             }
         }
 
@@ -213,4 +281,10 @@ fun SignInScreen(
             modifier = modifier.size(40.dp)
         )
     }
+}
+
+
+class UserDataStore(context: Context) {
+    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name="user_data")
+
 }

@@ -25,8 +25,8 @@ fun Greeting(
         modifier = Modifier.fillMaxSize(),
     ) {
         Spacer(modifier = Modifier.height(30.dp))
-        if (userData?.username != null) {
-            val formattedUsername = userData.username.formatUsername()
+        if (userData?.name != null) {
+            val formattedUsername = userData.name.formatUsername()
             Text(
                 text = stringResource(R.string.greeting_username) + " $formattedUsername",
                 textAlign = TextAlign.Center,

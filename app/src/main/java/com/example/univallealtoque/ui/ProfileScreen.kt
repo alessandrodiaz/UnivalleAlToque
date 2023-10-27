@@ -81,9 +81,9 @@ fun ProfileScreen(
         ) {
 
             //PROFILE PICTURE
-            if (userData?.profilePictureUrl != null) {
+            if (userData?.profile_photo != null) {
                 AsyncImage(
-                    model = userData.profilePictureUrl,
+                    model = userData.profile_photo,
                     contentDescription = stringResource(id = R.string.profile_picture_description),
                     modifier = Modifier
                         .size(150.dp)
@@ -108,9 +108,9 @@ fun ProfileScreen(
             }
 
             //USERNAME
-            if (userData?.username != null) {
+            if (userData?.name != null) {
                 Text(
-                    text = userData.username,
+                    text = userData.name,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.displayLarge,
                     color = Color.White

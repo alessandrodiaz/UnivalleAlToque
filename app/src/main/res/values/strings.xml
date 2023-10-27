@@ -19,6 +19,7 @@
     <string name="login_password">Contraseña</string>
     <string name="login_register_description">¿No tienes una cuenta? </string>
     <string name="login_register"> Registrarme</string>
+    <string name="login_invalid">Credenciales incorrectas</string>
     <!-- REGISTER -->
     <string name="register_title">Registrarse</string>
     <string name="register_password">Contraseña</string>
