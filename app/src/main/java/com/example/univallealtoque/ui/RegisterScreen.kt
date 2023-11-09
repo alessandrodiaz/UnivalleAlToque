@@ -1,6 +1,7 @@
 package com.example.univallealtoque.ui
 
 import CustomAlertDialog
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,7 +41,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.sign_in.RegisterViewModel
+import com.example.univallealtoque.sign_in_google.RegisterViewModel
 import kotlinx.coroutines.delay
 
 
@@ -52,6 +53,7 @@ fun RegisterScreen(
 ) {
 
     var name by remember { mutableStateOf("") }
+    var last_name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var repeat_password by rememberSaveable { mutableStateOf("") }
@@ -78,7 +80,7 @@ fun RegisterScreen(
                 text = stringResource(R.string.register_title),
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.Black,
-                modifier = Modifier.padding(bottom = 60.dp)
+                modifier = Modifier.padding(bottom = 28.dp)
             )
 
             OutlinedTextField(
@@ -88,6 +90,19 @@ fun RegisterScreen(
                 ),
                 onValueChange = { name = it },
                 label = { Text(text = stringResource(id = R.string.register_name)) },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+
+            )
+            OutlinedTextField(
+                value = last_name,
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
+                onValueChange = { last_name = it },
+                label = { Text(text = stringResource(id = R.string.register_last_name)) },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .padding(start = 16.dp, end = 16.dp)
@@ -139,7 +154,7 @@ fun RegisterScreen(
 
                 )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             val context = LocalContext.current
 
@@ -178,8 +193,11 @@ fun RegisterScreen(
                         }
 
                         if (validationState == null) {
-                            val registerData = RegisterModel(name, email, password)
+                            val registerData = RegisterModel(name, last_name, email, password)
+
                             val response = viewModel.registerUser(registerData)
+                            Log.d("response register: ", response.toString())
+
                         } else {
                             dialogState.value = validationState
                         }

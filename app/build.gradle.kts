@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.univallealtoque"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.univallealtoque"
@@ -85,6 +85,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("com.google.firebase:firebase-auth:22.1.2")
     implementation("com.google.firebase:firebase-firestore-ktx:24.9.0")
+    implementation("androidx.compose.ui:ui-graphics-android:1.5.4")
 
 
     testImplementation("junit:junit:4.13.2")
