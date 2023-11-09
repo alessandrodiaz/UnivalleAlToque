@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,17 +44,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
+import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userData: UserData?,
     onSignOut: () -> Unit,
+    userModelExpress: LoginViewModelExpress,
+    navController: NavController,
     modifier: Modifier
 ) {
+    val userModelExpressState by userModelExpress.loginResponseFromServer.collectAsState()
+
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
             listOf(
@@ -118,18 +126,22 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(25.dp))
 
             } else {
-                Text(
-                    text = "LUIS FELIPE",
-                    fontSize = 24.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "ZUÑIGA MALDONADO",
-                    fontSize = 24.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                )
+                userModelExpressState.userData?.name?.let {
+                    Text(
+                        text = it,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                userModelExpressState.userData?.last_name?.let {
+                    Text(
+                        text = it,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
             }
 
 
@@ -155,11 +167,16 @@ fun ProfileScreen(
                     .padding(0.dp)
 
             )
-            infoPart("Correo", "LUIS.ZUNIGA@CORREOUNIVALLE.EDU.CO")
-            infoPart("Celular", "3134567890")
-            infoPart("Carrera", "Ing. Sistemas")
+            userModelExpressState.userData?.email?.let { infoPart("Correo", it) }
+            userModelExpressState.userData?.phone?.let { infoPart("Celular", it) }
+            userModelExpressState.userData?.program?.let { infoPart("Carrera", it) }
             Spacer(modifier = Modifier.height(8.dp))
-            IconButton(onClick = onSignOut) {
+            IconButton(onClick =
+                {
+                    onSignOut;
+                    userModelExpress.resetLoginStateExpress();
+                    navController.navigate(UnivalleAlToqueScreen.Login.name)
+                }) {
                 Image(
                     painter = painterResource(id = R.drawable.logout),
                     contentDescription = stringResource(id = R.string.logout),

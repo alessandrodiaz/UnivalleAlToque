@@ -9,9 +9,9 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.collectAsState
-import com.example.univallealtoque.sign_in.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in.SignInViewModel
-import com.example.univallealtoque.sign_in.SignInState
+import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
+import com.example.univallealtoque.sign_in_google.SignInViewModel
+import com.example.univallealtoque.sign_in_google.SignInState
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,7 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
-import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +31,7 @@ fun LoginScreen(
     signInState: SignInState,
     coroutineScope: CoroutineScope,
     viewModel: SignInViewModel,
+    userModelExpress: LoginViewModelExpress,
     googleAuthUiClient: GoogleAuthUiClient,
     context: Context,
     modifier: Modifier = Modifier.fillMaxSize()
@@ -77,6 +78,7 @@ fun LoginScreen(
         navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name)},
         navController= navController,
         state = state,
+        userModelExpress = userModelExpress,
         onSignInClick = {
             coroutineScope.launch {
                 val signInIntentSender = googleAuthUiClient.signIn()

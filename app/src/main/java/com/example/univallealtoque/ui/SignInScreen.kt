@@ -1,6 +1,7 @@
 package com.example.univallealtoque.ui
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,19 +49,13 @@ import androidx.navigation.NavController
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.LoginRequest
-import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.sign_in.LoginViewModel
-import com.example.univallealtoque.sign_in.RegisterViewModel
-import com.example.univallealtoque.sign_in.SignInState
+import com.example.univallealtoque.sign_in_google.LoginViewModel
+import com.example.univallealtoque.sign_in_google.SignInState
 import kotlinx.coroutines.delay
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-
+import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +63,7 @@ fun SignInScreen(
     navigateRegister: () -> Unit,
     navController: NavController,
     state: SignInState,
+    userModelExpress: LoginViewModelExpress,
     onSignInClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -78,6 +74,10 @@ fun SignInScreen(
     val loginState by viewModel.state.collectAsState()
     /*var navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) }*/
 
+    val viewModelExpress = userModelExpress
+    //val viewModelExpressState by viewModelExpress.loginInputFromUser.collectAsState()
+    //val viewModelResponseFromServerAfterLogin by viewModelExpress.loginResponseFromServer.collectAsState()
+    val loginStateExpress by viewModelExpress.stateLoginExpress.collectAsState()
 
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError) {
@@ -157,8 +157,22 @@ fun SignInScreen(
         ) {
             Button(
                 onClick = {
-                    val loginData = LoginRequest(email, password)
-                    viewModel.loginUser(loginData)
+                    //val loginData = LoginRequest(email, password)
+                    viewModelExpress.saveIntoViewModelUserInput(email,password)
+                    viewModelExpress.loginUserWithExpress()
+                    Log.d("Email,Pasword: ",
+                        viewModelExpress.loginInputFromUser.value.toString()
+                    )
+                    //Log.d("User Data: ",
+                    //    viewModelResponseFromServerAfterLogin.userData.toString()
+                    //)
+                    //viewModel.loginUser(loginData)
+                    //navController.navigate(UnivalleAlToqueScreen.Profile.name)
+                    if (loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
+                        navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+                        //viewModel.resetState()
+                        //viewModelExpress.resetLoginStateExpress()
+                    }
                 },
                 modifier = Modifier.fillMaxSize(),
                 shape = RoundedCornerShape(12.dp)
@@ -174,12 +188,13 @@ fun SignInScreen(
         val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        if (loginState.isLoginSuccessful) {
+        if (false) {//(loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
             navController.navigate(UnivalleAlToqueScreen.HomePage.name)
             viewModel.resetState()
+            viewModelExpress.resetLoginStateExpress()
         }
 
-        if (loginState.loginError) {
+        if (loginState.loginError || loginStateExpress.loginError) {
             var showDialog by remember { mutableStateOf(true) }
 
             if (showDialog) {
@@ -285,6 +300,6 @@ fun SignInScreen(
 
 
 class UserDataStore(context: Context) {
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name="user_data")
+    //val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name="user_data")
 
 }

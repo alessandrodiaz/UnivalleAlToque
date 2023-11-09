@@ -25,7 +25,8 @@
     <string name="register_password">Contraseña</string>
     <string name="register_repeat_password">Repetir contraseña</string>
     <string name="register_email">Correo electrónico</string>
-    <string name="register_name">Nombre</string>
+    <string name="register_name">Nombres</string>
+    <string name="register_last_name">Apellidos</string>
     <string name="register_registered">Ya estoy registrado</string>
 
     <string name="register_invalid_email">El correo no es válido</string>

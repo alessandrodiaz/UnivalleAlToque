@@ -1,17 +1,9 @@
-package com.example.univallealtoque.sign_in
+package com.example.univallealtoque.sign_in_google
 
-import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.model.LoginRequest
-import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.model.UserData
 import com.example.univallealtoque.network.AlToqueServiceFactory
-import com.google.firebase.firestore.auth.User
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,12 +24,12 @@ class LoginViewModel() : ViewModel() {
         val json = gson.toJson(loginModel, LoginRequest::class.java)
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-        println("------>>>>>>$json")
+        //println("------>>>>>>$json")
 
         viewModelScope.launch {
             try {
                 val response = alToqueService.loginUser(requestBody)
-                println("RESPONSE" + response.message)
+                //println("RESPONSE" + response.message)
 
                 /*EJEMPLO DE RESPONSE
                 {
@@ -56,14 +48,14 @@ class LoginViewModel() : ViewModel() {
                 }*/
 
                 if (response.message == "Inicio de sesión exitoso") {
-                    println("AAAAAAAAAAAAAAAAAAAAAAA")
+                    //println("AAAAAAAAAAAAAAAAAAAAAAA")
                     _state.value = LoginState(isLoginSuccessful = true, loginError = false)
                 } else {
                     _state.value = LoginState(isLoginSuccessful = false, loginError = true)
                 }
             } catch (e: Exception) {
                 _state.value = LoginState(isLoginSuccessful = false, loginError = true)
-                println("Error al realizar la solicitud: ${e.message}")
+                //println("Error al realizar la solicitud: ${e.message}")
             }
         }
     }

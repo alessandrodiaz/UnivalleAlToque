@@ -38,9 +38,8 @@ import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.univallealtoque.sign_in.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in.SignInViewModel
-import com.example.univallealtoque.sign_in.RegisterViewModel
+import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
+import com.example.univallealtoque.sign_in_google.SignInViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -50,13 +49,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.univallealtoque.model.LoginRequest
-import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.network.AlToqueServiceFactory
-import com.example.univallealtoque.sign_in.LoginViewModel
+import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import com.example.univallealtoque.sign_in_google.LoginState
+import com.example.univallealtoque.sign_in_google.LoginViewModel
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 
@@ -116,6 +114,8 @@ fun UnivalleAlToqueAppBar(
 fun UnivalleAlToqueBottomBar(
     navigateLogin: () -> Unit,
     navigateHome: () -> Unit,
+    navigateProfile: () -> Unit,
+    userModelExpressState: LoginState,
 ) {
     // Íconos de navegación
     Row(
@@ -159,7 +159,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick = navigateLogin,
+            onClick = if (userModelExpressState.isLoginSuccessful) navigateProfile else navigateLogin,
         ) {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
@@ -212,6 +212,8 @@ fun UnivalleAlToqueApp(
         viewModelLogin.loginUser(loginData)
     }
     ////////////////////////////////////////////////
+    var loginViewModelExpress: LoginViewModelExpress = viewModel()
+    val loginViewModelExpressState by loginViewModelExpress.stateLoginExpress.collectAsState()
 
     Scaffold(
         topBar = {
@@ -223,7 +225,9 @@ fun UnivalleAlToqueApp(
         bottomBar = {
             UnivalleAlToqueBottomBar(
                 navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) },
-                navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name)}
+                navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name)},
+                navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name)},
+                userModelExpressState = loginViewModelExpressState,
             )
         }
     ) { innerPadding ->
@@ -248,6 +252,7 @@ fun UnivalleAlToqueApp(
                     signInState = signInState,
                     coroutineScope = coroutineScope,
                     viewModel = viewModel,
+                    userModelExpress = loginViewModelExpress,
                     googleAuthUiClient = googleAuthUiClient,
                     context = context
                 )
@@ -268,6 +273,8 @@ fun UnivalleAlToqueApp(
                             navController.popBackStack()
                         }
                     },
+                    userModelExpress = loginViewModelExpress,
+                    navController = navController,
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()
