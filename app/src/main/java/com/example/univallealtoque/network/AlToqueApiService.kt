@@ -2,11 +2,13 @@ package com.example.univallealtoque.network
 
 import com.example.univallealtoque.model.LoginResponse
 import com.example.univallealtoque.model.LoginResponseExpress
+import com.example.univallealtoque.model.UpdateBasicDataResponseExpress
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 
 private const val BASE_URL =
@@ -26,9 +28,8 @@ interface AlToqueService {
     @POST("register/user")
     suspend fun registerUser(@Body jsonBody: RequestBody): String
 
-
-
-
+    @PUT("updateprofile")
+    suspend fun updateProfile(@Body jsonBody: RequestBody): UpdateBasicDataResponseExpress
 
 }
 

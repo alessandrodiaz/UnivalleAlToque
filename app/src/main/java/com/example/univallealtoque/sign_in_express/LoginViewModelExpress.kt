@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.model.UserDataExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.sign_in_google.LoginState
 import com.google.gson.GsonBuilder
@@ -21,10 +22,11 @@ class LoginViewModelExpress : ViewModel() {
     // Expose screen UI state
     private val _privateLoginInputFromUser = MutableStateFlow(LoginRequestExpress())
     val loginInputFromUser: StateFlow<LoginRequestExpress> = _privateLoginInputFromUser.asStateFlow()
-    private val _privateLoginResponseFromServer = MutableStateFlow(LoginResponseExpress())
-    val loginResponseFromServer: StateFlow<LoginResponseExpress> = _privateLoginResponseFromServer.asStateFlow()
+    private val _privateLoginOrUpdateResponseFromServer = MutableStateFlow(LoginResponseExpress())
+    val loginOrUpdateResponseFromServer: StateFlow<LoginResponseExpress> = _privateLoginOrUpdateResponseFromServer.asStateFlow()
     private val _stateLoginExpress = MutableStateFlow(LoginState())
     val stateLoginExpress = _stateLoginExpress.asStateFlow()
+
 
     //Handle user input: email and password
     fun saveIntoViewModelUserInput(email: String, password: String){
@@ -52,8 +54,8 @@ class LoginViewModelExpress : ViewModel() {
                 val response = alToqueService.loginUserExpress(requestBody)
 
                 println("RESPONSE FROM EXPRESS " + response)
-                fun updateLoginResponseFromServer(userData: UserData?,token: String?,message: String?){
-                    _privateLoginResponseFromServer.update{ currentState ->
+                fun updateStatesAfterLoginResponseFromServer(userData: UserData?,token: String?,message: String?){
+                    _privateLoginOrUpdateResponseFromServer.update{ currentState ->
                         currentState.copy(
                             userData = userData,
                             token = token,
@@ -61,8 +63,8 @@ class LoginViewModelExpress : ViewModel() {
                         )
                     }
                 }
-                updateLoginResponseFromServer(response.userData,response.token,response.message)
-                Log.d("Data from server: ", loginResponseFromServer.value.userData.toString())
+                updateStatesAfterLoginResponseFromServer(response.userData,response.token,response.message)
+                Log.d("Data from server: ", loginOrUpdateResponseFromServer.value.userData.toString())
                 /*EJEMPLO DE RESPONSE
                 {
                     "userData": {
@@ -91,9 +93,54 @@ class LoginViewModelExpress : ViewModel() {
             }
         }
     }
+
+    fun updateBasicData(newProfilePhoto: String?=null,newEmail: String?=null, newProgram: String?=null,newPhone: String?=null) {
+        println("------>>>>>>${loginOrUpdateResponseFromServer.value.userData}")
+        val auxNewUserDataExpress = UserData(
+            user_id = loginOrUpdateResponseFromServer.value.userData?.user_id,
+            name = loginOrUpdateResponseFromServer.value.userData?.name,
+            last_name = loginOrUpdateResponseFromServer.value.userData?.last_name,
+            profile_photo = newProfilePhoto ?: loginOrUpdateResponseFromServer.value.userData?.profile_photo,
+            email = newEmail ?: loginOrUpdateResponseFromServer.value.userData?.email,
+            program = newProgram ?: loginOrUpdateResponseFromServer.value.userData?.program,
+            phone = newPhone ?: loginOrUpdateResponseFromServer.value.userData?.phone,
+            password = loginOrUpdateResponseFromServer.value.userData?.password,
+        )
+        println("------>>>>>>$auxNewUserDataExpress")
+        val alToqueService = AlToqueServiceFactory.makeAlToqueService()
+
+        val gson = GsonBuilder().setPrettyPrinting().create()
+        val json = gson.toJson(auxNewUserDataExpress, UserData::class.java)
+        val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
+        println("------>>>>>>$json")
+        viewModelScope.launch {
+            try {
+                val response = alToqueService.updateProfile(requestBody)
+
+                println("RESPONSE FROM EXPRESS " + response)
+                fun updateStatesAfterLoginResponseFromServer(updatedUserData: UserData?,token: String?,message: String?){
+                    _privateLoginOrUpdateResponseFromServer.update{ currentState ->
+                        currentState.copy(
+                            userData = updatedUserData,
+                            token = token,
+                            message = message
+                        )
+                    }
+                    Log.d("After update: ", _privateLoginOrUpdateResponseFromServer.value.userData.toString())
+                }
+                updateStatesAfterLoginResponseFromServer(auxNewUserDataExpress,_privateLoginOrUpdateResponseFromServer.value.token,_privateLoginOrUpdateResponseFromServer.value.message)
+                _stateLoginExpress.value = LoginState(isLoginSuccessful = true, loginError = false, updateSuccessful = true)
+            } catch (e: Exception) {
+                _stateLoginExpress.value = LoginState(isLoginSuccessful = true, loginError = false, updateSuccessful = false)
+                println("Error al realizar la actualizacion: ${e.message}")
+            }
+        }
+    }
+
+
     fun resetLoginStateExpress () {
         _stateLoginExpress.update { LoginState() }
         _privateLoginInputFromUser.update { LoginRequestExpress() }
-        _privateLoginResponseFromServer.update { LoginResponseExpress() }
+        _privateLoginOrUpdateResponseFromServer.update { LoginResponseExpress() }
     }
 }
