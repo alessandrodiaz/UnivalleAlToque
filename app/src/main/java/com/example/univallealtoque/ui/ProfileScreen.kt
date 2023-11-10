@@ -148,7 +148,7 @@ fun ProfileScreen(
             } else {
                 userModelExpressState.userData?.name?.let {
                     Text(
-                        text = it,
+                        text = it.uppercase(Locale.ROOT),
                         fontSize = 24.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -156,7 +156,7 @@ fun ProfileScreen(
                 }
                 userModelExpressState.userData?.last_name?.let {
                     Text(
-                        text = it,
+                        text = it.uppercase(Locale.ROOT),
                         fontSize = 24.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -191,8 +191,12 @@ fun ProfileScreen(
 
             if(showDialogChangeEmail){
                 emailOfUser?.let {
-                    ShowMessageDialog("Cambiar Correo",
-                        it, showDialogChangeEmail, { showDialogChangeEmail = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Correo",
+                        hint = it,
+                        show = showDialogChangeEmail,
+                        setUserUpdate = {param:String -> emailOfUser = param},
+                        onClose = { showDialogChangeEmail = false })
                 }
             }
 
@@ -200,8 +204,12 @@ fun ProfileScreen(
 
             if(showDialogChangePhone){
                 phoneOfUser?.let {
-                    ShowMessageDialog("Cambiar Celular",
-                        it, showDialogChangePhone, { showDialogChangePhone = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Celular",
+                        hint = it,
+                        show = showDialogChangePhone,
+                        setUserUpdate = {param:String -> phoneOfUser = param},
+                        onClose = { showDialogChangePhone = false })
                 }
             }
 
@@ -209,8 +217,12 @@ fun ProfileScreen(
 
             if(showDialogChangeProgram){
                 programOfUser?.let {
-                    ShowMessageDialog("Cambiar Programa",
-                        it, showDialogChangeProgram, { showDialogChangeProgram = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Programa",
+                        hint = it,
+                        show = showDialogChangeProgram,
+                        setUserUpdate = {param:String -> programOfUser = param},
+                        onClose = { showDialogChangeProgram = false })
                 }
             }
 
@@ -318,7 +330,7 @@ fun infoPart(infoName: String, infoValue: String, func: ()-> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClose: () -> Unit) {
+fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, setUserUpdate: (userUpdate: String) -> Unit, onClose: () -> Unit) {
     var titleOfDialog by remember { mutableStateOf(titleOfDialog) }
     var myHint by remember { mutableStateOf(hint) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -336,6 +348,7 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
                     value = myHint,
                     onValueChange = {
                         myHint = it
+
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
@@ -358,6 +371,8 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
                     onClick = {
                         // Puedes hacer algo con el texto ingresado aquí
                         onClose()
+                        setUserUpdate(myHint)////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
+
                     }
                 ) {
                     Text("Aceptar")
@@ -377,10 +392,4 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
 
         )
     }
-}
-
-@Preview
-@Composable
-fun showsomething(){
-    ShowMessageDialog("email", "a@gmail.com",true, {  })
 }
