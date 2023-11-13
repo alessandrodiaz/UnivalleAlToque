@@ -1,4 +1,4 @@
-package com.example.univallealtoque.sign_in
+package com.example.univallealtoque.sign_in_google
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

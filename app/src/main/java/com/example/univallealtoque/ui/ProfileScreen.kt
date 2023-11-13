@@ -6,11 +6,13 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,17 +46,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
+import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.DialogProperties
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userData: UserData?,
     onSignOut: () -> Unit,
+    userModelExpress: LoginViewModelExpress,
+    navController: NavController,
     modifier: Modifier
 ) {
+    val userModelExpressState by userModelExpress.loginResponseFromServer.collectAsState()
+    var showDialogChangeEmail by remember { mutableStateOf(false) }
+    var showDialogChangePhone by remember { mutableStateOf(false) }
+    var showDialogChangeProgram by remember { mutableStateOf(false) }
+
+    var emailOfUser by remember { mutableStateOf(userModelExpressState.userData?.email) }
+    var phoneOfUser by remember { mutableStateOf(userModelExpressState.userData?.phone) }
+    var programOfUser by remember { mutableStateOf(userModelExpressState.userData?.program) }
+
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
             listOf(
@@ -118,18 +146,22 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(25.dp))
 
             } else {
-                Text(
-                    text = "LUIS FELIPE",
-                    fontSize = 24.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "ZUÑIGA MALDONADO",
-                    fontSize = 24.sp,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                )
+                userModelExpressState.userData?.name?.let {
+                    Text(
+                        text = it,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                userModelExpressState.userData?.last_name?.let {
+                    Text(
+                        text = it,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
             }
 
 
@@ -155,11 +187,41 @@ fun ProfileScreen(
                     .padding(0.dp)
 
             )
-            infoPart("Correo", "LUIS.ZUNIGA@CORREOUNIVALLE.EDU.CO")
-            infoPart("Celular", "3134567890")
-            infoPart("Carrera", "Ing. Sistemas")
+            emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
+
+            if(showDialogChangeEmail){
+                emailOfUser?.let {
+                    ShowMessageDialog("Cambiar Correo",
+                        it, showDialogChangeEmail, { showDialogChangeEmail = false })
+                }
+            }
+
+            phoneOfUser?.let { infoPart("Celular", it, {showDialogChangePhone = true}) }
+
+            if(showDialogChangePhone){
+                phoneOfUser?.let {
+                    ShowMessageDialog("Cambiar Celular",
+                        it, showDialogChangePhone, { showDialogChangePhone = false })
+                }
+            }
+
+            programOfUser?.let { infoPart("Carrera", it,  {showDialogChangeProgram = true}) }
+
+            if(showDialogChangeProgram){
+                programOfUser?.let {
+                    ShowMessageDialog("Cambiar Programa",
+                        it, showDialogChangeProgram, { showDialogChangeProgram = false })
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
-            IconButton(onClick = onSignOut) {
+
+            IconButton(onClick =
+                {
+                    onSignOut;
+                    userModelExpress.resetLoginStateExpress();
+                    navController.navigate(UnivalleAlToqueScreen.Login.name)
+                }) {
                 Image(
                     painter = painterResource(id = R.drawable.logout),
                     contentDescription = stringResource(id = R.string.logout),
@@ -171,9 +233,13 @@ fun ProfileScreen(
                         .clip(CircleShape)
                 )
             }
+
+
+
         }
     }
 }
+
 
 @Composable
 fun CircleShape() {
@@ -212,13 +278,12 @@ fun Modifier.circleLayout() =
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun infoPart(infoName: String, infoValue: String) {
+fun infoPart(infoName: String, infoValue: String, func: ()-> Unit) {
     var text by remember { mutableStateOf("") }
     Spacer(modifier = Modifier.height(16.dp))
-    BasicTextField(
-        value = infoName,
-        onValueChange = { text = it },
-        textStyle = TextStyle(
+    Text(
+        infoName,
+        style = TextStyle(
             color = Color.Black,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium
@@ -228,15 +293,18 @@ fun infoPart(infoName: String, infoValue: String) {
             .fillMaxWidth()
     )
     OutlinedTextField(
-        value = infoValue,
+        value = infoValue.uppercase(Locale.ROOT),
         textStyle = TextStyle(
             color = Color.Black,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         ),
-        onValueChange = { text = text },
+
+        onValueChange = { text = text},
+        enabled = false,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
+            .clickable { func() }
             .padding(start = 16.dp, end = 16.dp)
             .fillMaxWidth()
             .height(height = 52.dp)
@@ -246,4 +314,73 @@ fun infoPart(infoName: String, infoValue: String) {
                 shape = RoundedCornerShape(12.dp)
             )
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClose: () -> Unit) {
+    var titleOfDialog by remember { mutableStateOf(titleOfDialog) }
+    var myHint by remember { mutableStateOf(hint) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    if (show) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = {
+                onClose()
+            },
+            title = {
+                Text(titleOfDialog, color = Color.Black)
+                 },
+            text = {
+                TextField(
+                    value = myHint,
+                    onValueChange = {
+                        myHint = it
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        }
+                    ),
+                    textStyle = TextStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // Puedes hacer algo con el texto ingresado aquí
+                        onClose()
+                    }
+                ) {
+                    Text("Aceptar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onClose()
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            },
+            modifier = Modifier.defaultMinSize(300.dp).border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
+
+
+        )
+    }
+}
+
+@Preview
+@Composable
+fun showsomething(){
+    ShowMessageDialog("email", "a@gmail.com",true, {  })
 }

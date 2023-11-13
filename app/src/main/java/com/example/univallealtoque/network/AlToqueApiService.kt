@@ -1,10 +1,8 @@
 package com.example.univallealtoque.network
 
-import com.example.univallealtoque.model.LoginRequest
 import com.example.univallealtoque.model.LoginResponse
-import com.example.univallealtoque.sign_in.RegisterViewModel
+import com.example.univallealtoque.model.LoginResponseExpress
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -21,6 +19,9 @@ interface AlToqueService {
 
     @POST("login") // Reemplaza con la ruta correcta de tu servicio
     suspend fun loginUser(@Body jsonBody: RequestBody): LoginResponse
+
+    @POST("login") // Reemplaza con la ruta correcta de tu servicio
+    suspend fun loginUserExpress(@Body jsonBody: RequestBody): LoginResponseExpress
 
     @POST("register/user")
     suspend fun registerUser(@Body jsonBody: RequestBody): String
