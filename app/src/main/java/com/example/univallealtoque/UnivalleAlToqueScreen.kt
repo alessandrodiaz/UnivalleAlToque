@@ -52,18 +52,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.univallealtoque.model.LoginRequest
+import com.example.univallealtoque.model.RegisterModel
+import com.example.univallealtoque.network.AlToqueServiceFactory
+import com.example.univallealtoque.ui.PrivacyPolicyScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.LoginState
 import com.example.univallealtoque.sign_in_google.LoginViewModel
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
+import com.example.univallealtoque.ui.TermsAndConditionsScreen
 
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     HomePage(title = R.string.app_name),
     Login(title = R.string.login),
     Profile(title = R.string.profile),
-    Register(title = R.string.register)
+    Register(title = R.string.register),
+    TermsAndConditions(title = R.string.terms),
+    PrivacyPolicy(title = R.string.privacypolicy)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -167,7 +173,6 @@ fun UnivalleAlToqueBottomBar(
                 modifier = Modifier.size(32.dp),
                 tint = Color.White,
             )
-
         }
     }
 }
@@ -286,6 +291,24 @@ fun UnivalleAlToqueApp(
                 RegisterScreen(
 
                     navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.TermsAndConditions.name) {
+                TermsAndConditionsScreen(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.PrivacyPolicy.name) {
+                PrivacyPolicyScreen(
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()

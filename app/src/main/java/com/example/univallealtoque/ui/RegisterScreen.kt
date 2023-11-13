@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,9 +34,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -43,6 +51,10 @@ import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.sign_in_google.RegisterViewModel
 import kotlinx.coroutines.delay
+import androidx.navigation.compose.composable
+import com.example.univallealtoque.navigation.PostOfficeApp
+import com.example.univallealtoque.navigation.PostOfficeAppRouter
+import com.example.univallealtoque.navigation.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +70,9 @@ fun RegisterScreen(
     var password by rememberSaveable { mutableStateOf("") }
     var repeat_password by rememberSaveable { mutableStateOf("") }
     var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
+    var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
+    var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
+    var checkboxState by remember { mutableStateOf(false) }
 
     val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
 
@@ -74,7 +89,6 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-
 
             Text(
                 text = stringResource(R.string.register_title),
@@ -154,7 +168,19 @@ fun RegisterScreen(
 
                 )
 
+            Checkbox(value = stringResource(id = R.string.register_conditions),
+                onTextSelected = {
+                    navigateTermsAndConditios()
+                },isChecked = checkboxState,
+                onCheckedChange = { newCheckedState ->
+                    checkboxState = newCheckedState
+                },
+                onTextSelected2 = {
+                    navigatePrivacyPolicy()
+                })
+
             Spacer(modifier = Modifier.height(28.dp))
+
 
             val context = LocalContext.current
 
@@ -170,6 +196,7 @@ fun RegisterScreen(
             ) {
                 Button(
                     onClick = {
+
                         val emailValidationState = isValidEmail(email)
 
                         if (emailValidationState != null) {
@@ -189,6 +216,10 @@ fun RegisterScreen(
                                 context.getString(R.string.register_password_mismatch)
                             )
 
+                            !checkboxState -> RegisterDialogState.UncheckedConditions(
+                                context.getString(R.string.register_unchecked_terms)
+                            )
+
                             else -> null
                         }
 
@@ -201,6 +232,8 @@ fun RegisterScreen(
                         } else {
                             dialogState.value = validationState
                         }
+
+
                     },
                     modifier = Modifier
                         .fillMaxSize()
@@ -232,6 +265,13 @@ fun RegisterScreen(
                     }
 
                     is RegisterDialogState.InvalidPassword -> {
+                        CustomAlertDialog(
+                            title = "",
+                            message = state.message,
+                            onDismiss = { dialogState.value = null })
+                    }
+
+                    is RegisterDialogState.UncheckedConditions -> {
                         CustomAlertDialog(
                             title = "",
                             message = state.message,
@@ -351,6 +391,7 @@ sealed class RegisterDialogState {
     data class InvalidName(val message: String) : RegisterDialogState()
     data class InvalidEmail(val message: String) : RegisterDialogState()
     data class InvalidPassword(val message: String) : RegisterDialogState()
+    data class UncheckedConditions(val message: String) : RegisterDialogState()
 }
 
 
@@ -360,4 +401,83 @@ fun isValidEmail(email: String): RegisterDialogState? {
     } else {
         RegisterDialogState.InvalidEmail("El correo no es válido")
     }
+}
+
+@Composable
+fun NormalTextComponent(value: String) {
+    Text(
+        text = value,
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 25.dp),
+        style = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal
+        ),
+    color = colorResource(id = R.color.colorText)
+    )
+}
+
+@Composable
+fun Checkbox(
+    value: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    onTextSelected: (String) -> Unit,
+    onTextSelected2: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(56.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        androidx.compose.material3.Checkbox(
+            checked = isChecked,
+            onCheckedChange = { newCheckedState ->
+                onCheckedChange(newCheckedState)
+            }
+        )
+        ClickableTextComponent(value = value, onTextSelected, onTextSelected2)
+    }
+}
+
+
+@Composable
+fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){
+
+    val initialText = "Al continuar aceptas nuestra "
+    val privacyPolicyText = "Política de privacidad"
+    val yText = " y "
+    val termsAndConditions = "Terminos de uso"
+
+    val annotatedString = buildAnnotatedString {
+        append(initialText)
+        withStyle(style = SpanStyle(color = Color(0xFF92A3FD))) {
+            pushStringAnnotation(tag = privacyPolicyText, annotation = privacyPolicyText)
+            append(privacyPolicyText)
+        }
+        append(yText)
+        withStyle(style = SpanStyle(color = Color(0xFF92A3FD))) {
+            pushStringAnnotation(tag = termsAndConditions, annotation = termsAndConditions)
+            append(termsAndConditions)
+        }
+    }
+
+    ClickableText(text = annotatedString, onClick = {
+        offset -> annotatedString.getStringAnnotations(offset,offset)
+        .firstOrNull()?.also {span->
+            Log.d("ClickableTextComponent","{$span}")
+
+            if(span.item == termsAndConditions ){
+                onTextSelected(span.item)
+            }
+            else {
+                onTextSelected2(span.item)
+            }
+
+        }
+    })
 }
