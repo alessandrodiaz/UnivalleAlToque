@@ -71,6 +71,7 @@ fun RegisterScreen(
     var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
     var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
     var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
+    var checkboxState by remember { mutableStateOf(false) }
 
     val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
 
@@ -156,6 +157,9 @@ fun RegisterScreen(
             Checkbox(value = stringResource(id = R.string.register_conditions),
                 onTextSelected = {
                     navigateTermsAndConditios()
+                },isChecked = checkboxState,
+                onCheckedChange = { newCheckedState ->
+                    checkboxState = newCheckedState
                 },
                 onTextSelected2 = {
                     navigatePrivacyPolicy()
@@ -193,6 +197,10 @@ fun RegisterScreen(
 
                             password != repeat_password -> RegisterDialogState.InvalidPassword(
                                 context.getString(R.string.register_password_mismatch)
+                            )
+
+                            !checkboxState -> RegisterDialogState.UncheckedConditions(
+                                context.getString(R.string.register_unchecked_terms)
                             )
 
                             else -> null
@@ -237,6 +245,13 @@ fun RegisterScreen(
                     }
 
                     is RegisterDialogState.InvalidPassword -> {
+                        CustomAlertDialog(
+                            title = "",
+                            message = state.message,
+                            onDismiss = { dialogState.value = null })
+                    }
+
+                    is RegisterDialogState.UncheckedConditions -> {
                         CustomAlertDialog(
                             title = "",
                             message = state.message,
@@ -356,6 +371,7 @@ sealed class RegisterDialogState {
     data class InvalidName(val message: String) : RegisterDialogState()
     data class InvalidEmail(val message: String) : RegisterDialogState()
     data class InvalidPassword(val message: String) : RegisterDialogState()
+    data class UncheckedConditions(val message: String) : RegisterDialogState()
 }
 
 
@@ -384,25 +400,30 @@ fun NormalTextComponent(value: String) {
 }
 
 @Composable
-fun Checkbox(value:String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){
-    Row (
+fun Checkbox(
+    value: String,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    onTextSelected: (String) -> Unit,
+    onTextSelected2: (String) -> Unit
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(56.dp)
             .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
-        val checkedState = remember {
-            mutableStateOf(false)
-        }
-        androidx.compose.material3.Checkbox(checked = checkedState.value, onCheckedChange = {
-            checkedState.value = !checkedState.value
-        })
+        androidx.compose.material3.Checkbox(
+            checked = isChecked,
+            onCheckedChange = { newCheckedState ->
+                onCheckedChange(newCheckedState)
+            }
+        )
         ClickableTextComponent(value = value, onTextSelected, onTextSelected2)
     }
 }
+
 
 @Composable
 fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){

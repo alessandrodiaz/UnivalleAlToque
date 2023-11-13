@@ -77,6 +77,7 @@
     <string name="register_invalid_name">El nombre es demasiado corto</string>
     <string name="register_password_mismatch">Las contraseñas no coinciden</string>
     <string name="register_invalid_data">Datos inválidos</string>
+    <string name="register_unchecked_terms">Debes Aceptar nuestros terminos y condiciones</string>
     <string name="register_title_success">Registro exitoso</string>
     <string name="register_text_success">Te has registrado en Univalle AlToque</string>
     <string name="register_text_error">Este correo electrónico ya se encuentra en uso</string>
