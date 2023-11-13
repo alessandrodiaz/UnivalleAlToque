@@ -4,6 +4,7 @@
     <string name="profile">Profile</string>
     <string name="register">Register</string>
     <string name="back_button">Atrás</string>
+    <string name="terms">TermsAndConditions</string>
     <string name="aviso">Aviso</string>
 
     <!-- LOGIN -->
@@ -27,6 +28,42 @@
     <string name="register_email">Correo electrónico</string>
     <string name="register_name">Nombre</string>
     <string name="register_registered">Ya estoy registrado</string>
+    <!-- TERMINOS Y CONDICIONES -->
+    <string name="register_conditions">Al continuar aceptas nuestra politica de privacidad y condiciones de uso</string>
+    <string name="terms_conditions_title">Terminos y condiciones</string>
+    <string name="terms_coditions_1_title">Mis terminos y condiciones</string>
+    <string name="terms_coditions_1">Mis terminos y condiciones</string>
+    <string name="terms_coditions_2_title">Mis terminos y condiciones</string>
+    <string name="terms_coditions_2.1">Mis terminos y condiciones</string>
+    <string name="terms_coditions_2.2">Mis terminos y condiciones</string>
+    <string name="terms_coditions_3_title">Mis terminos y condiciones</string>
+    <string name="terms_coditions_3.1">Mis terminos y condiciones</string>
+    <string name="terms_coditions_3.2">Mis terminos y condiciones</string>
+    <string name="terms_coditions_4_title">Mis terminos y condiciones</string>
+    <string name="terms_coditions_4.1">Mis terminos y condiciones</string>
+    <string name="terms_coditions_4.2">Mis terminos y condiciones</string>
+    <string name="terms_coditions_5_title">Mis terminos y condiciones</string>
+    <string name="terms_coditions_5">Mis terminos y condiciones</string>
+    <!-- POLITICA DE PRIVACIDAD -->
+    <string name="privacy_policy_title">Política de Privacidad</string>
+    <string name="privacy_policy_1_title">Política de Privacidad</string>
+    <string name="privacy_policy_1">Política de Privacidad</string>
+    <string name="privacy_policy_1.2">Política de Privacidad</string>
+    <string name="privacy_policy_2_title">Política de Privacidad</string>
+    <string name="privacy_policy_2">Política de Privacidad</string>
+    <string name="privacy_policy_2.2">Política de Privacidad</string>
+    <string name="privacy_policy_3_title">Política de Privacidad</string>
+    <string name="privacy_policy_3">Política de Privacidad</string>
+    <string name="privacy_policy_3.2">Política de Privacidad</string>
+    <string name="privacy_policy_4_title">Política de Privacidad</string>
+    <string name="privacy_policy_4">Política de Privacidad</string>
+    <string name="privacy_policy_4.2">Política de Privacidad</string>
+    <string name="privacy_policy_5_title">Política de Privacidad</string>
+    <string name="privacy_policy_5">Política de Privacidad</string>
+    <string name="privacy_policy_6_title">Política de Privacidad</string>
+    <string name="privacy_policy_6">Política de Privacidad</string>
+    <string name="privacy_policy_7_title">Política de Privacidad</string>
+    <string name="privacy_policy_7">Política de Privacidad</string>
 
     <string name="register_invalid_email">El correo no es válido</string>
     <string name="register_invalid_password">La contraseña es muy corta</string>
