@@ -5,6 +5,7 @@
     <string name="register">Register</string>
     <string name="back_button">Atrás</string>
     <string name="terms">TermsAndConditions</string>
+    <string name="privacypolicy">PrivacyPolicy</string>
     <string name="aviso">Aviso</string>
 
     <!-- LOGIN -->
@@ -52,24 +53,24 @@
     <string name="terms_conditions_8">Nos reservamos el derecho de suspender o terminar tu acceso a la aplicación en cualquier momento, por cualquier motivo, sin previo aviso.</string>
     <!-- POLITICA DE PRIVACIDAD -->
     <string name="privacy_policy_title">Política de Privacidad</string>
-    <string name="privacy_policy_1_title">Política de Privacidad</string>
-    <string name="privacy_policy_1">Política de Privacidad</string>
-    <string name="privacy_policy_1.2">Política de Privacidad</string>
-    <string name="privacy_policy_2_title">Política de Privacidad</string>
-    <string name="privacy_policy_2">Política de Privacidad</string>
-    <string name="privacy_policy_2.2">Política de Privacidad</string>
-    <string name="privacy_policy_3_title">Política de Privacidad</string>
-    <string name="privacy_policy_3">Política de Privacidad</string>
-    <string name="privacy_policy_3.2">Política de Privacidad</string>
-    <string name="privacy_policy_4_title">Política de Privacidad</string>
-    <string name="privacy_policy_4">Política de Privacidad</string>
-    <string name="privacy_policy_4.2">Política de Privacidad</string>
-    <string name="privacy_policy_5_title">Política de Privacidad</string>
-    <string name="privacy_policy_5">Política de Privacidad</string>
-    <string name="privacy_policy_6_title">Política de Privacidad</string>
-    <string name="privacy_policy_6">Política de Privacidad</string>
-    <string name="privacy_policy_7_title">Política de Privacidad</string>
-    <string name="privacy_policy_7">Política de Privacidad</string>
+    <string name="privacy_policy_1_title">1. Información Recopilada</string>
+    <string name="privacy_policy_1">1.1. Información de Registro: Para utilizar ciertas características de la aplicación, puedes ser requerido/a a proporcionar información personal, que puede incluir, entre otros, tu nombre, dirección de correo electrónico y detalles de contacto.</string>
+    <string name="privacy_policy_1.2">1.2. Datos de Actividad: Recopilamos datos sobre tu interacción con la aplicación, como la participación en actividades extracurriculares, preferencias y comportamientos de uso.</string>
+    <string name="privacy_policy_2_title">2. Uso de la Información</string>
+    <string name="privacy_policy_2">2.1. Propósito: Utilizamos la información recopilada para proporcionar y mejorar la aplicación, facilitar la participación en actividades extracurriculares y personalizar la experiencia del usuario.</string>
+    <string name="privacy_policy_2.2">2.2. Comunicación: Podemos utilizar tu dirección de correo electrónico para enviar actualizaciones, notificaciones y otras comunicaciones relacionadas con la aplicación.</string>
+    <string name="privacy_policy_3_title">3. Compartir Información</string>
+    <string name="privacy_policy_3">3.1. Participación en Actividades Extracurriculares: Al unirte a actividades extracurriculares a través de la aplicación, reconoces que cierta información, como tu nombre de usuario, puede ser compartida con otros participantes y organizadores.</string>
+    <string name="privacy_policy_3.2">3.2. Terceros de Confianza: Podemos compartir información con terceros de confianza para mejorar la funcionalidad y la seguridad de la aplicación.</string>
+    <string name="privacy_policy_4_title">4. Autorización de Datos</string>
+    <string name="privacy_policy_4">4.1. Consentimiento: Al utilizar la aplicación, otorgas tu consentimiento para la recopilación, procesamiento y uso de tu información personal de acuerdo con esta Política de Privacidad.</string>
+    <string name="privacy_policy_4.2">4.2. Revocación del Consentimiento: Puedes retirar tu consentimiento en cualquier momento, lo que podría afectar tu capacidad para utilizar ciertas funciones de la aplicación.</string>
+    <string name="privacy_policy_5_title">5. Seguridad de la Información</string>
+    <string name="privacy_policy_5">Implementamos medidas de seguridad razonables para proteger la información personal de nuestros usuarios contra accesos no autorizados, alteraciones, divulgación o destrucción.</string>
+    <string name="privacy_policy_6_title">6. Acceso y Control de la Información Personal</string>
+    <string name="privacy_policy_6">Tienes derecho a acceder, corregir, actualizar o eliminar tu información personal. Puedes realizar estos cambios en la configuración de tu cuenta o contactándonos directamente.</string>
+    <string name="privacy_policy_7_title">7. Cambios en la Política de Privacidad</string>
+    <string name="privacy_policy_7">Nos reservamos el derecho de modificar esta Política de Privacidad en cualquier momento. Las modificaciones entrarán en vigencia después de su publicación en la aplicación.</string>
 
     <string name="register_invalid_email">El correo no es válido</string>
     <string name="register_invalid_password">La contraseña es muy corta</string>

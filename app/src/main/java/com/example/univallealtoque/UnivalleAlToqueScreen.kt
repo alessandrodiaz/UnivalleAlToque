@@ -57,6 +57,7 @@ import com.example.univallealtoque.model.LoginRequest
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.sign_in.LoginViewModel
+import com.example.univallealtoque.ui.PrivacyPolicyScreen
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
@@ -68,6 +69,7 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     Profile(title = R.string.profile),
     Register(title = R.string.register),
     TermsAndConditions(title = R.string.terms),
+    PrivacyPolicy(title = R.string.privacypolicy)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -289,6 +291,15 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.TermsAndConditions.name) {
                 TermsAndConditionsScreen(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.PrivacyPolicy.name) {
+                PrivacyPolicyScreen(
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()

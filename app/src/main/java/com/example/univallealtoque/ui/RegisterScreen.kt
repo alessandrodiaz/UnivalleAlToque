@@ -70,6 +70,7 @@ fun RegisterScreen(
     var repeat_password by rememberSaveable { mutableStateOf("") }
     var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
     var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
+    var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
 
     val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
 
@@ -155,6 +156,9 @@ fun RegisterScreen(
             Checkbox(value = stringResource(id = R.string.register_conditions),
                 onTextSelected = {
                     navigateTermsAndConditios()
+                },
+                onTextSelected2 = {
+                    navigatePrivacyPolicy()
                 })
 
             val context = LocalContext.current
@@ -380,7 +384,7 @@ fun NormalTextComponent(value: String) {
 }
 
 @Composable
-fun Checkbox(value:String, onTextSelected: (String) -> Unit){
+fun Checkbox(value:String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -396,12 +400,12 @@ fun Checkbox(value:String, onTextSelected: (String) -> Unit){
         androidx.compose.material3.Checkbox(checked = checkedState.value, onCheckedChange = {
             checkedState.value = !checkedState.value
         })
-        ClickableTextComponent(value = value, onTextSelected)
+        ClickableTextComponent(value = value, onTextSelected, onTextSelected2)
     }
 }
 
 @Composable
-fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit){
+fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){
 
     val initialText = "Al continuar aceptas nuestra "
     val privacyPolicyText = "Política de privacidad"
@@ -426,8 +430,11 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit){
         .firstOrNull()?.also {span->
             Log.d("ClickableTextComponent","{$span}")
 
-            if(span.item == termsAndConditions || (span.item == privacyPolicyText)){
+            if(span.item == termsAndConditions ){
                 onTextSelected(span.item)
+            }
+            else {
+                onTextSelected2(span.item)
             }
 
         }
