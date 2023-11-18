@@ -1,6 +1,8 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
 import android.graphics.Color.rgb
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -62,6 +64,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +76,7 @@ fun ProfileScreen(
     navController: NavController,
     modifier: Modifier
 ) {
-    val userModelExpressState by userModelExpress.loginResponseFromServer.collectAsState()
+    val userModelExpressState by userModelExpress.loginOrUpdateResponseFromServer.collectAsState()
     var showDialogChangeEmail by remember { mutableStateOf(false) }
     var showDialogChangePhone by remember { mutableStateOf(false) }
     var showDialogChangeProgram by remember { mutableStateOf(false) }
@@ -81,6 +84,10 @@ fun ProfileScreen(
     var emailOfUser by remember { mutableStateOf(userModelExpressState.userData?.email) }
     var phoneOfUser by remember { mutableStateOf(userModelExpressState.userData?.phone) }
     var programOfUser by remember { mutableStateOf(userModelExpressState.userData?.program) }
+
+    var showMessageAfterUpdate by remember { mutableStateOf(false) }
+
+    var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
@@ -148,7 +155,7 @@ fun ProfileScreen(
             } else {
                 userModelExpressState.userData?.name?.let {
                     Text(
-                        text = it,
+                        text = it.uppercase(Locale.ROOT),
                         fontSize = 24.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -156,7 +163,7 @@ fun ProfileScreen(
                 }
                 userModelExpressState.userData?.last_name?.let {
                     Text(
-                        text = it,
+                        text = it.uppercase(Locale.ROOT),
                         fontSize = 24.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
@@ -191,8 +198,14 @@ fun ProfileScreen(
 
             if(showDialogChangeEmail){
                 emailOfUser?.let {
-                    ShowMessageDialog("Cambiar Correo",
-                        it, showDialogChangeEmail, { showDialogChangeEmail = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Correo",
+                        hint = it,
+                        show = showDialogChangeEmail,
+                        viewModelExpress = userModelExpress,
+                        setUserUpdate = {param:String -> emailOfUser = param},
+                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        onClose = { showDialogChangeEmail = false })
                 }
             }
 
@@ -200,8 +213,14 @@ fun ProfileScreen(
 
             if(showDialogChangePhone){
                 phoneOfUser?.let {
-                    ShowMessageDialog("Cambiar Celular",
-                        it, showDialogChangePhone, { showDialogChangePhone = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Celular",
+                        hint = it,
+                        show = showDialogChangePhone,
+                        viewModelExpress = userModelExpress,
+                        setUserUpdate = {param:String -> phoneOfUser = param},
+                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        onClose = { showDialogChangePhone = false })
                 }
             }
 
@@ -209,10 +228,40 @@ fun ProfileScreen(
 
             if(showDialogChangeProgram){
                 programOfUser?.let {
-                    ShowMessageDialog("Cambiar Programa",
-                        it, showDialogChangeProgram, { showDialogChangeProgram = false })
+                    ShowMessageDialog(
+                        titleOfDialog = "Cambiar Programa",
+                        hint = it,
+                        show = showDialogChangeProgram,
+                        viewModelExpress = userModelExpress,
+                        setUserUpdate = {param:String -> programOfUser = param},
+                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        onClose = { showDialogChangeProgram = false })
                 }
             }
+
+
+
+
+
+
+
+
+
+
+            if (booleanResponseSuccessFromUpdateBasicData){
+                CustomAlertDialog(title = "Dato Acutaliado", message = "Peticion exitosa", onDismiss = {booleanResponseSuccessFromUpdateBasicData = false})
+                print("sfsefewfweef")
+            }
+
+
+
+
+
+
+
+
+
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -318,7 +367,14 @@ fun infoPart(infoName: String, infoValue: String, func: ()-> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClose: () -> Unit) {
+fun ShowMessageDialog(
+    titleOfDialog: String,
+    hint: String,
+    show: Boolean,
+    viewModelExpress: LoginViewModelExpress,
+    setUserUpdate: (userUpdate: String) -> Unit,
+    setSuccessOrFailure:  (success: Boolean) -> Unit,
+    onClose: () -> Unit) {
     var titleOfDialog by remember { mutableStateOf(titleOfDialog) }
     var myHint by remember { mutableStateOf(hint) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -336,6 +392,7 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
                     value = myHint,
                     onValueChange = {
                         myHint = it
+
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
@@ -357,7 +414,32 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
                 TextButton(
                     onClick = {
                         // Puedes hacer algo con el texto ingresado aquí
-                        onClose()
+                        onClose()////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
+                        var getSuccess = false;
+                        when (titleOfDialog){
+                            "Cambiar Correo" -> {
+                                viewModelExpress.updateBasicData(newEmail = myHint)
+                                //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
+
+                            }
+                            "Cambiar Celular" -> {
+                                viewModelExpress.updateBasicData(newPhone = myHint)
+                                //getSuccess = viewModelExpress.stateLoginExpress.value.updateSuccessful == true
+                            }
+                            "Cambiar Programa" -> {
+                                viewModelExpress.updateBasicData(newProgram = myHint)
+                                //getSuccess = viewModelExpress.stateLoginExpress.value.updateSuccessful == true
+                            }
+                            else -> {}
+                        }
+                        // no se puede hacer un if porque el viewmodelexpress no alcanza a actualizarse
+                        //getSuccess = viewModelExpress.stateLoginExpress.value.updateSuccessful ?: false
+
+                        setSuccessOrFailure(true)
+                        setUserUpdate(myHint)///ESTO PASA SI EL UPDATE HA SIDO EXITOSO
+
+
+
                     }
                 ) {
                     Text("Aceptar")
@@ -372,15 +454,11 @@ fun ShowMessageDialog(titleOfDialog: String, hint: String, show: Boolean, onClos
                     Text("Cancelar")
                 }
             },
-            modifier = Modifier.defaultMinSize(300.dp).border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
+            modifier = Modifier
+                .defaultMinSize(300.dp)
+                .border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
 
 
         )
     }
-}
-
-@Preview
-@Composable
-fun showsomething(){
-    ShowMessageDialog("email", "a@gmail.com",true, {  })
 }
