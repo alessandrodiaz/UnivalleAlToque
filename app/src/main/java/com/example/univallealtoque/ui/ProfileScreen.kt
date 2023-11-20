@@ -58,13 +58,20 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.data.StoreUserData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,6 +95,17 @@ fun ProfileScreen(
     var showMessageAfterUpdate by remember { mutableStateOf(false) }
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
+
+    val emailFlow = DataStoreSingleton.getEmail()
+
+    // Observar el flujo para obtener el email
+    LaunchedEffect(Unit) {
+        val email = emailFlow.first() // Esperar al primer valor emitido
+        emailOfUser = email ?: "" // Actualizar el estado con el valor obtenido del flujo
+        Log.d("ProfileScreen", "Email: $emailOfUser") // Log del email obtenido
+    }
+
+
 
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
@@ -196,45 +214,51 @@ fun ProfileScreen(
             )
             emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
 
-            if(showDialogChangeEmail){
+            if (showDialogChangeEmail) {
                 emailOfUser?.let {
                     ShowMessageDialog(
                         titleOfDialog = "Cambiar Correo",
                         hint = it,
                         show = showDialogChangeEmail,
                         viewModelExpress = userModelExpress,
-                        setUserUpdate = {param:String -> emailOfUser = param},
-                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        setUserUpdate = { param: String -> emailOfUser = param },
+                        setSuccessOrFailure = { param: Boolean ->
+                            booleanResponseSuccessFromUpdateBasicData = param
+                        },
                         onClose = { showDialogChangeEmail = false })
                 }
             }
 
-            phoneOfUser?.let { infoPart("Celular", it, {showDialogChangePhone = true}) }
+            phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
 
-            if(showDialogChangePhone){
+            if (showDialogChangePhone) {
                 phoneOfUser?.let {
                     ShowMessageDialog(
                         titleOfDialog = "Cambiar Celular",
                         hint = it,
                         show = showDialogChangePhone,
                         viewModelExpress = userModelExpress,
-                        setUserUpdate = {param:String -> phoneOfUser = param},
-                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        setUserUpdate = { param: String -> phoneOfUser = param },
+                        setSuccessOrFailure = { param: Boolean ->
+                            booleanResponseSuccessFromUpdateBasicData = param
+                        },
                         onClose = { showDialogChangePhone = false })
                 }
             }
 
-            programOfUser?.let { infoPart("Carrera", it,  {showDialogChangeProgram = true}) }
+            programOfUser?.let { infoPart("Carrera", it, { showDialogChangeProgram = true }) }
 
-            if(showDialogChangeProgram){
+            if (showDialogChangeProgram) {
                 programOfUser?.let {
                     ShowMessageDialog(
                         titleOfDialog = "Cambiar Programa",
                         hint = it,
                         show = showDialogChangeProgram,
                         viewModelExpress = userModelExpress,
-                        setUserUpdate = {param:String -> programOfUser = param},
-                        setSuccessOrFailure = { param: Boolean -> booleanResponseSuccessFromUpdateBasicData = param},
+                        setUserUpdate = { param: String -> programOfUser = param },
+                        setSuccessOrFailure = { param: Boolean ->
+                            booleanResponseSuccessFromUpdateBasicData = param
+                        },
                         onClose = { showDialogChangeProgram = false })
                 }
             }
@@ -248,8 +272,11 @@ fun ProfileScreen(
 
 
 
-            if (booleanResponseSuccessFromUpdateBasicData){
-                CustomAlertDialog(title = "Dato Acutaliado", message = "Peticion exitosa", onDismiss = {booleanResponseSuccessFromUpdateBasicData = false})
+            if (booleanResponseSuccessFromUpdateBasicData) {
+                CustomAlertDialog(
+                    title = "Dato Acutaliado",
+                    message = "Peticion exitosa",
+                    onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
                 print("sfsefewfweef")
             }
 
@@ -266,11 +293,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             IconButton(onClick =
-                {
-                    onSignOut;
-                    userModelExpress.resetLoginStateExpress();
-                    navController.navigate(UnivalleAlToqueScreen.Login.name)
-                }) {
+            {
+                onSignOut;
+                userModelExpress.resetLoginStateExpress();
+                navController.navigate(UnivalleAlToqueScreen.Login.name)
+            }) {
                 Image(
                     painter = painterResource(id = R.drawable.logout),
                     contentDescription = stringResource(id = R.string.logout),
@@ -284,11 +311,9 @@ fun ProfileScreen(
             }
 
 
-
         }
     }
 }
-
 
 @Composable
 fun CircleShape() {
@@ -327,7 +352,7 @@ fun Modifier.circleLayout() =
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun infoPart(infoName: String, infoValue: String, func: ()-> Unit) {
+fun infoPart(infoName: String, infoValue: String, func: () -> Unit) {
     var text by remember { mutableStateOf("") }
     Spacer(modifier = Modifier.height(16.dp))
     Text(
@@ -349,7 +374,7 @@ fun infoPart(infoName: String, infoValue: String, func: ()-> Unit) {
             fontWeight = FontWeight.Medium
         ),
 
-        onValueChange = { text = text},
+        onValueChange = { text = text },
         enabled = false,
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
@@ -373,8 +398,9 @@ fun ShowMessageDialog(
     show: Boolean,
     viewModelExpress: LoginViewModelExpress,
     setUserUpdate: (userUpdate: String) -> Unit,
-    setSuccessOrFailure:  (success: Boolean) -> Unit,
-    onClose: () -> Unit) {
+    setSuccessOrFailure: (success: Boolean) -> Unit,
+    onClose: () -> Unit
+) {
     var titleOfDialog by remember { mutableStateOf(titleOfDialog) }
     var myHint by remember { mutableStateOf(hint) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -386,7 +412,7 @@ fun ShowMessageDialog(
             },
             title = {
                 Text(titleOfDialog, color = Color.Black)
-                 },
+            },
             text = {
                 TextField(
                     value = myHint,
@@ -416,20 +442,23 @@ fun ShowMessageDialog(
                         // Puedes hacer algo con el texto ingresado aquí
                         onClose()////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
                         var getSuccess = false;
-                        when (titleOfDialog){
+                        when (titleOfDialog) {
                             "Cambiar Correo" -> {
                                 viewModelExpress.updateBasicData(newEmail = myHint)
                                 //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
 
                             }
+
                             "Cambiar Celular" -> {
                                 viewModelExpress.updateBasicData(newPhone = myHint)
                                 //getSuccess = viewModelExpress.stateLoginExpress.value.updateSuccessful == true
                             }
+
                             "Cambiar Programa" -> {
                                 viewModelExpress.updateBasicData(newProgram = myHint)
                                 //getSuccess = viewModelExpress.stateLoginExpress.value.updateSuccessful == true
                             }
+
                             else -> {}
                         }
                         // no se puede hacer un if porque el viewmodelexpress no alcanza a actualizarse
@@ -437,7 +466,6 @@ fun ShowMessageDialog(
 
                         setSuccessOrFailure(true)
                         setUserUpdate(myHint)///ESTO PASA SI EL UPDATE HA SIDO EXITOSO
-
 
 
                     }

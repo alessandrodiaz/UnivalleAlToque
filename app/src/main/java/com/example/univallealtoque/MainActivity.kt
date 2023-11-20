@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.theme.UnivalleAlToqueTheme
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
  class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DataStoreSingleton.initialize(this)
 
 
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightNavigationBars = true

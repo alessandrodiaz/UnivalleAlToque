@@ -55,7 +55,9 @@ import kotlinx.coroutines.delay
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import kotlinx.coroutines.coroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,8 +78,10 @@ fun SignInScreen(
 
     val viewModelExpress = userModelExpress
     //val viewModelExpressState by viewModelExpress.loginInputFromUser.collectAsState()
-    //val viewModelResponseFromServerAfterLogin by viewModelExpress.loginResponseFromServer.collectAsState()
+//    val viewModelResponseFromServerAfterLogin by viewModelExpress.loginResponseFromServer.collectAsState()
     val loginStateExpress by viewModelExpress.stateLoginExpress.collectAsState()
+
+
 
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError) {
@@ -159,20 +163,18 @@ fun SignInScreen(
                 onClick = {
                     //val loginData = LoginRequest(email, password)
                     viewModelExpress.saveIntoViewModelUserInput(email,password)
-                    viewModelExpress.loginUserWithExpress()
+
                     Log.d("Email,Pasword: ",
                         viewModelExpress.loginInputFromUser.value.toString()
                     )
-                    //Log.d("User Data: ",
-                    //    viewModelResponseFromServerAfterLogin.userData.toString()
-                    //)
+
+                    viewModelExpress.loginUserWithExpress()
+//                    Log.d("User Data: ",
+//                        viewModelResponseFromServerAfterLogin.userData.toString()
+//                    )
                     //viewModel.loginUser(loginData)
                     //navController.navigate(UnivalleAlToqueScreen.Profile.name)
-                    if (loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
-                        navController.navigate(UnivalleAlToqueScreen.HomePage.name)
-                        //viewModel.resetState()
-                        //viewModelExpress.resetLoginStateExpress()
-                    }
+
 
 
                 },
@@ -187,14 +189,19 @@ fun SignInScreen(
             }
         }
 
-        val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
+//        if (false) {//(loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
+//            navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+//            viewModel.resetState()
+//            viewModelExpress.resetLoginStateExpress()
+//        }
 
-        if (false) {//(loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
+        if (loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
             navController.navigate(UnivalleAlToqueScreen.HomePage.name)
             viewModel.resetState()
             viewModelExpress.resetLoginStateExpress()
         }
+
+
 
         if (loginState.loginError || loginStateExpress.loginError) {
             var showDialog by remember { mutableStateOf(true) }

@@ -43,6 +43,7 @@ import com.example.univallealtoque.sign_in_google.SignInViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.runtime.LaunchedEffect
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.model.LoginRequest
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
@@ -61,6 +64,8 @@ import com.example.univallealtoque.sign_in_google.LoginViewModel
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
@@ -154,7 +159,7 @@ fun UnivalleAlToqueBottomBar(
 
         }
         IconButton(
-            onClick = { /* Acción adicional */ }
+            onClick = navigateProfile
         ) {
 
             Icon(
@@ -184,6 +189,8 @@ fun UnivalleAlToqueApp(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val dataStore = StoreUserData(context)
 
     val googleAuthUiClient by remember {
         mutableStateOf(
@@ -219,6 +226,19 @@ fun UnivalleAlToqueApp(
     ////////////////////////////////////////////////
     var loginViewModelExpress: LoginViewModelExpress = viewModel()
     val loginViewModelExpressState by loginViewModelExpress.stateLoginExpress.collectAsState()
+
+//    val context = LocalContext.current
+//    val scope = rememberCoroutineScope()
+//    val dataStore = StoreUserData(context)
+//    LaunchedEffect(Unit) {
+//        dataStore.saveEmail(emailOfUser)
+//    }
+
+//    val savedEmail = dataStore.getEmail.collectAsState(initial = "")
+//    println("savedEMAIL........"+ savedEmail)
+
+
+
 
     Scaffold(
         topBar = {

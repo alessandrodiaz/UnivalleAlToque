@@ -1,8 +1,14 @@
 package com.example.univallealtoque.sign_in_express
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.UserData
@@ -10,26 +16,31 @@ import com.example.univallealtoque.model.UserDataExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.sign_in_google.LoginState
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
-class LoginViewModelExpress : ViewModel() {
+
+class LoginViewModelExpress() : ViewModel() {
     // Expose screen UI state
     private val _privateLoginInputFromUser = MutableStateFlow(LoginRequestExpress())
-    val loginInputFromUser: StateFlow<LoginRequestExpress> = _privateLoginInputFromUser.asStateFlow()
+    val loginInputFromUser: StateFlow<LoginRequestExpress> =
+        _privateLoginInputFromUser.asStateFlow()
     private val _privateLoginOrUpdateResponseFromServer = MutableStateFlow(LoginResponseExpress())
-    val loginOrUpdateResponseFromServer: StateFlow<LoginResponseExpress> = _privateLoginOrUpdateResponseFromServer.asStateFlow()
+    val loginOrUpdateResponseFromServer: StateFlow<LoginResponseExpress> =
+        _privateLoginOrUpdateResponseFromServer.asStateFlow()
     private val _stateLoginExpress = MutableStateFlow(LoginState())
     val stateLoginExpress = _stateLoginExpress.asStateFlow()
 
 
     //Handle user input: email and password
-    fun saveIntoViewModelUserInput(email: String, password: String){
+    fun saveIntoViewModelUserInput(email: String, password: String) {
         _privateLoginInputFromUser.update { currentState ->
             currentState.copy(
                 email = email,
@@ -40,6 +51,13 @@ class LoginViewModelExpress : ViewModel() {
         Log.d("UserLoginExpressUiState: ", loginInputFromUser.value.password.toString())
     }
 
+//    fun saveEmailDirectly(email: String) {
+////        val context = LocalContext.current
+//        val dataStore = StoreUserData(context)
+//        dataStore.saveEmail(email)
+//    }
+
+    //    @Composable
     fun loginUserWithExpress() {
         val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
@@ -49,13 +67,20 @@ class LoginViewModelExpress : ViewModel() {
 
         println("------>>>>>>$json")
 
+        //context
+
+
         viewModelScope.launch {
             try {
                 val response = alToqueService.loginUserExpress(requestBody)
 
                 println("RESPONSE FROM EXPRESS " + response)
-                fun updateStatesAfterLoginResponseFromServer(userData: UserData?,token: String?,message: String?){
-                    _privateLoginOrUpdateResponseFromServer.update{ currentState ->
+                fun updateStatesAfterLoginResponseFromServer(
+                    userData: UserData?,
+                    token: String?,
+                    message: String?
+                ) {
+                    _privateLoginOrUpdateResponseFromServer.update { currentState ->
                         currentState.copy(
                             userData = userData,
                             token = token,
@@ -63,8 +88,15 @@ class LoginViewModelExpress : ViewModel() {
                         )
                     }
                 }
-                updateStatesAfterLoginResponseFromServer(response.userData,response.token,response.message)
-                Log.d("Data from server: ", loginOrUpdateResponseFromServer.value.userData.toString())
+                updateStatesAfterLoginResponseFromServer(
+                    response.userData,
+                    response.token,
+                    response.message
+                )
+                Log.d(
+                    "Data from server: ",
+                    loginOrUpdateResponseFromServer.value.userData.toString()
+                )
                 /*EJEMPLO DE RESPONSE
                 {
                     "userData": {
@@ -82,10 +114,26 @@ class LoginViewModelExpress : ViewModel() {
                 }*/
 
                 if (response.message == "Inicio de sesión exitoso") {
-                    //println("AAAAAAAAAAAAAAAAAAAAAAA")
-                    _stateLoginExpress.value = LoginState(isLoginSuccessful = true, loginError = false)
+                    println("------vbufbvuinfiduvbiufiudf" + response.userData?.email)
+                    // Ejemplo desde un Fragment
+                    val email = "ejemplo@dominio.com"
+
+                    // Guardar el email utilizando el Singleton
+                    DataStoreSingleton.saveEmail(email)
+
+                    // Recolectar el valor del flujo getEmail
+                    val emailFlow: Flow<String?> = DataStoreSingleton.getEmail()
+                    val collectedEmail = emailFlow.firstOrNull() // Esto es una operación suspendida
+
+                    println("Valor del email recolectado: $collectedEmail")
+
+
+                    //                    dataStore.saveEmail(response.userData?.email)
+                    _stateLoginExpress.value =
+                        LoginState(isLoginSuccessful = true, loginError = false)
                 } else {
-                    _stateLoginExpress.value = LoginState(isLoginSuccessful = false, loginError = true)
+                    _stateLoginExpress.value =
+                        LoginState(isLoginSuccessful = false, loginError = true)
                 }
             } catch (e: Exception) {
                 _stateLoginExpress.value = LoginState(isLoginSuccessful = false, loginError = true)
@@ -94,13 +142,19 @@ class LoginViewModelExpress : ViewModel() {
         }
     }
 
-    fun updateBasicData(newProfilePhoto: String?=null,newEmail: String?=null, newProgram: String?=null,newPhone: String?=null) {
+    fun updateBasicData(
+        newProfilePhoto: String? = null,
+        newEmail: String? = null,
+        newProgram: String? = null,
+        newPhone: String? = null
+    ) {
         println("------>>>>>>${loginOrUpdateResponseFromServer.value.userData}")
         val auxNewUserDataExpress = UserData(
             user_id = loginOrUpdateResponseFromServer.value.userData?.user_id,
             name = loginOrUpdateResponseFromServer.value.userData?.name,
             last_name = loginOrUpdateResponseFromServer.value.userData?.last_name,
-            profile_photo = newProfilePhoto ?: loginOrUpdateResponseFromServer.value.userData?.profile_photo,
+            profile_photo = newProfilePhoto
+                ?: loginOrUpdateResponseFromServer.value.userData?.profile_photo,
             email = newEmail ?: loginOrUpdateResponseFromServer.value.userData?.email,
             program = newProgram ?: loginOrUpdateResponseFromServer.value.userData?.program,
             phone = newPhone ?: loginOrUpdateResponseFromServer.value.userData?.phone,
@@ -118,27 +172,46 @@ class LoginViewModelExpress : ViewModel() {
                 val response = alToqueService.updateProfile(requestBody)
 
                 println("RESPONSE FROM EXPRESS " + response)
-                fun updateStatesAfterLoginResponseFromServer(updatedUserData: UserData?,token: String?,message: String?){
-                    _privateLoginOrUpdateResponseFromServer.update{ currentState ->
+                fun updateStatesAfterLoginResponseFromServer(
+                    updatedUserData: UserData?,
+                    token: String?,
+                    message: String?
+                ) {
+                    _privateLoginOrUpdateResponseFromServer.update { currentState ->
                         currentState.copy(
                             userData = updatedUserData,
                             token = token,
                             message = message
                         )
                     }
-                    Log.d("After update: ", _privateLoginOrUpdateResponseFromServer.value.userData.toString())
+                    Log.d(
+                        "After update: ",
+                        _privateLoginOrUpdateResponseFromServer.value.userData.toString()
+                    )
                 }
-                updateStatesAfterLoginResponseFromServer(auxNewUserDataExpress,_privateLoginOrUpdateResponseFromServer.value.token,_privateLoginOrUpdateResponseFromServer.value.message)
-                _stateLoginExpress.value = LoginState(isLoginSuccessful = true, loginError = false, updateSuccessful = true)
+                updateStatesAfterLoginResponseFromServer(
+                    auxNewUserDataExpress,
+                    _privateLoginOrUpdateResponseFromServer.value.token,
+                    _privateLoginOrUpdateResponseFromServer.value.message
+                )
+                _stateLoginExpress.value = LoginState(
+                    isLoginSuccessful = true,
+                    loginError = false,
+                    updateSuccessful = true
+                )
             } catch (e: Exception) {
-                _stateLoginExpress.value = LoginState(isLoginSuccessful = true, loginError = false, updateSuccessful = false)
+                _stateLoginExpress.value = LoginState(
+                    isLoginSuccessful = true,
+                    loginError = false,
+                    updateSuccessful = false
+                )
                 println("Error al realizar la actualizacion: ${e.message}")
             }
         }
     }
 
 
-    fun resetLoginStateExpress () {
+    fun resetLoginStateExpress() {
         _stateLoginExpress.update { LoginState() }
         _privateLoginInputFromUser.update { LoginRequestExpress() }
         _privateLoginOrUpdateResponseFromServer.update { LoginResponseExpress() }
