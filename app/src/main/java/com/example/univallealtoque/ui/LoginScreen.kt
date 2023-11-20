@@ -37,11 +37,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
 
-
-
-//    val viewModel = viewModel<SignInViewModel>()
     val state by viewModel.state.collectAsState()
-
 
     LaunchedEffect(key1 = Unit) {
         if (googleAuthUiClient.getSignedInUser() != null) {
@@ -75,8 +71,8 @@ fun LoginScreen(
         }
     }
     SignInScreen(
-        navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name)},
-        navController= navController,
+        navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) },
+        navController = navController,
         state = state,
         userModelExpress = userModelExpress,
         onSignInClick = {

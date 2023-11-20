@@ -18,8 +18,6 @@ interface AlToqueService {
 //    @GET("users")
 //    suspend fun getUsers(): RemoteResult
 
-//    @POST("login") // Reemplaza con la ruta correcta de tu servicio
-//    suspend fun loginUser(@Body jsonBody: RequestBody): LoginResponse
 
     @POST("login") // Reemplaza con la ruta correcta de tu servicio
     suspend fun loginUserExpress(@Body jsonBody: RequestBody): LoginResponseExpress

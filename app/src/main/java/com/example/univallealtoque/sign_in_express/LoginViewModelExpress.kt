@@ -1,15 +1,9 @@
 package com.example.univallealtoque.sign_in_express
 
-import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.UserDataExpress
@@ -20,7 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -51,12 +44,6 @@ class LoginViewModelExpress() : ViewModel() {
         Log.d("UserLoginExpressUiState: ", loginInputFromUser.value.password.toString())
     }
 
-//    fun saveEmailDirectly(email: String) {
-////        val context = LocalContext.current
-//        val dataStore = StoreUserData(context)
-//        dataStore.saveEmail(email)
-//    }
-
     fun loginUserWithExpress() {
         val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
@@ -65,9 +52,6 @@ class LoginViewModelExpress() : ViewModel() {
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
         println("------>>>>>>$json")
-
-        //context
-
 
         viewModelScope.launch {
             try {
@@ -130,12 +114,8 @@ class LoginViewModelExpress() : ViewModel() {
 
                     // Recolectar el valor del flujo getEmail
                     val data: Flow<UserDataExpress?> = DataStoreSingleton.getUserData()
-//                    val collectedEmail = emailFlow.firstOrNull() // Esto es una operación suspendida
-
                     println("Valor del email recolectado: $data")
 
-
-                    //                    dataStore.saveEmail(response.userData?.email)
                     _stateLoginExpress.value =
                         LoginState(isLoginSuccessful = true, loginError = false)
                 } else {
@@ -148,11 +128,6 @@ class LoginViewModelExpress() : ViewModel() {
             }
         }
     }
-
-    suspend fun clearUserData() {
-        DataStoreSingleton.saveUserData(UserDataExpress(null, null, null, null, null, null, null, null))
-    }
-
 
     fun updateBasicData(
         newProfilePhoto: String? = null,

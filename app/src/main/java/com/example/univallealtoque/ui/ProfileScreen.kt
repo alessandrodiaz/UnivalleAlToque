@@ -2,6 +2,7 @@ package com.example.univallealtoque.ui
 
 import CustomAlertDialog
 import android.graphics.Color.rgb
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -58,14 +59,17 @@ import androidx.compose.material3.TextField
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.UserDataExpress
 import com.example.univallealtoque.sign_in_google.UserData
+//import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userData: UserData?,
+//    userDataExpress: UserDataExpress?,
     onSignOut: () -> Unit,
     userModelExpress: LoginViewModelExpress,
     navController: NavController,
@@ -76,22 +80,39 @@ fun ProfileScreen(
     var showDialogChangePhone by remember { mutableStateOf(false) }
     var showDialogChangeProgram by remember { mutableStateOf(false) }
 
-    var emailOfUser by remember { mutableStateOf(userModelExpressState.userData?.email) }
-    var phoneOfUser by remember { mutableStateOf(userModelExpressState.userData?.phone) }
-    var programOfUser by remember { mutableStateOf(userModelExpressState.userData?.program) }
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+    val nameToShow = userDataFlow.value?.name ?: "null"
+    val lastNameToShow = userDataFlow.value?.last_name ?: "null"
+    val profile_photoToShow = userDataFlow.value?.profile_photo ?: "null"
+    var emailToShow = userDataFlow.value?.email ?: "null"
+    val phoneToShow = userDataFlow.value?.phone ?: "null"
+    val programToShow = userDataFlow.value?.program ?: "null"
+
+    println(emailToShow)
+
+    var emailOfUser by remember { mutableStateOf("$emailToShow") }
+    var phoneOfUser by remember { mutableStateOf(userDataFlow.value?.last_name) }
+    var programOfUser by remember { mutableStateOf(userDataFlow.value?.profile_photo) }
 
     var showMessageAfterUpdate by remember { mutableStateOf(false) }
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-//    val emailFlow = DataStoreSingleton.getEmail()
 
-    // Observar el flujo para obtener el email
-//    LaunchedEffect(Unit) {
-//        val email = emailFlow.first() // Esperar al primer valor emitido
-//        emailOfUser = email ?: "" // Actualizar el estado con el valor obtenido del flujo
-//        Log.d("ProfileScreen", "Email: $emailOfUser") // Log del email obtenido
+    println(emailOfUser+ userDataFlow.value?.email)
+
+
+//    userDataFlow.value?.let { userData ->
+//        val email = userData.email
+//        val name = userData.name
+//
+//        // Ahora puedes usar 'email' y 'name' como necesites
+//        Log.d("UserData", "Email: $email, Name: $name")
+////        Log.d("UserData", name)
 //    }
+
+
+
 
 
     val rainbowColorsBrush = remember {
@@ -121,60 +142,60 @@ fun ProfileScreen(
         ) {
 
             //PROFILE PICTURE
-//            if (userData?.profile_photo != null) {
-//                AsyncImage(
-//                    model = userData.profile_photo,
-//                    contentDescription = stringResource(id = R.string.profile_picture_description),
-//                    modifier = Modifier
-//                        .size(150.dp)
-//                        .clip(CircleShape),
-//                    contentScale = ContentScale.Crop
-//                )
-//                Spacer(modifier = Modifier.height(16.dp))
-//            } else {
-//                Image(
-//                    painter = painterResource(id = R.drawable.user6),
-//                    contentDescription = stringResource(id = R.string.login_title),
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier
-//                        .size(160.dp)
-//                        .border(
-//                            BorderStroke(borderWidth, rainbowColorsBrush),
-//                            CircleShape
-//                        )
-//                        .padding(borderWidth)
-//                        .clip(CircleShape)
-//                )
-//            }
+            if (profile_photoToShow != "null") {
+                AsyncImage(
+                    model = "$profile_photoToShow",
+                    contentDescription = stringResource(id = R.string.profile_picture_description),
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.user6),
+                    contentDescription = stringResource(id = R.string.login_title),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(160.dp)
+                        .border(
+                            BorderStroke(borderWidth, rainbowColorsBrush),
+                            CircleShape
+                        )
+                        .padding(borderWidth)
+                        .clip(CircleShape)
+                )
+            }
 
             //USERNAME
-//            if (userData?.name != null) {
-//                Text(
-//                    text = userData.name,
-//                    textAlign = TextAlign.Center,
-//                    style = MaterialTheme.typography.displayLarge,
-//                    color = Color.White
-//                )
-//                Spacer(modifier = Modifier.height(25.dp))
-//
-//            } else {
-//                userModelExpressState.userData?.name?.let {
-//                    Text(
-//                        text = it.uppercase(Locale.ROOT),
-//                        fontSize = 24.sp,
-//                        color = Color.White,
-//                        fontWeight = FontWeight.Bold,
-//                    )
-//                }
-//                userModelExpressState.userData?.last_name?.let {
-//                    Text(
-//                        text = it.uppercase(Locale.ROOT),
-//                        fontSize = 24.sp,
-//                        color = Color.White,
-//                        fontWeight = FontWeight.Bold,
-//                    )
-//                }
-//            }
+            if (nameToShow != "null" && lastNameToShow != "null") {
+                Text(
+                    text = "$nameToShow $lastNameToShow",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(25.dp))
+
+            } else {
+                userModelExpressState.userData?.name?.let {
+                    Text(
+                        text = it.uppercase(Locale.ROOT),
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                userModelExpressState.userData?.last_name?.let {
+                    Text(
+                        text = it.uppercase(Locale.ROOT),
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
 
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -199,16 +220,16 @@ fun ProfileScreen(
                     .padding(0.dp)
 
             )
-            emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
+            emailToShow?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
 
             if (showDialogChangeEmail) {
-                emailOfUser?.let {
+                emailToShow?.let {
                     ShowMessageDialog(
                         titleOfDialog = "Cambiar Correo",
                         hint = it,
                         show = showDialogChangeEmail,
                         viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> emailOfUser = param },
+                        setUserUpdate = { param: String -> emailToShow = param },
                         setSuccessOrFailure = { param: Boolean ->
                             booleanResponseSuccessFromUpdateBasicData = param
                         },
@@ -251,14 +272,6 @@ fun ProfileScreen(
             }
 
 
-
-
-
-
-
-
-
-
             if (booleanResponseSuccessFromUpdateBasicData) {
                 CustomAlertDialog(
                     title = "Dato Acutaliado",
@@ -267,22 +280,11 @@ fun ProfileScreen(
                 print("sfsefewfweef")
             }
 
-
-
-
-
-
-
-
-
-
-
             Spacer(modifier = Modifier.height(8.dp))
 
             IconButton(onClick =
             {
-                onSignOut;
-
+                onSignOut()
                 userModelExpress.resetLoginStateExpress()
                 navController.navigate(UnivalleAlToqueScreen.Login.name)
             }) {
