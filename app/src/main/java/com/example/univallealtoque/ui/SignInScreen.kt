@@ -49,7 +49,6 @@ import androidx.navigation.NavController
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.LoginRequest
-import com.example.univallealtoque.sign_in_google.LoginViewModel
 import com.example.univallealtoque.sign_in_google.SignInState
 import kotlinx.coroutines.delay
 import androidx.datastore.core.DataStore
@@ -72,8 +71,8 @@ fun SignInScreen(
     var email by remember { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
-    val viewModel: LoginViewModel = viewModel()
-    val loginState by viewModel.state.collectAsState()
+//    val viewModel: LoginViewModel = viewModel()
+//    val loginState by viewModel.state.collectAsState()
     /*var navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) }*/
 
     val viewModelExpress = userModelExpress
@@ -195,15 +194,15 @@ fun SignInScreen(
 //            viewModelExpress.resetLoginStateExpress()
 //        }
 
-        if (loginState.isLoginSuccessful || loginStateExpress.isLoginSuccessful) {
+        if (loginStateExpress.isLoginSuccessful) {
             navController.navigate(UnivalleAlToqueScreen.HomePage.name)
-            viewModel.resetState()
+//            viewModel.resetState()
             viewModelExpress.resetLoginStateExpress()
         }
 
 
 
-        if (loginState.loginError || loginStateExpress.loginError) {
+        if (loginStateExpress.loginError) {
             var showDialog by remember { mutableStateOf(true) }
 
             if (showDialog) {

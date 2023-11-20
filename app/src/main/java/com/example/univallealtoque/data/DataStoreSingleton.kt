@@ -1,6 +1,7 @@
 package com.example.univallealtoque.data
 
 import android.content.Context
+import com.example.univallealtoque.model.UserDataExpress
 import kotlinx.coroutines.flow.Flow
 
 object DataStoreSingleton {
@@ -10,11 +11,12 @@ object DataStoreSingleton {
         storeUserData = StoreUserData(context)
     }
 
-    suspend fun saveEmail(email: String) {
-        storeUserData.saveEmail(email)
+    suspend fun saveUserData(userData: UserDataExpress) {
+        storeUserData.saveUserData(userData)
     }
 
-    fun getEmail(): Flow<String?> {
-        return storeUserData.getEmail
+    fun getUserData(): Flow<UserDataExpress?> {
+        return storeUserData.getUserData
     }
 }
+

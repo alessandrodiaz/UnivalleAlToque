@@ -1,6 +1,5 @@
 package com.example.univallealtoque.network
 
-import com.example.univallealtoque.model.LoginResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.UpdateBasicDataResponseExpress
 import okhttp3.RequestBody
@@ -19,8 +18,8 @@ interface AlToqueService {
 //    @GET("users")
 //    suspend fun getUsers(): RemoteResult
 
-    @POST("login") // Reemplaza con la ruta correcta de tu servicio
-    suspend fun loginUser(@Body jsonBody: RequestBody): LoginResponse
+//    @POST("login") // Reemplaza con la ruta correcta de tu servicio
+//    suspend fun loginUser(@Body jsonBody: RequestBody): LoginResponse
 
     @POST("login") // Reemplaza con la ruta correcta de tu servicio
     suspend fun loginUserExpress(@Body jsonBody: RequestBody): LoginResponseExpress

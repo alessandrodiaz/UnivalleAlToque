@@ -6,29 +6,28 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.univallealtoque.model.UserDataExpress
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 public class StoreUserData(private val context: Context) {
-
-    // to make sure there is only one instance
-    companion object{
-        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("UserEmail")
-        val USER_EMAIL_KEY = stringPreferencesKey("user_email")
-
+    companion object {
+        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("UserDataStore")
+        val USER_DATA_KEY = stringPreferencesKey("user_data")
     }
 
-    // to get the email
-    val getEmail: Flow<String?> = context.dataStore.data
-        .map{ preferences ->
-            preferences[USER_EMAIL_KEY]?: ""
+    val getUserData: Flow<UserDataExpress?> = context.dataStore.data
+        .map { preferences ->
+            val userDataString = preferences[USER_DATA_KEY]
+            Gson().fromJson(userDataString, UserDataExpress::class.java)
         }
 
-    // to save the email
-    suspend fun saveEmail(name: String){
-        context.dataStore.edit{ preferences ->
-            preferences[USER_EMAIL_KEY] = name
-
+    suspend fun saveUserData(userData: UserDataExpress) {
+        val userDataString = Gson().toJson(userData)
+        context.dataStore.edit { preferences ->
+            preferences[USER_DATA_KEY] = userDataString
         }
     }
 }
+

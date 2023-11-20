@@ -3,6 +3,7 @@ package com.example.univallealtoque.sign_in_express
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,6 @@ import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
-import com.example.univallealtoque.model.UserData
 import com.example.univallealtoque.model.UserDataExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.sign_in_google.LoginState
@@ -57,7 +57,6 @@ class LoginViewModelExpress() : ViewModel() {
 //        dataStore.saveEmail(email)
 //    }
 
-    //    @Composable
     fun loginUserWithExpress() {
         val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
@@ -76,13 +75,13 @@ class LoginViewModelExpress() : ViewModel() {
 
                 println("RESPONSE FROM EXPRESS " + response)
                 fun updateStatesAfterLoginResponseFromServer(
-                    userData: UserData?,
+                    userDataExpress: UserDataExpress?,
                     token: String?,
                     message: String?
                 ) {
                     _privateLoginOrUpdateResponseFromServer.update { currentState ->
                         currentState.copy(
-                            userData = userData,
+                            userData = userDataExpress,
                             token = token,
                             message = message
                         )
@@ -114,18 +113,26 @@ class LoginViewModelExpress() : ViewModel() {
                 }*/
 
                 if (response.message == "Inicio de sesión exitoso") {
-                    println("------vbufbvuinfiduvbiufiudf" + response.userData?.email)
+                    println("------vbufbvuinfiduvbiufiudf" + response)
                     // Ejemplo desde un Fragment
-                    val email = "ejemplo@dominio.com"
+                    val userData = response.userData ?: UserDataExpress(
+                        user_id = null,
+                        name = null,
+                        last_name = null,
+                        profile_photo = null,
+                        email = null,
+                        program = null,
+                        phone = null,
+                        password = null
+                    )
+                    DataStoreSingleton.saveUserData(userData)
 
-                    // Guardar el email utilizando el Singleton
-                    DataStoreSingleton.saveEmail(email)
 
                     // Recolectar el valor del flujo getEmail
-                    val emailFlow: Flow<String?> = DataStoreSingleton.getEmail()
-                    val collectedEmail = emailFlow.firstOrNull() // Esto es una operación suspendida
+                    val data: Flow<UserDataExpress?> = DataStoreSingleton.getUserData()
+//                    val collectedEmail = emailFlow.firstOrNull() // Esto es una operación suspendida
 
-                    println("Valor del email recolectado: $collectedEmail")
+                    println("Valor del email recolectado: $data")
 
 
                     //                    dataStore.saveEmail(response.userData?.email)
@@ -142,6 +149,11 @@ class LoginViewModelExpress() : ViewModel() {
         }
     }
 
+    suspend fun clearUserData() {
+        DataStoreSingleton.saveUserData(UserDataExpress(null, null, null, null, null, null, null, null))
+    }
+
+
     fun updateBasicData(
         newProfilePhoto: String? = null,
         newEmail: String? = null,
@@ -149,7 +161,7 @@ class LoginViewModelExpress() : ViewModel() {
         newPhone: String? = null
     ) {
         println("------>>>>>>${loginOrUpdateResponseFromServer.value.userData}")
-        val auxNewUserDataExpress = UserData(
+        val auxNewUserDataExpress = UserDataExpress(
             user_id = loginOrUpdateResponseFromServer.value.userData?.user_id,
             name = loginOrUpdateResponseFromServer.value.userData?.name,
             last_name = loginOrUpdateResponseFromServer.value.userData?.last_name,
@@ -164,7 +176,7 @@ class LoginViewModelExpress() : ViewModel() {
         val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
         val gson = GsonBuilder().setPrettyPrinting().create()
-        val json = gson.toJson(auxNewUserDataExpress, UserData::class.java)
+        val json = gson.toJson(auxNewUserDataExpress, UserDataExpress::class.java)
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
         println("------>>>>>>$json")
         viewModelScope.launch {
@@ -173,7 +185,7 @@ class LoginViewModelExpress() : ViewModel() {
 
                 println("RESPONSE FROM EXPRESS " + response)
                 fun updateStatesAfterLoginResponseFromServer(
-                    updatedUserData: UserData?,
+                    updatedUserData: UserDataExpress?,
                     token: String?,
                     message: String?
                 ) {

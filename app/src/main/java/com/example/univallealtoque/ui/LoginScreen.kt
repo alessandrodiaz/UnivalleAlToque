@@ -9,8 +9,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.runtime.collectAsState
-import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.sign_in_google.SignInState
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
@@ -21,6 +19,8 @@ import kotlinx.coroutines.launch
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
+import com.example.univallealtoque.sign_in_google.SignInViewModel
 import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +39,7 @@ fun LoginScreen(
 
 
 
-    /*val viewModel = viewModel<SignInViewModel>()*/
+//    val viewModel = viewModel<SignInViewModel>()
     val state by viewModel.state.collectAsState()
 
 

@@ -2,7 +2,6 @@ package com.example.univallealtoque.ui
 
 import CustomAlertDialog
 import android.graphics.Color.rgb
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -52,26 +51,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
-import com.example.univallealtoque.model.UserData
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.data.StoreUserData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import com.example.univallealtoque.model.UserDataExpress
+import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,15 +84,14 @@ fun ProfileScreen(
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-    val emailFlow = DataStoreSingleton.getEmail()
+//    val emailFlow = DataStoreSingleton.getEmail()
 
     // Observar el flujo para obtener el email
-    LaunchedEffect(Unit) {
-        val email = emailFlow.first() // Esperar al primer valor emitido
-        emailOfUser = email ?: "" // Actualizar el estado con el valor obtenido del flujo
-        Log.d("ProfileScreen", "Email: $emailOfUser") // Log del email obtenido
-    }
-
+//    LaunchedEffect(Unit) {
+//        val email = emailFlow.first() // Esperar al primer valor emitido
+//        emailOfUser = email ?: "" // Actualizar el estado con el valor obtenido del flujo
+//        Log.d("ProfileScreen", "Email: $emailOfUser") // Log del email obtenido
+//    }
 
 
     val rainbowColorsBrush = remember {
@@ -134,60 +121,60 @@ fun ProfileScreen(
         ) {
 
             //PROFILE PICTURE
-            if (userData?.profile_photo != null) {
-                AsyncImage(
-                    model = userData.profile_photo,
-                    contentDescription = stringResource(id = R.string.profile_picture_description),
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.user6),
-                    contentDescription = stringResource(id = R.string.login_title),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(160.dp)
-                        .border(
-                            BorderStroke(borderWidth, rainbowColorsBrush),
-                            CircleShape
-                        )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
-            }
+//            if (userData?.profile_photo != null) {
+//                AsyncImage(
+//                    model = userData.profile_photo,
+//                    contentDescription = stringResource(id = R.string.profile_picture_description),
+//                    modifier = Modifier
+//                        .size(150.dp)
+//                        .clip(CircleShape),
+//                    contentScale = ContentScale.Crop
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//            } else {
+//                Image(
+//                    painter = painterResource(id = R.drawable.user6),
+//                    contentDescription = stringResource(id = R.string.login_title),
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .size(160.dp)
+//                        .border(
+//                            BorderStroke(borderWidth, rainbowColorsBrush),
+//                            CircleShape
+//                        )
+//                        .padding(borderWidth)
+//                        .clip(CircleShape)
+//                )
+//            }
 
             //USERNAME
-            if (userData?.name != null) {
-                Text(
-                    text = userData.name,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.displayLarge,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(25.dp))
-
-            } else {
-                userModelExpressState.userData?.name?.let {
-                    Text(
-                        text = it.uppercase(Locale.ROOT),
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                userModelExpressState.userData?.last_name?.let {
-                    Text(
-                        text = it.uppercase(Locale.ROOT),
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
+//            if (userData?.name != null) {
+//                Text(
+//                    text = userData.name,
+//                    textAlign = TextAlign.Center,
+//                    style = MaterialTheme.typography.displayLarge,
+//                    color = Color.White
+//                )
+//                Spacer(modifier = Modifier.height(25.dp))
+//
+//            } else {
+//                userModelExpressState.userData?.name?.let {
+//                    Text(
+//                        text = it.uppercase(Locale.ROOT),
+//                        fontSize = 24.sp,
+//                        color = Color.White,
+//                        fontWeight = FontWeight.Bold,
+//                    )
+//                }
+//                userModelExpressState.userData?.last_name?.let {
+//                    Text(
+//                        text = it.uppercase(Locale.ROOT),
+//                        fontSize = 24.sp,
+//                        color = Color.White,
+//                        fontWeight = FontWeight.Bold,
+//                    )
+//                }
+//            }
 
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -295,7 +282,8 @@ fun ProfileScreen(
             IconButton(onClick =
             {
                 onSignOut;
-                userModelExpress.resetLoginStateExpress();
+
+                userModelExpress.resetLoginStateExpress()
                 navController.navigate(UnivalleAlToqueScreen.Login.name)
             }) {
                 Image(
@@ -314,6 +302,7 @@ fun ProfileScreen(
         }
     }
 }
+
 
 @Composable
 fun CircleShape() {

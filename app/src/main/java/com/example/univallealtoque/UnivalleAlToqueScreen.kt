@@ -1,6 +1,7 @@
 package com.example.univallealtoque
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,8 +39,6 @@ import com.example.univallealtoque.ui.HomePageScreen
 import com.example.univallealtoque.ui.LoginScreen
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in_google.SignInViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -56,11 +55,13 @@ import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.data.StoreUserData
 import com.example.univallealtoque.model.LoginRequest
 import com.example.univallealtoque.model.RegisterModel
+import com.example.univallealtoque.model.UserDataExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.ui.PrivacyPolicyScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in_google.LoginState
-import com.example.univallealtoque.sign_in_google.LoginViewModel
+import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
@@ -96,13 +97,13 @@ fun UnivalleAlToqueAppBar(
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .background(color = colorResource(id = R.color.red)),
-            ){
+            ) {
                 Text(
                     text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.padding(
-                        top=6.dp,
-                        bottom=6.dp
+                        top = 6.dp,
+                        bottom = 6.dp
                     ),
                 )
             }
@@ -213,16 +214,16 @@ fun UnivalleAlToqueApp(
     val signInState by viewModel.state.collectAsState()
 
     //////////////////////////////////////////////////////
-    val viewModelLogin: LoginViewModel = viewModel()
+//    val viewModelLogin: LoginViewModel = viewModel()
 
 //    val name = "ALEX"
-    val email = "claudia@gmail.com"
-    val password = "123456"
+//    val email = "claudia@gmail.com"
+//    val password = "123456"
 
-    val loginData = LoginRequest(email, password)
-    viewModelLogin.viewModelScope.launch {
-        viewModelLogin.loginUser(loginData)
-    }
+//    val loginData = LoginRequest(email, password)
+//    viewModelLogin.viewModelScope.launch {
+//        viewModelLogin.loginUser(loginData)
+//    }
     ////////////////////////////////////////////////
     var loginViewModelExpress: LoginViewModelExpress = viewModel()
     val loginViewModelExpressState by loginViewModelExpress.stateLoginExpress.collectAsState()
@@ -237,6 +238,15 @@ fun UnivalleAlToqueApp(
 //    val savedEmail = dataStore.getEmail.collectAsState(initial = "")
 //    println("savedEMAIL........"+ savedEmail)
 
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+
+    userDataFlow.value?.let { userData ->
+        val email = userData.email
+        val name = userData.name
+
+        // Ahora puedes usar 'email' y 'name' como necesites
+        Log.d("UserData", "Email: $email, Name: $name")
+    }
 
 
 
@@ -250,8 +260,8 @@ fun UnivalleAlToqueApp(
         bottomBar = {
             UnivalleAlToqueBottomBar(
                 navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) },
-                navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name)},
-                navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name)},
+                navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) },
+                navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name) },
                 userModelExpressState = loginViewModelExpressState,
             )
         }
@@ -266,8 +276,8 @@ fun UnivalleAlToqueApp(
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()
-                        .padding(innerPadding),
-                    userData = googleAuthUiClient.getSignedInUser()
+                        .padding(innerPadding)
+//                    userData = googleAuthUiClient.getSignedInUser()
                 )
             }
 
@@ -288,6 +298,19 @@ fun UnivalleAlToqueApp(
                     userData = googleAuthUiClient.getSignedInUser(),
                     onSignOut = {
                         coroutineScope.launch {
+                            DataStoreSingleton.saveUserData(
+                                UserDataExpress(
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            )
+
                             googleAuthUiClient.signOut()
                             Toast.makeText(
                                 context,

@@ -14,36 +14,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
-import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 
-@Composable
-fun Greeting(
-    userData: UserData?
-){
-    Column(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        Spacer(modifier = Modifier.height(30.dp))
-        if (userData?.name != null) {
-            val formattedUsername = userData.name.formatUsername()
-            Text(
-                text = stringResource(R.string.greeting_username) + " $formattedUsername",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-        } else {
-            Text(
-                text = stringResource(R.string.greeting_empty),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-        }
-    }
-
-}
+//@Composable
+//fun Greeting(
+//    userData: UserData?
+//){
+//    Column(
+//        modifier = Modifier.fillMaxSize(),
+//    ) {
+//        Spacer(modifier = Modifier.height(30.dp))
+//        if (userData?.name != null) {
+//            val formattedUsername = userData.name.formatUsername()
+//            Text(
+//                text = stringResource(R.string.greeting_username) + " $formattedUsername",
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.titleMedium,
+//                modifier = Modifier.padding(start = 20.dp)
+//            )
+//        } else {
+//            Text(
+//                text = stringResource(R.string.greeting_empty),
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.titleMedium,
+//                modifier = Modifier.padding(start = 20.dp)
+//            )
+//        }
+//    }
+//
+//}
 
 // Format username text
 fun String.formatUsername(): String {
