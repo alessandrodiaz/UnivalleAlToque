@@ -49,12 +49,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.sign_in_google.RegisterViewModel
+import com.example.univallealtoque.sign_in_express.RegisterViewModel
 import kotlinx.coroutines.delay
-import androidx.navigation.compose.composable
-import com.example.univallealtoque.navigation.PostOfficeApp
-import com.example.univallealtoque.navigation.PostOfficeAppRouter
-import com.example.univallealtoque.navigation.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)

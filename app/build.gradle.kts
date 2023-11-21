@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 
     // Retrofit
@@ -76,7 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
 
-//GOOGLE LOGIN
+    //GOOGLE LOGIN
     implementation("com.google.firebase:firebase-auth-ktx:21.1.0")
     implementation("com.google.android.gms:play-services-auth:20.4.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")

@@ -10,10 +10,9 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.example.univallealtoque.R
-import com.example.univallealtoque.model.SignInResult
-import com.example.univallealtoque.model.UserData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
+//import com.example.univallealtoque.sign_in_google.UserData
 
 class GoogleAuthUiClient(
     private val context: Context,
@@ -43,21 +42,16 @@ class GoogleAuthUiClient(
             SignInResult(
                 data = user?.run {
                     UserData(
-                        user_id = null,
-                        name = displayName,
-                        last_name = null,
-                        profile_photo = photoUrl?.toString(),
-                        email = email,
-                        program = null,
-                        phone = null,
-                        password = null
+                        userId = uid,
+                        username = displayName,
+                        profilePictureUrl = photoUrl?.toString()
                     )
                 },
                 errorMessage = null
             )
-        } catch (e: Exception) {
+        } catch(e: Exception) {
             e.printStackTrace()
-            if (e is CancellationException) throw e
+            if(e is CancellationException) throw e
             SignInResult(
                 data = null,
                 errorMessage = e.message
@@ -77,17 +71,9 @@ class GoogleAuthUiClient(
 
     fun getSignedInUser(): UserData? = auth.currentUser?.run {
         UserData(
-//            user_id = uid,
-//            name = displayName,
-//            profile_photo = photoUrl?.toString()
-            user_id = null,
-            name = displayName,
-            last_name = null,
-            profile_photo = photoUrl?.toString(),
-            email = email,
-            program = null,
-            phone = null,
-            password = null
+            userId = uid,
+            username = displayName,
+            profilePictureUrl = photoUrl?.toString()
         )
     }
 

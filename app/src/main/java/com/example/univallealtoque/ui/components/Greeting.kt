@@ -9,24 +9,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
-import com.example.univallealtoque.model.UserData
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 
 @Composable
 fun Greeting(
-    userData: UserData?
 ){
+    //Obtener datos del usuario del DataStore
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+    val nameToShow = userDataFlow.value?.name
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         Spacer(modifier = Modifier.height(30.dp))
-        if (userData?.name != null) {
-            val formattedUsername = userData.name.formatUsername()
+        if (nameToShow != null) {
+            val formattedUsername = nameToShow
             Text(
                 text = stringResource(R.string.greeting_username) + " $formattedUsername",
                 textAlign = TextAlign.Center,
