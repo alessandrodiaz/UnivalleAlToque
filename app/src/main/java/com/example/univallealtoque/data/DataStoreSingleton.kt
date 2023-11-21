@@ -18,5 +18,13 @@ object DataStoreSingleton {
     fun getUserData(): Flow<UserDataExpress?> {
         return storeUserData.getUserData
     }
+
+    suspend fun updatePhone(newPhone: String) {
+        storeUserData.updatePhone(newPhone)
+    }
+
+    suspend fun updateProgram(newProgram: String) {
+        storeUserData.updateProgram(newProgram)
+    }
 }
 

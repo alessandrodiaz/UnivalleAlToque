@@ -32,12 +32,12 @@ import androidx.compose.ui.unit.sp
 import com.example.univallealtoque.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import com.example.univallealtoque.ui.components.Greeting
 
 data class Semilleros(val name: String, val time: String, val imageRes: Int)
 @Composable
 fun HomePageScreen(
     modifier: Modifier,
-//    userData: UserData?
 ) {
 
     var categoryNames = listOf(
@@ -60,7 +60,7 @@ fun HomePageScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-//            Greeting(userData = userData)
+            Greeting()
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = stringResource(id = R.string.proximos_eventos),

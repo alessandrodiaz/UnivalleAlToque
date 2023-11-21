@@ -135,6 +135,20 @@ class LoginViewModelExpress() : ViewModel() {
         newProgram: String? = null,
         newPhone: String? = null
     ) {
+
+        /**
+         * updatePhone actualiza el dato del celular del usuario LOCALMENTE en el DataStore
+         */
+        viewModelScope.launch {
+            if(newPhone!= null){
+                DataStoreSingleton.updatePhone(newPhone)
+            }
+            if(newProgram!=null){
+                DataStoreSingleton.updateProgram(newProgram)
+            }
+
+        }
+
         println("------>>>>>>${loginOrUpdateResponseFromServer.value.userData}")
         val auxNewUserDataExpress = UserDataExpress(
             user_id = loginOrUpdateResponseFromServer.value.userData?.user_id,

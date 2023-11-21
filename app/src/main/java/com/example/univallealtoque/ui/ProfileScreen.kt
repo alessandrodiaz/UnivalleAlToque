@@ -56,6 +56,7 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -80,40 +81,37 @@ fun ProfileScreen(
     var showDialogChangePhone by remember { mutableStateOf(false) }
     var showDialogChangeProgram by remember { mutableStateOf(false) }
 
+    //Obtener datos del usuario del DataStore
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+
     val nameToShow = userDataFlow.value?.name ?: "null"
     val lastNameToShow = userDataFlow.value?.last_name ?: "null"
-    val profile_photoToShow = userDataFlow.value?.profile_photo ?: "null"
-    var emailToShow = userDataFlow.value?.email ?: "null"
+    val profilePhotoToShow = userDataFlow.value?.profile_photo ?: "null"
+    val emailToShow = userDataFlow.value?.email ?: "null"
     val phoneToShow = userDataFlow.value?.phone ?: "null"
     val programToShow = userDataFlow.value?.program ?: "null"
 
-    println(emailToShow)
+    var emailOfUser by remember { mutableStateOf(emailToShow) }
+    var phoneOfUser by remember { mutableStateOf(phoneToShow) }
+    var programOfUser by remember { mutableStateOf(programToShow) }
 
-    var emailOfUser by remember { mutableStateOf("$emailToShow") }
-    var phoneOfUser by remember { mutableStateOf(userDataFlow.value?.last_name) }
-    var programOfUser by remember { mutableStateOf(userDataFlow.value?.profile_photo) }
+    LaunchedEffect(userDataFlow.value) {
+        emailOfUser = userDataFlow.value?.email ?: "null"
+        phoneOfUser = userDataFlow.value?.phone ?: "null"
+        programOfUser = userDataFlow.value?.program ?: "null"
+    }
 
     var showMessageAfterUpdate by remember { mutableStateOf(false) }
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-
-    println(emailOfUser+ userDataFlow.value?.email)
-
-
 //    userDataFlow.value?.let { userData ->
 //        val email = userData.email
 //        val name = userData.name
 //
-//        // Ahora puedes usar 'email' y 'name' como necesites
 //        Log.d("UserData", "Email: $email, Name: $name")
 ////        Log.d("UserData", name)
 //    }
-
-
-
-
 
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
@@ -142,9 +140,9 @@ fun ProfileScreen(
         ) {
 
             //PROFILE PICTURE
-            if (profile_photoToShow != "null") {
+            if (profilePhotoToShow != "null") {
                 AsyncImage(
-                    model = "$profile_photoToShow",
+                    model = "$profilePhotoToShow",
                     contentDescription = stringResource(id = R.string.profile_picture_description),
                     modifier = Modifier
                         .size(150.dp)
@@ -220,16 +218,16 @@ fun ProfileScreen(
                     .padding(0.dp)
 
             )
-            emailToShow?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
+            emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
 
             if (showDialogChangeEmail) {
-                emailToShow?.let {
+                emailOfUser?.let {
                     ShowMessageDialog(
                         titleOfDialog = "Cambiar Correo",
                         hint = it,
                         show = showDialogChangeEmail,
                         viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> emailToShow = param },
+                        setUserUpdate = { param: String -> emailOfUser = param },
                         setSuccessOrFailure = { param: Boolean ->
                             booleanResponseSuccessFromUpdateBasicData = param
                         },
@@ -274,8 +272,8 @@ fun ProfileScreen(
 
             if (booleanResponseSuccessFromUpdateBasicData) {
                 CustomAlertDialog(
-                    title = "Dato Acutaliado",
-                    message = "Peticion exitosa",
+                    title = "Dato Actualizado",
+                    message = "Petición exitosa",
                     onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
                 print("sfsefewfweef")
             }
@@ -286,7 +284,7 @@ fun ProfileScreen(
             {
                 onSignOut()
                 userModelExpress.resetLoginStateExpress()
-                navController.navigate(UnivalleAlToqueScreen.Login.name)
+                navController.navigate(UnivalleAlToqueScreen.HomePage.name)
             }) {
                 Image(
                     painter = painterResource(id = R.drawable.logout),
@@ -435,6 +433,7 @@ fun ShowMessageDialog(
                         var getSuccess = false;
                         when (titleOfDialog) {
                             "Cambiar Correo" -> {
+
                                 viewModelExpress.updateBasicData(newEmail = myHint)
                                 //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
 

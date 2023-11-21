@@ -12,8 +12,8 @@ data class UserDataExpress(
     val last_name: String?,
     val profile_photo: String?,
     val email: String?,
-    val program: String?,
-    val phone: String?,
+    var program: String?,
+    var phone: String?,
     val password: String?
 )
 

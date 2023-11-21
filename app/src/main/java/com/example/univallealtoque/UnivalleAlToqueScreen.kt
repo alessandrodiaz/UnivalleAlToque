@@ -121,6 +121,8 @@ fun UnivalleAlToqueBottomBar(
     navigateProfile: () -> Unit,
     userModelExpressState: LoginState,
 ) {
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+    val userDataEmail = userDataFlow.value?.email
     // Íconos de navegación
     Row(
         modifier = Modifier
@@ -152,7 +154,7 @@ fun UnivalleAlToqueBottomBar(
 
         }
         IconButton(
-            onClick = navigateProfile
+            onClick = {  }
         ) {
 
             Icon(
@@ -163,7 +165,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick = if (userModelExpressState.isLoginSuccessful) navigateProfile else navigateLogin,
+            onClick = if (userDataEmail!=null) navigateProfile else navigateLogin,
         ) {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
@@ -203,7 +205,7 @@ fun UnivalleAlToqueApp(
     val viewModel: SignInViewModel = viewModel()
     val signInState by viewModel.state.collectAsState()
 
-    var loginViewModelExpress: LoginViewModelExpress = viewModel()
+    val loginViewModelExpress: LoginViewModelExpress = viewModel()
     val loginViewModelExpressState by loginViewModelExpress.stateLoginExpress.collectAsState()
 
     Scaffold(
@@ -274,7 +276,7 @@ fun UnivalleAlToqueApp(
                                 Toast.LENGTH_LONG
                             ).show()
 
-                            navController.popBackStack()
+//                            navController.popBackStack()
                         }
                     },
                     userModelExpress = loginViewModelExpress,
