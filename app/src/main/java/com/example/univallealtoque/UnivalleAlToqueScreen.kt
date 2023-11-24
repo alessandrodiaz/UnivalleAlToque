@@ -57,6 +57,7 @@ import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in_google.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.ProfileScreen
+import com.example.univallealtoque.ui.RecoverPasswordScreen
 import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
 
@@ -67,7 +68,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     Profile(title = R.string.profile),
     Register(title = R.string.register),
     TermsAndConditions(title = R.string.terms),
-    PrivacyPolicy(title = R.string.privacypolicy)
+    PrivacyPolicy(title = R.string.privacypolicy),
+    RecoverPassword(title = R.string.recoverpassword)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -310,6 +312,15 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.PrivacyPolicy.name) {
                 PrivacyPolicyScreen(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.RecoverPassword.name) {
+                RecoverPasswordScreen(
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()

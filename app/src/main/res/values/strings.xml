@@ -7,6 +7,9 @@
     <string name="terms">TermsAndConditions</string>
     <string name="privacypolicy">PrivacyPolicy</string>
     <string name="aviso">Aviso</string>
+    <string name="recoverpassword">Recover Password</string>
+    <string name="recoverpassword_title">Ingresa tu correo electrónico</string>
+    <string name="forgotpassword">Xispas, Olvidé mi contraseña :c</string>
 
     <!-- LOGIN -->
     <string name="login_title">Iniciar sesión</string>
