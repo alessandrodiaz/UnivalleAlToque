@@ -107,14 +107,6 @@ fun ProfileScreen(
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-//    userDataFlow.value?.let { userData ->
-//        val email = userData.email
-//        val name = userData.name
-//
-//        Log.d("UserData", "Email: $email, Name: $name")
-////        Log.d("UserData", name)
-//    }
-
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
             listOf(
@@ -223,21 +215,21 @@ fun ProfileScreen(
 
             )
             emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
-
-            if (showDialogChangeEmail) {
-                emailOfUser?.let {
-                    ShowMessageDialog(
-                        titleOfDialog = "Cambiar Correo",
-                        hint = it,
-                        show = showDialogChangeEmail,
-                        viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> emailOfUser = param },
-                        setSuccessOrFailure = { param: Boolean ->
-                            booleanResponseSuccessFromUpdateBasicData = param
-                        },
-                        onClose = { showDialogChangeEmail = false })
-                }
-            }
+//
+//            if (showDialogChangeEmail) {
+//                emailOfUser?.let {
+//                    ShowMessageDialog(
+//                        titleOfDialog = "Cambiar Correo",
+//                        hint = it,
+//                        show = showDialogChangeEmail,
+//                        viewModelExpress = userModelExpress,
+//                        setUserUpdate = { param: String -> emailOfUser = param },
+//                        setSuccessOrFailure = { param: Boolean ->
+//                            booleanResponseSuccessFromUpdateBasicData = param
+//                        },
+//                        onClose = { showDialogChangeEmail = false })
+//                }
+//            }
 
             phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
 
@@ -276,10 +268,9 @@ fun ProfileScreen(
 
             if (booleanResponseSuccessFromUpdateBasicData) {
                 CustomAlertDialog(
-                    title = "Dato Actualizado",
+                    title = "Dato actualizado",
                     message = "Petición exitosa",
                     onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
-                print("sfsefewfweef")
             }
 
             Spacer(modifier = Modifier.height(25.dp))
@@ -438,12 +429,6 @@ fun ShowMessageDialog(
                         onClose()////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
                         var getSuccess = false;
                         when (titleOfDialog) {
-                            "Cambiar Correo" -> {
-
-                                viewModelExpress.updateBasicData(newEmail = myHint)
-                                //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
-
-                            }
 
                             "Cambiar Celular" -> {
                                 viewModelExpress.updateBasicData(newPhone = myHint)
