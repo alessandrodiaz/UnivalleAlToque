@@ -33,7 +33,7 @@ fun Greeting(
         if (nameToShow != null) {
             val formattedUsername = nameToShow
             Text(
-                text = stringResource(R.string.greeting_username) + " $formattedUsername",
+                text = stringResource(R.string.greeting_username) + " $formattedUsername" + " 👋",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 20.dp)

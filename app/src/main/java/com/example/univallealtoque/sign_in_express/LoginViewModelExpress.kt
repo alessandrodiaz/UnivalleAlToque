@@ -97,7 +97,6 @@ class LoginViewModelExpress() : ViewModel() {
                 }*/
 
                 if (response.message == "Inicio de sesión exitoso") {
-                    println("------vbufbvuinfiduvbiufiudf" + response)
                     // Ejemplo desde un Fragment
                     val userData = response.userData ?: UserDataExpress(
                         user_id = null,
