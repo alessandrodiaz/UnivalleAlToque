@@ -57,5 +57,18 @@ public class StoreUserData(private val context: Context) {
         }
     }
 
+    suspend fun updateProfilePhoto(newProfilePhoto: String) {
+        context.dataStore.edit { preferences ->
+            val userDataString = preferences[USER_DATA_KEY]
+            val userData = Gson().fromJson(userDataString, UserDataExpress::class.java)
+
+            userData?.let {
+                it.profile_photo = newProfilePhoto
+                val updatedUserDataString = Gson().toJson(it)
+                preferences[USER_DATA_KEY] = updatedUserDataString
+            }
+        }
+    }
+
 }
 

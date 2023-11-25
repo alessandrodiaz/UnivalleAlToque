@@ -53,11 +53,13 @@ import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import com.example.univallealtoque.data.DataStoreSingleton
@@ -105,14 +107,6 @@ fun ProfileScreen(
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-//    userDataFlow.value?.let { userData ->
-//        val email = userData.email
-//        val name = userData.name
-//
-//        Log.d("UserData", "Email: $email, Name: $name")
-////        Log.d("UserData", name)
-//    }
-
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
             listOf(
@@ -130,10 +124,12 @@ fun ProfileScreen(
     val interactionSource = remember { MutableInteractionSource() }
 
     val borderWidth = 4.dp
-    Column(
+    LazyColumn(
         modifier = modifier
     ) {
-        CircleShape()
+        item{
+            CircleShape()
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -219,21 +215,21 @@ fun ProfileScreen(
 
             )
             emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
-
-            if (showDialogChangeEmail) {
-                emailOfUser?.let {
-                    ShowMessageDialog(
-                        titleOfDialog = "Cambiar Correo",
-                        hint = it,
-                        show = showDialogChangeEmail,
-                        viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> emailOfUser = param },
-                        setSuccessOrFailure = { param: Boolean ->
-                            booleanResponseSuccessFromUpdateBasicData = param
-                        },
-                        onClose = { showDialogChangeEmail = false })
-                }
-            }
+//
+//            if (showDialogChangeEmail) {
+//                emailOfUser?.let {
+//                    ShowMessageDialog(
+//                        titleOfDialog = "Cambiar Correo",
+//                        hint = it,
+//                        show = showDialogChangeEmail,
+//                        viewModelExpress = userModelExpress,
+//                        setUserUpdate = { param: String -> emailOfUser = param },
+//                        setSuccessOrFailure = { param: Boolean ->
+//                            booleanResponseSuccessFromUpdateBasicData = param
+//                        },
+//                        onClose = { showDialogChangeEmail = false })
+//                }
+//            }
 
             phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
 
@@ -272,13 +268,12 @@ fun ProfileScreen(
 
             if (booleanResponseSuccessFromUpdateBasicData) {
                 CustomAlertDialog(
-                    title = "Dato Actualizado",
+                    title = "Dato actualizado",
                     message = "Petición exitosa",
                     onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
-                print("sfsefewfweef")
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
             IconButton(onClick =
             {
@@ -286,20 +281,22 @@ fun ProfileScreen(
                 userModelExpress.resetLoginStateExpress()
                 navController.navigate(UnivalleAlToqueScreen.HomePage.name)
             }) {
+
                 Image(
                     painter = painterResource(id = R.drawable.logout),
                     contentDescription = stringResource(id = R.string.logout),
-                    contentScale = ContentScale.Crop,
+//                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .size(40.dp)
-                        .padding(borderWidth)
+                        .scale(1.2f)
+//                        .size(3000.dp)
+//                        .padding(borderWidth)
                         .clip(CircleShape)
                 )
             }
 
 
-        }
+        }}
     }
 }
 
@@ -432,12 +429,6 @@ fun ShowMessageDialog(
                         onClose()////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
                         var getSuccess = false;
                         when (titleOfDialog) {
-                            "Cambiar Correo" -> {
-
-                                viewModelExpress.updateBasicData(newEmail = myHint)
-                                //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
-
-                            }
 
                             "Cambiar Celular" -> {
                                 viewModelExpress.updateBasicData(newPhone = myHint)

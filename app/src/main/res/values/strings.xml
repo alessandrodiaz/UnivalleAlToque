@@ -85,8 +85,8 @@
 
 
     <!-- HOME -->
-    <string name="greeting_username">Bienvenido, </string>
-    <string name="greeting_empty">Bienvenido</string>
+    <string name="greeting_username">Hola, </string>
+    <string name="greeting_empty">Hola, ¿qué tal? 👋</string>
     <string name="proximos_eventos">Próximos eventos</string>
     <string name="esta_semana">Esta semana</string>
     <string name="que_queres_hacer">¿Qué querés hacer?</string>

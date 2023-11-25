@@ -26,5 +26,9 @@ object DataStoreSingleton {
     suspend fun updateProgram(newProgram: String) {
         storeUserData.updateProgram(newProgram)
     }
+
+    suspend fun updateProfilePhoto(newProfilePhoto: String) {
+        storeUserData.updateProfilePhoto(newProfilePhoto)
+    }
 }
 
