@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,11 +28,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
-import com.example.univallealtoque.RecoverPassword.UserViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
+import com.example.univallealtoque.user_password.UserPasswordModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.RecoverPasswordModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,13 +40,13 @@ fun RecoverPasswordScreen(
     modifier: Modifier,
 ) {
     var email by remember { mutableStateOf("") }
-    val userViewModel: UserViewModel = viewModel()
+    val userPasswordModel: UserPasswordModel = viewModel()
 
     var recoveryMessage by remember { mutableStateOf("") }
     var navigateGetCode = {navController.navigate(UnivalleAlToqueScreen.GetCode.name)}
 
-    LaunchedEffect(userViewModel.recoveryMessage) {
-        userViewModel.recoveryMessage.collect {
+    LaunchedEffect(userPasswordModel.recoveryMessage) {
+        userPasswordModel.recoveryMessage.collect {
             recoveryMessage = it
         }
     }
@@ -87,7 +85,8 @@ fun RecoverPasswordScreen(
         Button(
             onClick = {
                 // Llama al método de recuperación de contraseña del ViewModel
-                userViewModel.getUserByEmail(email,"recover_password")
+                val userEmail = RecoverPasswordModel(email)
+                val response = userPasswordModel.recoverPassword(userEmail)
 
             },
             modifier = Modifier

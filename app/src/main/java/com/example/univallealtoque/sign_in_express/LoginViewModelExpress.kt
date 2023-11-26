@@ -1,18 +1,12 @@
 package com.example.univallealtoque.sign_in_express
 
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
-import com.example.univallealtoque.model.UserDataExpress
+import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.sign_in_google.LoginState
 import com.google.gson.GsonBuilder
@@ -20,9 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -69,13 +61,13 @@ class LoginViewModelExpress() : ViewModel() {
 
                 println("RESPONSE FROM EXPRESS " + response)
                 fun updateStatesAfterLoginResponseFromServer(
-                    userDataExpress: UserDataExpress?,
+                    userDataResponseExpress: UserDataResponseExpress?,
                     token: String?,
                     message: String?
                 ) {
                     _privateLoginOrUpdateResponseFromServer.update { currentState ->
                         currentState.copy(
-                            userData = userDataExpress,
+                            userData = userDataResponseExpress,
                             token = token,
                             message = message
                         )
@@ -108,7 +100,7 @@ class LoginViewModelExpress() : ViewModel() {
 
                 if (response.message == "Inicio de sesión exitoso") {
                     // Ejemplo desde un Fragment
-                    val userData = response.userData ?: UserDataExpress(
+                    val userData = response.userData ?: UserDataResponseExpress(
                         user_id = null,
                         name = null,
                         last_name = null,
@@ -122,7 +114,7 @@ class LoginViewModelExpress() : ViewModel() {
 
 
                     // Recolectar el valor del flujo getEmail
-                    val data: Flow<UserDataExpress?> = DataStoreSingleton.getUserData()
+                    val data: Flow<UserDataResponseExpress?> = DataStoreSingleton.getUserData()
                     println("Valor del email recolectado: $data")
 
                     _stateLoginExpress.value =

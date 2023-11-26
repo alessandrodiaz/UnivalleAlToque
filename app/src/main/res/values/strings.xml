@@ -125,4 +125,5 @@
     <string name="settings_current_password">Contraseña actual</string>
     <string name="settings_new_password">Contraseña nueva</string>
     <string name="settings_repeat_new_password">Repetir contraseña nueva</string>
+
 </resources>
