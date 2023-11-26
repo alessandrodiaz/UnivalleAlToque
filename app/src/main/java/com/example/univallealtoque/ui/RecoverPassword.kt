@@ -87,7 +87,7 @@ fun RecoverPasswordScreen(
         Button(
             onClick = {
                 // Llama al método de recuperación de contraseña del ViewModel
-                userViewModel.getUserByEmail(email)
+                userViewModel.getUserByEmail(email,"recover_password")
                 if (recoveryMessage.contains("registrado")) {
                     navController.navigate(UnivalleAlToqueScreen.GetCode.name)
                 }

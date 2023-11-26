@@ -32,7 +32,7 @@ interface AlToqueService {
     suspend fun updateProfile(@Body jsonBody: RequestBody): UpdateBasicDataResponseExpress
 
     @GET("user/{email}")
-    suspend fun getUserByEmail(@Path("email") email: String): UserDataResponse
+    suspend fun getUserByEmail(@Path("email") email: String,type:String): UserDataResponse
 }
 
 object AlToqueServiceFactory {

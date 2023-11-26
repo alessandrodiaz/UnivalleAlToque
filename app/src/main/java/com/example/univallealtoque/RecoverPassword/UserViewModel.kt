@@ -17,10 +17,12 @@ class UserViewModel : ViewModel() {
     private val _recoveryMessage = MutableStateFlow<String>("")
     val recoveryMessage: StateFlow<String> = _recoveryMessage
 
-    fun getUserByEmail(email: String) {
+    fun getUserByEmail(email: String, type: String) {
         viewModelScope.launch {
             try {
-                val message = alToqueService.getUserByEmail(email)
+                val message = alToqueService.getUserByEmail(email,type)
+
+                println(message)
                 _recoveryMessage.value = message.toString()
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)
