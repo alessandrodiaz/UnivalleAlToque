@@ -24,7 +24,7 @@ class UserViewModel : ViewModel() {
                 _recoveryMessage.value = message.toString()
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)
-                _recoveryMessage.value = "Error al recuperar la contraseña"
+                _recoveryMessage.value = "El correo no se encuentra registrado"
             }
         }
     }

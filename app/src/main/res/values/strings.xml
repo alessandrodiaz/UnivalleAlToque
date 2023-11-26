@@ -10,6 +10,8 @@
     <string name="recoverpassword">Recover Password</string>
     <string name="recoverpassword_title">Ingresa tu correo electrónico</string>
     <string name="forgotpassword">Xispas, Olvidé mi contraseña :c</string>
+    <string name="getcode">Get Code</string>
+    <string name="invalidemail">El correo no se encuentra registrado</string>
 
     <!-- LOGIN -->
     <string name="login_title">Iniciar sesión</string>

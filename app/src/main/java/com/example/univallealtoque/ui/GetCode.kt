@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,28 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
 import com.example.univallealtoque.RecoverPassword.UserViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
-import androidx.navigation.NavController
-import com.example.univallealtoque.UnivalleAlToqueScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecoverPasswordScreen(
-    navController: NavController,
+fun GetCodeScreen(
     modifier: Modifier,
 ) {
-    var email by remember { mutableStateOf("") }
-    val userViewModel: UserViewModel = viewModel()
-
-    var recoveryMessage by remember { mutableStateOf("") }
-    var navigateGetCode = {navController.navigate(UnivalleAlToqueScreen.GetCode.name)}
-
-    LaunchedEffect(userViewModel.recoveryMessage) {
-        userViewModel.recoveryMessage.collect {
-            recoveryMessage = it
-        }
-    }
+    var code by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -63,18 +47,19 @@ fun RecoverPasswordScreen(
     ) {
 
         Text(
-            text = stringResource(R.string.recoverpassword_title),
+            text = "Ingresa el código que te mandamos al correo seleccionado",
             style = MaterialTheme.typography.displayLarge,
             color = Color.Black,
-            modifier = Modifier.padding(bottom = 28.dp)
+            modifier = Modifier.padding(bottom = 20.dp)
         )
 
         OutlinedTextField(
-            value = email,
+            value = code,
             textStyle = TextStyle(
                 color = Color.Black
+
             ),
-            onValueChange = { email = it },
+            onValueChange = { code = it },
             label = { Text(text = stringResource(id = R.string.register_email)) },
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
@@ -87,10 +72,7 @@ fun RecoverPasswordScreen(
         Button(
             onClick = {
                 // Llama al método de recuperación de contraseña del ViewModel
-                userViewModel.getUserByEmail(email)
-                if (recoveryMessage.contains("registrado")) {
-                    navController.navigate(UnivalleAlToqueScreen.GetCode.name)
-                }
+                println("jeje")
             },
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
@@ -108,13 +90,5 @@ fun RecoverPasswordScreen(
             )
         }
 
-        // Observa el mensaje de recuperación y muestra un mensaje en la interfaz de usuario
-        if (recoveryMessage.isNotBlank() && recoveryMessage.contains("registrado")) {
-            Text(
-                text = recoveryMessage,
-                color = Color.Red,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
     }
 }
