@@ -54,6 +54,7 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
+    navigateRecoverPassword: () -> Unit,
     navigateRegister: () -> Unit,
     navController: NavController,
     state: SignInState,
@@ -268,6 +269,17 @@ fun SignInScreen(
                 color = Color.Red
             )
         }
+
+        Spacer(
+            modifier = modifier.size(25.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.forgotpassword),
+            style = MaterialTheme.typography.titleSmall,
+            color = Color.Blue,
+            modifier = Modifier.clickable { navigateRecoverPassword() }
+        )
 
         Spacer(
             modifier = modifier.size(40.dp)

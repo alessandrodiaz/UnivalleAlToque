@@ -71,6 +71,7 @@ fun LoginScreen(
         }
     }
     SignInScreen(
+        navigateRecoverPassword = {navController.navigate(UnivalleAlToqueScreen.RecoverPassword.name)},
         navigateRegister = { navController.navigate(UnivalleAlToqueScreen.Register.name) },
         navController = navController,
         state = state,

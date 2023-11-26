@@ -75,7 +75,6 @@ fun RegisterScreen(
     val viewModel: RegisterViewModel = viewModel()
     val registerState by viewModel.state.collectAsState()
 
-
     Column(modifier = modifier) {
         Column(
             modifier = Modifier
