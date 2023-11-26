@@ -88,9 +88,7 @@ fun RecoverPasswordScreen(
             onClick = {
                 // Llama al método de recuperación de contraseña del ViewModel
                 userViewModel.getUserByEmail(email)
-                if (recoveryMessage.contains("registrado")) {
-                    navController.navigate(UnivalleAlToqueScreen.GetCode.name)
-                }
+                
             },
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
@@ -109,10 +107,10 @@ fun RecoverPasswordScreen(
         }
 
         // Observa el mensaje de recuperación y muestra un mensaje en la interfaz de usuario
-        if (recoveryMessage.isNotBlank() && recoveryMessage.contains("registrado")) {
+        if (recoveryMessage.isNotBlank()) {
             Text(
                 text = recoveryMessage,
-                color = Color.Red,
+                color = if (recoveryMessage.contains("registrado")) Color.Red else Color.Green,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
