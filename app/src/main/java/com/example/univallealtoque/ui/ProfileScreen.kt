@@ -53,11 +53,15 @@ import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import com.example.univallealtoque.data.DataStoreSingleton
@@ -105,14 +109,6 @@ fun ProfileScreen(
 
     var booleanResponseSuccessFromUpdateBasicData by remember { mutableStateOf(false) }
 
-//    userDataFlow.value?.let { userData ->
-//        val email = userData.email
-//        val name = userData.name
-//
-//        Log.d("UserData", "Email: $email, Name: $name")
-////        Log.d("UserData", name)
-//    }
-
     val rainbowColorsBrush = remember {
         Brush.sweepGradient(
             listOf(
@@ -130,175 +126,195 @@ fun ProfileScreen(
     val interactionSource = remember { MutableInteractionSource() }
 
     val borderWidth = 4.dp
-    Column(
+    LazyColumn(
         modifier = modifier
     ) {
-        CircleShape()
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        item {
+            CircleShape()
 
-            //PROFILE PICTURE
-            if (profilePhotoToShow != "null") {
-                AsyncImage(
-                    model = "$profilePhotoToShow",
-                    contentDescription = stringResource(id = R.string.profile_picture_description),
-                    modifier = Modifier
-                        .size(150.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.user6),
-                    contentDescription = stringResource(id = R.string.login_title),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(160.dp)
-                        .border(
-                            BorderStroke(borderWidth, rainbowColorsBrush),
-                            CircleShape
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                //PROFILE PICTURE
+                if (profilePhotoToShow != "null") {
+                    AsyncImage(
+                        model = "$profilePhotoToShow",
+                        contentDescription = stringResource(id = R.string.profile_picture_description),
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.user6),
+                        contentDescription = stringResource(id = R.string.login_title),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(160.dp)
+                            .border(
+                                BorderStroke(borderWidth, rainbowColorsBrush),
+                                CircleShape
+                            )
+                            .padding(borderWidth)
+                            .clip(CircleShape)
+                    )
+                }
+
+                //USERNAME
+                if (nameToShow != "null" && lastNameToShow != "null") {
+                    Text(
+                        text = "$nameToShow $lastNameToShow",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.displayLarge,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(25.dp))
+
+                } else {
+                    userModelExpressState.userData?.name?.let {
+                        Text(
+                            text = it.uppercase(Locale.ROOT),
+                            fontSize = 24.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
                         )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
-            }
+                    }
+                    userModelExpressState.userData?.last_name?.let {
+                        Text(
+                            text = it.uppercase(Locale.ROOT),
+                            fontSize = 24.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
 
-            //USERNAME
-            if (nameToShow != "null" && lastNameToShow != "null") {
+
+                Spacer(modifier = Modifier.height(100.dp))
+                IconButton(onClick = {}) {
+                    Icon(
+                        Icons.Rounded.ThumbUp,
+                        contentDescription = "Thumb Up",
+                        tint = Color.Red,
+                        modifier = Modifier
+                            .rotate(-20f)
+                            .size(40.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "$nameToShow $lastNameToShow",
+                    text = "0",
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.displayLarge,
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(25.dp))
-
-            } else {
-                userModelExpressState.userData?.name?.let {
-                    Text(
-                        text = it.uppercase(Locale.ROOT),
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-                userModelExpressState.userData?.last_name?.let {
-                    Text(
-                        text = it.uppercase(Locale.ROOT),
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
-
-
-            Spacer(modifier = Modifier.height(100.dp))
-            IconButton(onClick = {}) {
-                Icon(
-                    Icons.Rounded.ThumbUp,
-                    contentDescription = "Thumb Up",
-                    tint = Color.Red,
+                    color = Color.White,
                     modifier = Modifier
-                        .rotate(-20f)
-                        .size(40.dp)
+                        .background(Color(rgb(234, 31, 1)), shape = CircleShape)
+                        .circleLayout()
+                        .padding(0.dp)
+
                 )
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "0",
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                modifier = Modifier
-                    .background(Color(rgb(234, 31, 1)), shape = CircleShape)
-                    .circleLayout()
-                    .padding(0.dp)
+                emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
+//
+//            if (showDialogChangeEmail) {
+//                emailOfUser?.let {
+//                    ShowMessageDialog(
+//                        titleOfDialog = "Cambiar Correo",
+//                        hint = it,
+//                        show = showDialogChangeEmail,
+//                        viewModelExpress = userModelExpress,
+//                        setUserUpdate = { param: String -> emailOfUser = param },
+//                        setSuccessOrFailure = { param: Boolean ->
+//                            booleanResponseSuccessFromUpdateBasicData = param
+//                        },
+//                        onClose = { showDialogChangeEmail = false })
+//                }
+//            }
 
-            )
-            emailOfUser?.let { infoPart("Correo", it) { showDialogChangeEmail = true } }
+                phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
 
-            if (showDialogChangeEmail) {
-                emailOfUser?.let {
-                    ShowMessageDialog(
-                        titleOfDialog = "Cambiar Correo",
-                        hint = it,
-                        show = showDialogChangeEmail,
-                        viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> emailOfUser = param },
-                        setSuccessOrFailure = { param: Boolean ->
-                            booleanResponseSuccessFromUpdateBasicData = param
-                        },
-                        onClose = { showDialogChangeEmail = false })
+                if (showDialogChangePhone) {
+                    phoneOfUser?.let {
+                        ShowMessageDialog(
+                            titleOfDialog = "Cambiar Celular",
+                            hint = it,
+                            show = showDialogChangePhone,
+                            viewModelExpress = userModelExpress,
+                            setUserUpdate = { param: String -> phoneOfUser = param },
+                            setSuccessOrFailure = { param: Boolean ->
+                                booleanResponseSuccessFromUpdateBasicData = param
+                            },
+                            onClose = { showDialogChangePhone = false })
+                    }
                 }
-            }
 
-            phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
+                programOfUser?.let { infoPart("Carrera", it, { showDialogChangeProgram = true }) }
 
-            if (showDialogChangePhone) {
-                phoneOfUser?.let {
-                    ShowMessageDialog(
-                        titleOfDialog = "Cambiar Celular",
-                        hint = it,
-                        show = showDialogChangePhone,
-                        viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> phoneOfUser = param },
-                        setSuccessOrFailure = { param: Boolean ->
-                            booleanResponseSuccessFromUpdateBasicData = param
-                        },
-                        onClose = { showDialogChangePhone = false })
+                if (showDialogChangeProgram) {
+                    programOfUser?.let {
+                        ShowMessageDialog(
+                            titleOfDialog = "Cambiar Programa",
+                            hint = it,
+                            show = showDialogChangeProgram,
+                            viewModelExpress = userModelExpress,
+                            setUserUpdate = { param: String -> programOfUser = param },
+                            setSuccessOrFailure = { param: Boolean ->
+                                booleanResponseSuccessFromUpdateBasicData = param
+                            },
+                            onClose = { showDialogChangeProgram = false })
+                    }
                 }
-            }
 
-            programOfUser?.let { infoPart("Carrera", it, { showDialogChangeProgram = true }) }
 
-            if (showDialogChangeProgram) {
-                programOfUser?.let {
-                    ShowMessageDialog(
-                        titleOfDialog = "Cambiar Programa",
-                        hint = it,
-                        show = showDialogChangeProgram,
-                        viewModelExpress = userModelExpress,
-                        setUserUpdate = { param: String -> programOfUser = param },
-                        setSuccessOrFailure = { param: Boolean ->
-                            booleanResponseSuccessFromUpdateBasicData = param
-                        },
-                        onClose = { showDialogChangeProgram = false })
+                if (booleanResponseSuccessFromUpdateBasicData) {
+                    CustomAlertDialog(
+                        title = "Dato actualizado",
+                        message = "Petición exitosa",
+                        onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
                 }
-            }
 
+                Spacer(modifier = Modifier.height(35.dp))
 
-            if (booleanResponseSuccessFromUpdateBasicData) {
-                CustomAlertDialog(
-                    title = "Dato Actualizado",
-                    message = "Petición exitosa",
-                    onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
-                print("sfsefewfweef")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            IconButton(onClick =
-            {
-                onSignOut()
-                userModelExpress.resetLoginStateExpress()
-                navController.navigate(UnivalleAlToqueScreen.HomePage.name)
-            }) {
-                Image(
-                    painter = painterResource(id = R.drawable.logout),
-                    contentDescription = stringResource(id = R.string.logout),
-                    contentScale = ContentScale.Crop,
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .size(40.dp)
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
+                ) {
+                    IconButton(onClick =
+                    {
+                        navController.navigate(UnivalleAlToqueScreen.Settings.name)
+                    }) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.settings),
+                            contentDescription = stringResource(id = R.string.settings),
+                            modifier = Modifier
+                                .scale(1.2f)
+                                .clip(CircleShape)
+                        )
+                    }
+                    IconButton(onClick =
+                    {
+                        onSignOut()
+                        userModelExpress.resetLoginStateExpress()
+                        navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+                    }) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.logout),
+                            contentDescription = stringResource(id = R.string.logout),
+                            modifier = Modifier
+                                .scale(1.2f)
+                                .clip(CircleShape)
+                        )
+                    }
+                }
+
+
             }
-
-
         }
     }
 }
@@ -432,12 +448,6 @@ fun ShowMessageDialog(
                         onClose()////////////////////////////////////////////////////////////////////COLOCAR EL UPDATE A LA BD AQUI ABAJO
                         var getSuccess = false;
                         when (titleOfDialog) {
-                            "Cambiar Correo" -> {
-
-                                viewModelExpress.updateBasicData(newEmail = myHint)
-                                //return viewModelExpress.stateLoginExpress.value.updateSuccessful == true
-
-                            }
 
                             "Cambiar Celular" -> {
                                 viewModelExpress.updateBasicData(newPhone = myHint)

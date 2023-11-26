@@ -1,6 +1,12 @@
 package com.example.univallealtoque.sign_in_express
 
 import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.data.DataStoreSingleton
@@ -14,6 +20,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -52,6 +61,7 @@ class LoginViewModelExpress() : ViewModel() {
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
         println("------>>>>>>$json")
+        Log.d("request", "$requestBody")
 
         viewModelScope.launch {
             try {
@@ -97,7 +107,6 @@ class LoginViewModelExpress() : ViewModel() {
                 }*/
 
                 if (response.message == "Inicio de sesión exitoso") {
-                    println("------vbufbvuinfiduvbiufiudf" + response)
                     // Ejemplo desde un Fragment
                     val userData = response.userData ?: UserDataExpress(
                         user_id = null,
@@ -131,81 +140,51 @@ class LoginViewModelExpress() : ViewModel() {
 
     fun updateBasicData(
         newProfilePhoto: String? = null,
-        newEmail: String? = null,
         newProgram: String? = null,
         newPhone: String? = null
     ) {
 
-        /**
-         * updatePhone actualiza el dato del celular del usuario LOCALMENTE en el DataStore
-         */
         viewModelScope.launch {
-            if(newPhone!= null){
+
+            if (newPhone != null) {
                 DataStoreSingleton.updatePhone(newPhone)
             }
-            if(newProgram!=null){
+            if (newProgram != null) {
                 DataStoreSingleton.updateProgram(newProgram)
             }
+            if (newProfilePhoto != null) {
+                DataStoreSingleton.updateProfilePhoto(newProfilePhoto)
+            }
 
-        }
+            val userData = DataStoreSingleton.getUserData().first()
 
-        println("------>>>>>>${loginOrUpdateResponseFromServer.value.userData}")
-        val auxNewUserDataExpress = UserDataExpress(
-            user_id = loginOrUpdateResponseFromServer.value.userData?.user_id,
-            name = loginOrUpdateResponseFromServer.value.userData?.name,
-            last_name = loginOrUpdateResponseFromServer.value.userData?.last_name,
-            profile_photo = newProfilePhoto
-                ?: loginOrUpdateResponseFromServer.value.userData?.profile_photo,
-            email = newEmail ?: loginOrUpdateResponseFromServer.value.userData?.email,
-            program = newProgram ?: loginOrUpdateResponseFromServer.value.userData?.program,
-            phone = newPhone ?: loginOrUpdateResponseFromServer.value.userData?.phone,
-            password = loginOrUpdateResponseFromServer.value.userData?.password,
-        )
-        println("------>>>>>>$auxNewUserDataExpress")
-        val alToqueService = AlToqueServiceFactory.makeAlToqueService()
+            var jsonUserData: String = ""
 
-        val gson = GsonBuilder().setPrettyPrinting().create()
-        val json = gson.toJson(auxNewUserDataExpress, UserDataExpress::class.java)
-        val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
-        println("------>>>>>>$json")
-        viewModelScope.launch {
+            userData?.let {
+                val userDataMap = mapOf(
+                    "user_id" to userData.user_id,
+                    "program" to userData.program,
+                    "phone" to userData.phone,
+                    "profile_photo" to userData.profile_photo
+                )
+
+                val gson = GsonBuilder().setPrettyPrinting().create()
+
+                jsonUserData = gson.toJson(userDataMap)
+
+                println(jsonUserData)
+            }
+
+            val alToqueService = AlToqueServiceFactory.makeAlToqueService()
+
+            val requestBody = jsonUserData.toRequestBody("application/json".toMediaTypeOrNull())
+            println("------>>>>>>$jsonUserData")
+
             try {
                 val response = alToqueService.updateProfile(requestBody)
 
                 println("RESPONSE FROM EXPRESS " + response)
-                fun updateStatesAfterLoginResponseFromServer(
-                    updatedUserData: UserDataExpress?,
-                    token: String?,
-                    message: String?
-                ) {
-                    _privateLoginOrUpdateResponseFromServer.update { currentState ->
-                        currentState.copy(
-                            userData = updatedUserData,
-                            token = token,
-                            message = message
-                        )
-                    }
-                    Log.d(
-                        "After update: ",
-                        _privateLoginOrUpdateResponseFromServer.value.userData.toString()
-                    )
-                }
-                updateStatesAfterLoginResponseFromServer(
-                    auxNewUserDataExpress,
-                    _privateLoginOrUpdateResponseFromServer.value.token,
-                    _privateLoginOrUpdateResponseFromServer.value.message
-                )
-                _stateLoginExpress.value = LoginState(
-                    isLoginSuccessful = true,
-                    loginError = false,
-                    updateSuccessful = true
-                )
             } catch (e: Exception) {
-                _stateLoginExpress.value = LoginState(
-                    isLoginSuccessful = true,
-                    loginError = false,
-                    updateSuccessful = false
-                )
                 println("Error al realizar la actualizacion: ${e.message}")
             }
         }

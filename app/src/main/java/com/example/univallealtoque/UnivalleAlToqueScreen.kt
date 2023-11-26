@@ -60,6 +60,7 @@ import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RecoverPasswordScreen
 import com.example.univallealtoque.ui.RegisterScreen
+import com.example.univallealtoque.ui.SettingsScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
 
 
@@ -71,7 +72,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     TermsAndConditions(title = R.string.terms),
     PrivacyPolicy(title = R.string.privacypolicy),
     RecoverPassword(title = R.string.recoverpassword),
-    GetCode(title = R.string.getcode)
+    GetCode(title = R.string.getcode),
+    Settings(title=R.string.settings)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -334,6 +336,17 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.GetCode.name) {
                 GetCodeScreen(
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.Settings.name) {
+                SettingsScreen(
+
+                    navController = navController,
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()

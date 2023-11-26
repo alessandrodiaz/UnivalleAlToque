@@ -3,6 +3,7 @@
     <string name="login">Login</string>
     <string name="profile">Profile</string>
     <string name="register">Register</string>
+    <string name="settings">Settings</string>
     <string name="back_button">Atrás</string>
     <string name="terms">TermsAndConditions</string>
     <string name="privacypolicy">PrivacyPolicy</string>
@@ -88,10 +89,9 @@
     <string name="register_text_success">Te has registrado en Univalle AlToque</string>
     <string name="register_text_error">Este correo electrónico ya se encuentra en uso</string>
 
-
     <!-- HOME -->
-    <string name="greeting_username">Bienvenido, </string>
-    <string name="greeting_empty">Bienvenido</string>
+    <string name="greeting_username">Hola, </string>
+    <string name="greeting_empty">Hola, ¿qué tal? 👋</string>
     <string name="proximos_eventos">Próximos eventos</string>
     <string name="esta_semana">Esta semana</string>
     <string name="que_queres_hacer">¿Qué querés hacer?</string>
@@ -114,5 +114,14 @@
     <string name="rugby_time">Viernes 5:00 PM</string>
     <!-- PERFIL -->
     <string name="logout">Logout</string>
-
+    <string name="profile_settings">Configuración de la cuenta</string>
+    <!-- SETTINGS -->
+    <string name="settings_title">Configuración de la cuenta</string>
+    <string name="settings_delete_account_title">Eliminar cuenta</string>
+    <string name="settings_delete_account_description">¿Estás seguro de eliminar tu cuenta? Esta acción es irreversible</string>
+    <string name="settings_delete_account_button">BORRAR CUENTA</string>
+    <string name="settings_change_password_title">Cambiar contraseña</string>
+    <string name="settings_current_password">Contraseña actual</string>
+    <string name="settings_new_password">Contraseña nueva</string>
+    <string name="settings_repeat_new_password">Repetir contraseña nueva</string>
 </resources>
