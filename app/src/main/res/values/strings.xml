@@ -36,6 +36,18 @@
     <string name="register_name">Nombres</string>
     <string name="register_last_name">Apellidos</string>
     <string name="register_registered">Ya estoy registrado</string>
+    <string name="register_invalid_email">El correo no es válido</string>
+    <string name="register_invalid_name">El nombre es demasiado corto</string>
+    <string name="register_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="register_invalid_data">Datos inválidos</string>
+    <string name="register_unchecked_terms">Debes aceptar nuestros términos y condiciones</string>
+    <string name="register_title_success">Registro exitoso</string>
+    <string name="register_text_success">Te has registrado en Univalle AlToque</string>
+    <string name="register_text_error">Este correo electrónico ya se encuentra en uso</string>
+    <string name="register_invalid_password">La contraseña es muy corta</string>
+    <string name="register_invalid_password_criteria_letter">La contraseña debe contener al menos una letra</string>
+    <string name="register_invalid_password_criteria_number">La contraseña debe contener al menos un número</string>
+    <string name="register_invalid_password_criteria_symbol">La contraseña debe contener al menos un símbolo especial</string>
     <!-- TERMINOS Y CONDICIONES -->
     <string name="register_conditions">Al continuar aceptas nuestra politica de privacidad y condiciones de uso</string>
     <string name="terms_conditions_title">Terminos y condiciones</string>
@@ -78,17 +90,6 @@
     <string name="privacy_policy_6">Tienes derecho a acceder, corregir, actualizar o eliminar tu información personal. Puedes realizar estos cambios en la configuración de tu cuenta o contactándonos directamente.</string>
     <string name="privacy_policy_7_title">7. Cambios en la Política de Privacidad</string>
     <string name="privacy_policy_7">Nos reservamos el derecho de modificar esta Política de Privacidad en cualquier momento. Las modificaciones entrarán en vigencia después de su publicación en la aplicación.</string>
-
-    <string name="register_invalid_email">El correo no es válido</string>
-    <string name="register_invalid_password">La contraseña es muy corta</string>
-    <string name="register_invalid_name">El nombre es demasiado corto</string>
-    <string name="register_password_mismatch">Las contraseñas no coinciden</string>
-    <string name="register_invalid_data">Datos inválidos</string>
-    <string name="register_unchecked_terms">Debes Aceptar nuestros terminos y condiciones</string>
-    <string name="register_title_success">Registro exitoso</string>
-    <string name="register_text_success">Te has registrado en Univalle AlToque</string>
-    <string name="register_text_error">Este correo electrónico ya se encuentra en uso</string>
-
     <!-- HOME -->
     <string name="greeting_username">Hola, </string>
     <string name="greeting_empty">Hola, ¿qué tal? 👋</string>

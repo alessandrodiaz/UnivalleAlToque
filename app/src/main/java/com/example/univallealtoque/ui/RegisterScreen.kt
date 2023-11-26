@@ -199,13 +199,36 @@ fun RegisterScreen(
                             return@Button
                         }
 
+                        val containsLetter = password.any { it.isLetter() }
+                        val containsDigit = password.any { it.isDigit() }
+                        val containsSpecialChar = password.any { !it.isLetterOrDigit() }
+
                         val validationState: RegisterDialogState? = when {
                             name.length < 3 -> RegisterDialogState.InvalidName(context.getString(R.string.register_invalid_name))
-                            password.length < 6 -> RegisterDialogState.InvalidPassword(
+
+
+                            //PASSWORD LENGTH
+                            password.length < 8 -> RegisterDialogState.InvalidPassword(
                                 context.getString(
                                     R.string.register_invalid_password
                                 )
                             )
+
+                            //CONTAINS A LETTER
+                            !containsLetter -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_letter)
+                            )
+
+                            //CONTAINS A NUMBER
+                            !containsDigit -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_number)
+                            )
+
+                            //CONTAINS A SYMBOL
+                            !containsSpecialChar -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_symbol)
+                            )
+
 
                             password != repeat_password -> RegisterDialogState.InvalidPassword(
                                 context.getString(R.string.register_password_mismatch)
