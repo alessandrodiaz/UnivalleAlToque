@@ -5,18 +5,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.model.RecoverPasswordModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
+import com.example.univallealtoque.sign_in_express.RegisterState
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.HttpException
 
 class UserPasswordModel : ViewModel() {
     private val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
     private val _recoveryMessage = MutableStateFlow<String>("")
     val recoveryMessage: StateFlow<String> = _recoveryMessage
+
+    private val _state = MutableStateFlow(RecoverPasswordState())
+    val state = _state.asStateFlow()
 
     fun recoverPassword(recoverPasswordModel: RecoverPasswordModel) {
 
@@ -27,17 +36,38 @@ class UserPasswordModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val message = alToqueService.recoverPassword(requestBody)
+                val response = alToqueService.recoverPassword(requestBody)
 
-                println("----->RESPONSE"+message)
+                println("----->RESPONSE RECOVER" + response)
+                if (response.message == "Email sent successfully") {
+                    _state.value =
+                        RecoverPasswordState(
+                            isEmailSentSuccessfully = true,
+                            isEmailValid = true,
+                            isRequestSuccessful = true
+                        )
 
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)
+                println("Error message: $e")
+
+                _state.value =
+                    RecoverPasswordState(
+                        isEmailSentSuccessfully = false,
+                        isEmailValid = false,
+                        isRequestSuccessful = true
+                    )
+
             }
         }
     }
 
     companion object {
         private const val TAG = "UserViewModel"
+    }
+
+    fun resetState() {
+        _state.update { RecoverPasswordState() }
     }
 }

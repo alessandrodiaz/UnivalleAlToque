@@ -10,7 +10,7 @@
     <string name="aviso">Aviso</string>
     <string name="recoverpassword">Recover Password</string>
     <string name="recoverpassword_title">Ingresa tu correo electrónico</string>
-    <string name="forgotpassword">Xispas, Olvidé mi contraseña :c</string>
+    <string name="forgotpassword">Olvidé mi contraseña</string>
     <string name="getcode">Get Code</string>
     <string name="invalidemail">El correo no se encuentra registrado</string>
 
@@ -125,5 +125,8 @@
     <string name="settings_current_password">Contraseña actual</string>
     <string name="settings_new_password">Contraseña nueva</string>
     <string name="settings_repeat_new_password">Repetir contraseña nueva</string>
+    <!-- RECOVER PASSWORD-->
+    <string name="recover_invalid_email">Este correo es inválido</string>
+    <string name="recover_email_sent">Hemos enviado un código de verificación a tu correo</string>
 
 </resources>

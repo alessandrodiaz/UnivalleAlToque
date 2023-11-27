@@ -1,21 +1,28 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,13 +32,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
 import com.example.univallealtoque.user_password.UserPasswordModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RecoverPasswordModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,9 +51,10 @@ fun RecoverPasswordScreen(
 ) {
     var email by remember { mutableStateOf("") }
     val userPasswordModel: UserPasswordModel = viewModel()
+    val userPasswordState by userPasswordModel.state.collectAsState()
 
     var recoveryMessage by remember { mutableStateOf("") }
-    var navigateGetCode = {navController.navigate(UnivalleAlToqueScreen.GetCode.name)}
+    var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
 
     LaunchedEffect(userPasswordModel.recoveryMessage) {
         userPasswordModel.recoveryMessage.collect {
@@ -84,9 +95,11 @@ fun RecoverPasswordScreen(
 
         Button(
             onClick = {
-                // Llama al método de recuperación de contraseña del ViewModel
+                // Llama al método de recuperación de contraseña del ViewModell
                 val userEmail = RecoverPasswordModel(email)
                 val response = userPasswordModel.recoverPassword(userEmail)
+
+                Log.d("response register: ", response.toString())
 
             },
             modifier = Modifier
@@ -104,6 +117,27 @@ fun RecoverPasswordScreen(
                 color = Color.White,
             )
         }
+
+        if (userPasswordState.isEmailSentSuccessfully && userPasswordState.isRequestSuccessful) {
+            println("CORREO ENVIADO")
+            CustomAlertDialog(
+                title = "Código enviado",
+                message = "Hemos enviado un código de verificación a tu correo",
+                onDismiss = { userPasswordModel.resetState() }
+            )
+        }
+
+        if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
+            println("CORREO INVALIDO")
+            CustomAlertDialog(
+                title = "Error",
+                message = "Este correo no es válido",
+                onDismiss={ userPasswordModel.resetState()}
+            )
+        }
+
+
+        println("recovery message" + recoveryMessage)
 
         // Observa el mensaje de recuperación y muestra un mensaje en la interfaz de usuario
         if (recoveryMessage.isNotBlank()) {

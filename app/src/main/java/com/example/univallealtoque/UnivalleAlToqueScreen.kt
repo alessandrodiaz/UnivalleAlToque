@@ -53,7 +53,7 @@ import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.ui.PrivacyPolicyScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in_google.LoginState
+import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.ProfileScreen

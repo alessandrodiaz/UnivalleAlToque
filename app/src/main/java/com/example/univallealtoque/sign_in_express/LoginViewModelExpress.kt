@@ -8,7 +8,6 @@ import com.example.univallealtoque.model.LoginRequestExpress
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.network.AlToqueServiceFactory
-import com.example.univallealtoque.sign_in_google.LoginState
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

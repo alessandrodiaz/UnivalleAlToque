@@ -6,7 +6,7 @@ data class SignInResult(
 )
 
 data class UserDataGoogle(
-    val userId:String,
+    val userId: String,
     val username: String?,
     val profilePictureUrl: String?
 )
