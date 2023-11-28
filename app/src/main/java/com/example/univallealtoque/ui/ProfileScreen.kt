@@ -1,5 +1,6 @@
 package com.example.univallealtoque.ui
 
+import androidx.core.content.FileProvider
 import CustomAlertDialog
 import android.graphics.Color.rgb
 import androidx.compose.foundation.BorderStroke
@@ -36,7 +37,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.scale
-
+import com.example.univallealtoque.BuildConfig
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 
@@ -48,12 +49,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
@@ -65,7 +67,32 @@ import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.sign_in_google.UserDataGoogle
 //import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
+
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.asImageBitmap
+
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
+
+import com.example.univallealtoque.util.StorageUtil
+
+
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -80,13 +107,15 @@ fun ProfileScreen(
     var showDialogChangeEmail by remember { mutableStateOf(false) }
     var showDialogChangePhone by remember { mutableStateOf(false) }
     var showDialogChangeProgram by remember { mutableStateOf(false) }
+    var showDialogChoosePhoto by remember { mutableStateOf(false) }
+    var showDialogChooseAvatar by remember { mutableStateOf(false) }
 
     //Obtener datos del usuario del DataStore
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
 
     val nameToShow = userDataFlow.value?.name ?: "null"
     val lastNameToShow = userDataFlow.value?.last_name ?: "null"
-    val profilePhotoToShow = userDataFlow.value?.profile_photo ?: "null"
+    var profilePhotoToShow = userDataFlow.value?.profile_photo ?: "null"
     val emailToShow = userDataFlow.value?.email ?: "null"
     val phoneToShow = userDataFlow.value?.phone ?: "null"
     val programToShow = userDataFlow.value?.program ?: "null"
@@ -120,7 +149,7 @@ fun ProfileScreen(
         )
     }
     val interactionSource = remember { MutableInteractionSource() }
-
+    var isClicked by remember { mutableStateOf(false) }
     val borderWidth = 4.dp
     LazyColumn(
         modifier = modifier
@@ -135,16 +164,66 @@ fun ProfileScreen(
 
                 //PROFILE PICTURE
                 if (profilePhotoToShow != "null") {
-                    AsyncImage(
-                        model = "$profilePhotoToShow",
-                        contentDescription = stringResource(id = R.string.profile_picture_description),
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
+                    var displayAvatarInt = 0;
+                    when (profilePhotoToShow){
+                        "avatar1" -> {displayAvatarInt = R.drawable.avatar1}
+                        "avatar2" -> {displayAvatarInt = R.drawable.avatar2}
+                        "avatar3" -> {displayAvatarInt = R.drawable.avatar3}
+                        "avatar4" -> {displayAvatarInt = R.drawable.avatar4}
+                        "avatar5" -> {displayAvatarInt = R.drawable.avatar5}
+                        "avatar6" -> {displayAvatarInt = R.drawable.avatar6}
+                        else -> {
+                        }
+                    }
+                    if (displayAvatarInt != 0){
+                        Image(
+                            painter = painterResource(id = displayAvatarInt),
+                            contentDescription = stringResource(id = R.string.login_title),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(160.dp)
+                                .border(
+                                    BorderStroke(borderWidth, rainbowColorsBrush),
+                                    CircleShape
+                                )
+                                .padding(borderWidth)
+                                .clip(CircleShape)
+                                .clickable {
+                                    // Toggle the value on each click
+                                    isClicked = !isClicked
+                                    // Print to console
+                                    println("Image Clicked: $isClicked")
+                                    showDialogChoosePhoto = true
+
+                                }
+                        )
+                    }else{//Tiene una url a una imagen de internet
+                        AsyncImage(
+                            //bitmap = BitmapFactory.decodeFile(File(LocalContext.current.filesDir, profilePhotoToShow).absolutePath).asImageBitmap(),
+                            model = profilePhotoToShow,
+                            contentDescription = stringResource(id = R.string.profile_picture_description),
+                            modifier = Modifier
+                                .size(150.dp)
+                                .border(
+                                    BorderStroke(borderWidth, rainbowColorsBrush),
+                                    CircleShape
+                                )
+                                .padding(borderWidth)
+                                .clip(CircleShape)
+                                .clickable {
+                                    // Toggle the value on each click
+                                    isClicked = !isClicked
+                                    // Print to console
+                                    println("Image Clicked: $isClicked")
+                                    showDialogChoosePhoto = true
+
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(16.dp))
-                } else {
+                } else {//Sin imagen de perfil
                     Image(
                         painter = painterResource(id = R.drawable.user6),
                         contentDescription = stringResource(id = R.string.login_title),
@@ -157,13 +236,27 @@ fun ProfileScreen(
                             )
                             .padding(borderWidth)
                             .clip(CircleShape)
+                            .clickable {
+                                // Toggle the value on each click
+                                isClicked = !isClicked
+                                // Print to console
+                                println("Image Clicked: $isClicked")
+                                showDialogChoosePhoto = true
+
+                            }
                     )
                 }
 
                 //USERNAME
                 if (nameToShow != "null" && lastNameToShow != "null") {
                     Text(
-                        text = "$nameToShow $lastNameToShow",
+                        text = "$nameToShow",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.displayLarge,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "$lastNameToShow",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.displayLarge,
                         color = Color.White
@@ -229,7 +322,16 @@ fun ProfileScreen(
 //                }
 //            }
 
+                if (showDialogChoosePhoto){
+                    showNewImageOptions(true, userModelExpress, {param: String -> profilePhotoToShow = param},{showDialogChooseAvatar = true},{showDialogChoosePhoto = false})
+                }
+
+                if(showDialogChooseAvatar){
+                    showNewAvatarOptions(true, userModelExpress, {param: String -> profilePhotoToShow = param},{showDialogChooseAvatar = false})
+                }
+
                 phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
+
 
                 if (showDialogChangePhone) {
                     phoneOfUser?.let {
@@ -480,6 +582,429 @@ fun ShowMessageDialog(
             },
             modifier = Modifier
                 .defaultMinSize(300.dp)
+                .border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
+
+
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun showNewImageOptions(
+    show: Boolean,
+    viewModelExpress: LoginViewModelExpress,
+    setProfilePhotoToShow: (imageName: String) -> Unit,
+    setShowNewAvatarOptions: () -> Unit,
+    onClose: () -> Unit
+) {
+
+    if (show) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = {
+                onClose()
+            },
+            title = {
+                Text("Elegir Nueva Foto De Perfil", color = Color.Black)
+            },
+            text = {
+                LazyColumn(
+                    modifier = Modifier
+                ) {
+                    item{
+                        Button(
+                            onClick = {
+                                viewModelExpress.updateBasicData(newProfilePhoto = "null")
+                                setProfilePhotoToShow("null");
+                                onClose()}) {
+                            Text(text = "Sin Foto")
+                        }
+                        imageCaptureFromCamera(viewModelExpress,setProfilePhotoToShow)
+                        ImageSelectionScreen(viewModelExpress,setProfilePhotoToShow)
+                        Button(onClick = {setShowNewAvatarOptions();onClose()}) {
+                            Text(text = "Elegir Avatar")
+                        }
+                    }
+                }
+
+
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onClose()
+                    }
+                ) {
+                    Text("Aceptar")
+                }
+            },
+            modifier = Modifier
+                .defaultMinSize(1700.dp)
+                .border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
+
+
+        )
+    }
+}
+
+
+
+@Composable
+fun imageCaptureFromCamera(
+    viewModelExpress: LoginViewModelExpress,
+    setProfilePhotoToShow: (imageName: String) -> Unit
+)
+{
+
+    val context = LocalContext.current
+    val file = context.createImageFile()
+    val uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+
+
+    var capturedImageUri by remember {
+        mutableStateOf<Uri>(Uri.EMPTY)
+    }
+
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){
+            capturedImageUri = uri
+        }
+
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ){
+        if (it)
+        {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            cameraLauncher.launch(uri)
+        }
+        else
+        {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+
+        Button(onClick = {
+            val permissionCheckResult =
+                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+
+            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
+            {
+                cameraLauncher.launch(uri)
+            }
+            else
+            {
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }) {
+            Text(text = "Tomar Foto")
+        }
+
+
+    if (capturedImageUri.path?.isNotEmpty() == true)
+    {
+        println("Imagen tomada: $capturedImageUri")
+        saveImageToInternalStorage(viewModelExpress,context,capturedImageUri , setProfilePhotoToShow)
+    }
+}
+
+fun Context.createImageFile(): File {
+    val timeStamp = SimpleDateFormat("yyyy_MM_dd_HH:mm:ss").format(Date())
+    val imageFileName = "JPEG_" + timeStamp + "_"
+    val image = File.createTempFile(
+        imageFileName,
+        ".jpg",
+        filesDir
+    )
+    println(filesDir)
+
+    return image
+}
+
+@Composable
+fun ImageSelectionScreen(
+    viewModelExpress: LoginViewModelExpress,
+    capturedImageUri: (imageName: String) -> Unit
+) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            uri?.let { saveImageToInternalStorage(viewModelExpress,context, it, capturedImageUri) }
+        }
+    )
+
+    Button(onClick = { launcher.launch("image/*") }) {
+        Text(text = "Elegir De Galeria")
+    }
+}
+
+//Used for the function of taking pictures with cameraX and for retrieving images from gallery
+//It will do the job of uploading the picture to google drive
+//It will do the job of updating the viewModel of the user to link with google drive
+//maybe I will need another function to store an image from google drive into internal store so
+//the rest of the code works without any editing
+//beacuse all the images wiil be store in google drive, it's besto edit the code of showing images,
+//to work viewing the images from google drive only.
+//the viewModel I think will have the link of the image serve on google drive.
+
+fun saveImageToInternalStorage(viewModelExpress: LoginViewModelExpress,context: Context, uri: Uri, capturedImageUri: (imageName: String) -> Unit) {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val imageName = "image.jpg"
+    val outputStream = context.openFileOutput("image.jpg", Context.MODE_PRIVATE)
+    inputStream?.use { input ->
+        outputStream.use { output ->
+            input.copyTo(output)
+            capturedImageUri(imageName)
+            println(uri)
+            StorageUtil.uploadToStorage(
+                viewModelExpress = viewModelExpress,
+                uri =uri,
+                context =context,
+                type ="image")
+            println("url of uploaded image: ${viewModelExpress.stateLoginExpress}")
+        }
+    }
+}
+
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@Composable
+fun showNewAvatarOptions(
+    show: Boolean,
+    viewModelExpress: LoginViewModelExpress,
+    setProfilePhotoToShow: (imageName: String) -> Unit,
+    onClose: () -> Unit
+) {
+
+    var selectedImage by remember { mutableStateOf("null") }
+
+    var isClicked by remember { mutableStateOf(false) }
+    var borderWidth1 by remember { mutableStateOf(0.dp) }
+    var borderWidth2 by remember { mutableStateOf(0.dp) }
+    var borderWidth3 by remember { mutableStateOf(0.dp) }
+    var borderWidth4 by remember { mutableStateOf(0.dp) }
+    var borderWidth5 by remember { mutableStateOf(0.dp) }
+    var borderWidth6 by remember { mutableStateOf(0.dp) }
+
+    if (show) {
+        AlertDialog(
+            containerColor = Color.White,
+            onDismissRequest = {
+                onClose()
+            },
+            title = {
+                Text("Elegir Avatar Como Foto De Perfil", color = Color.Black)
+            },
+            text = {
+                LazyColumn(
+                    modifier = Modifier
+                ) {
+                    item{
+                        var rainbowColorsBrush = remember {
+                            Brush.sweepGradient(
+                                listOf(
+                                    Color(0xFF9575CD),
+                                    Color(0xFFBA68C8),
+                                    Color(0xFFE57373),
+                                    Color(0xFFFFB74D),
+                                    Color(0xFFFFF176),
+                                    Color(0xFFAED581),
+                                    Color(0xFF4DD0E1),
+                                    Color(0xFF9575CD)
+                                )
+                            )
+                        }
+                        Row{
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar1),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth1, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth1)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar1"
+                                        borderWidth1 = 4.dp
+                                        borderWidth2 = 0.dp
+                                        borderWidth3 = 0.dp
+                                        borderWidth4 = 0.dp
+                                        borderWidth5 = 0.dp
+                                        borderWidth6 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar1")
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar2),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth2, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth2)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar2"
+                                        borderWidth2 = 4.dp
+                                        borderWidth1 = 0.dp
+                                        borderWidth3 = 0.dp
+                                        borderWidth4 = 0.dp
+                                        borderWidth5 = 0.dp
+                                        borderWidth6 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar2")
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar3),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth3, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth3)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar3"
+                                        borderWidth3 = 4.dp
+                                        borderWidth2 = 0.dp
+                                        borderWidth1 = 0.dp
+                                        borderWidth4 = 0.dp
+                                        borderWidth5 = 0.dp
+                                        borderWidth6 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar3")
+                                    }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row{
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar4),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth4, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth4)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar4"
+                                        borderWidth4 = 4.dp
+                                        borderWidth2 = 0.dp
+                                        borderWidth3 = 0.dp
+                                        borderWidth1 = 0.dp
+                                        borderWidth5 = 0.dp
+                                        borderWidth6 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar4")
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar5),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth5, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth5)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar5"
+                                        borderWidth5 = 4.dp
+                                        borderWidth2 = 0.dp
+                                        borderWidth3 = 0.dp
+                                        borderWidth4 = 0.dp
+                                        borderWidth1 = 0.dp
+                                        borderWidth6 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar5")
+                                    }
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.avatar6),
+                                contentDescription = stringResource(id = R.string.login_title),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(60.dp)
+                                    .border(
+                                        BorderStroke(borderWidth6, rainbowColorsBrush),
+                                        CircleShape
+                                    )
+                                    .padding(borderWidth6)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        selectedImage = "avatar6"
+                                        borderWidth6 = 4.dp
+                                        borderWidth2 = 0.dp
+                                        borderWidth3 = 0.dp
+                                        borderWidth4 = 0.dp
+                                        borderWidth5 = 0.dp
+                                        borderWidth1 = 0.dp
+                                        // Print to console
+                                        println("Image Clicked: avatar6")
+                                    }
+                            )
+                        }
+
+
+
+                    }
+                }
+
+
+            },
+            confirmButton = {
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        setProfilePhotoToShow(selectedImage)
+                        if (selectedImage != "null"){
+                            viewModelExpress.updateBasicData(newProfilePhoto = selectedImage)
+                        }
+                        onClose()
+                    }
+                ) {
+                    Text("Aceptar")
+                }
+            },
+            modifier = Modifier
+                .defaultMinSize(1700.dp)
                 .border(0.dp, Color.Transparent, RoundedCornerShape(16.dp))
 
 
