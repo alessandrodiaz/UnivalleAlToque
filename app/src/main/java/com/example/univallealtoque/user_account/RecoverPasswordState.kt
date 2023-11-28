@@ -1,4 +1,4 @@
-package com.example.univallealtoque.user_password
+package com.example.univallealtoque.user_account
 
 data class RecoverPasswordState (
     val isEmailSentSuccessfully: Boolean = false,

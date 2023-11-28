@@ -1,14 +1,11 @@
-package com.example.univallealtoque.user_password
+package com.example.univallealtoque.user_account
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.model.RecoverPasswordModel
 import com.example.univallealtoque.network.AlToqueServiceFactory
-import com.example.univallealtoque.sign_in_express.RegisterState
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 
 class UserPasswordModel : ViewModel() {
     private val alToqueService = AlToqueServiceFactory.makeAlToqueService()

@@ -1,5 +1,6 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -173,38 +174,11 @@ fun SignInScreen(
 
 
         if (loginStateExpress.loginError) {
-            var showDialog by remember { mutableStateOf(true) }
-
-            if (showDialog) {
-                LaunchedEffect(true) {
-                    delay(4000)
-                    showDialog = false
-                }
-            }
-
-            if (showDialog) {
-                Dialog(
-                    onDismissRequest = {}
-                ) {
-                    Box() {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .padding(16.dp),
-                            shape = RoundedCornerShape(16.dp),
-                        ) {
-                            Text(
-                                text = stringResource(id = R.string.login_invalid),
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize(Alignment.Center),
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-                }
-            }
+            CustomAlertDialog(
+                title = stringResource(id = R.string.error),
+                message = stringResource(id = R.string.login_invalid),
+                onDismiss={ viewModelExpress.resetLoginStateExpress()}
+            )
         }
 
         Spacer(
