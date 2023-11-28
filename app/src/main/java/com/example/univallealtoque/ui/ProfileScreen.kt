@@ -55,6 +55,7 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.LaunchedEffect
@@ -63,8 +64,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.sign_in_google.UserData
-
+import com.example.univallealtoque.sign_in_google.UserDataGoogle
 //import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 import android.Manifest
@@ -96,7 +96,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    userData: UserData?,
+    userDataGoogle: UserDataGoogle?,
 //    userDataExpress: UserDataExpress?,
     onSignOut: () -> Unit,
     userModelExpress: LoginViewModelExpress,

@@ -1,5 +1,7 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,11 +31,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
-import com.example.univallealtoque.RecoverPassword.UserViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.collectAsState
+import com.example.univallealtoque.user_account.UserPasswordModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.RecoverPasswordModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,13 +43,14 @@ fun RecoverPasswordScreen(
     modifier: Modifier,
 ) {
     var email by remember { mutableStateOf("") }
-    val userViewModel: UserViewModel = viewModel()
+    val userPasswordModel: UserPasswordModel = viewModel()
+    val userPasswordState by userPasswordModel.state.collectAsState()
 
     var recoveryMessage by remember { mutableStateOf("") }
-    var navigateGetCode = {navController.navigate(UnivalleAlToqueScreen.GetCode.name)}
+    var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
 
-    LaunchedEffect(userViewModel.recoveryMessage) {
-        userViewModel.recoveryMessage.collect {
+    LaunchedEffect(userPasswordModel.recoveryMessage) {
+        userPasswordModel.recoveryMessage.collect {
             recoveryMessage = it
         }
     }
@@ -86,11 +88,12 @@ fun RecoverPasswordScreen(
 
         Button(
             onClick = {
-                // Llama al método de recuperación de contraseña del ViewModel
-                userViewModel.getUserByEmail(email)
-                if (recoveryMessage.contains("registrado")) {
-                    navController.navigate(UnivalleAlToqueScreen.GetCode.name)
-                }
+                // Llama al método de recuperación de contraseña del ViewModell
+                val userEmail = RecoverPasswordModel(email)
+                val response = userPasswordModel.recoverPassword(userEmail)
+
+                Log.d("response register: ", response.toString())
+
             },
             modifier = Modifier
                 .padding(start = 16.dp, end = 16.dp)
@@ -108,11 +111,30 @@ fun RecoverPasswordScreen(
             )
         }
 
+        if (userPasswordState.isEmailSentSuccessfully && userPasswordState.isRequestSuccessful) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.recover_email_sent_title),
+                message = stringResource(id = R.string.recover_email_sent),
+                onDismiss = { userPasswordModel.resetState() }
+            )
+        }
+
+        if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.error),
+                message = stringResource(id = R.string.recover_invalid_email),
+                onDismiss={ userPasswordModel.resetState()}
+            )
+        }
+
+
+        println("recovery message" + recoveryMessage)
+
         // Observa el mensaje de recuperación y muestra un mensaje en la interfaz de usuario
-        if (recoveryMessage.isNotBlank() && recoveryMessage.contains("registrado")) {
+        if (recoveryMessage.isNotBlank()) {
             Text(
                 text = recoveryMessage,
-                color = Color.Red,
+                color = if (recoveryMessage.contains("registrado")) Color.Red else Color.Green,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }

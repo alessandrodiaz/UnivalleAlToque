@@ -10,20 +10,3 @@ data class NewDataPutted(
     val program: String? = null,
     val phone: String? = null
 )
-
-// Función para almacenar datos
-class DataStorage {
-    private var storedData: NewDataPutted? = null
-
-    fun storeData(data: NewDataPutted) {
-        storedData = data
-    }
-
-    fun getData(): NewDataPutted? {
-        return storedData
-    }
-
-    fun updateData(newData: NewDataPutted) {
-        storedData = newData
-    }
-}

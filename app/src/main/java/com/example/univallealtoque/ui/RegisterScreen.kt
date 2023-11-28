@@ -66,8 +66,9 @@ fun RegisterScreen(
     var password by rememberSaveable { mutableStateOf("") }
     var repeat_password by rememberSaveable { mutableStateOf("") }
     var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
-    var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
-    var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
+    var navigateTermsAndConditios =
+        { navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name) }
+    var navigatePrivacyPolicy = { navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name) }
     var checkboxState by remember { mutableStateOf(false) }
 
     val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
@@ -166,7 +167,7 @@ fun RegisterScreen(
             Checkbox(value = stringResource(id = R.string.register_conditions),
                 onTextSelected = {
                     navigateTermsAndConditios()
-                },isChecked = checkboxState,
+                }, isChecked = checkboxState,
                 onCheckedChange = { newCheckedState ->
                     checkboxState = newCheckedState
                 },
@@ -199,13 +200,36 @@ fun RegisterScreen(
                             return@Button
                         }
 
+                        val containsLetter = password.any { it.isLetter() }
+                        val containsDigit = password.any { it.isDigit() }
+                        val containsSpecialChar = password.any { !it.isLetterOrDigit() }
+
                         val validationState: RegisterDialogState? = when {
                             name.length < 3 -> RegisterDialogState.InvalidName(context.getString(R.string.register_invalid_name))
-                            password.length < 6 -> RegisterDialogState.InvalidPassword(
+
+
+                            //PASSWORD LENGTH
+                            password.length < 8 -> RegisterDialogState.InvalidPassword(
                                 context.getString(
                                     R.string.register_invalid_password
                                 )
                             )
+
+                            //CONTAINS A LETTER
+                            !containsLetter -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_letter)
+                            )
+
+                            //CONTAINS A NUMBER
+                            !containsDigit -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_number)
+                            )
+
+                            //CONTAINS A SYMBOL
+                            !containsSpecialChar -> RegisterDialogState.InvalidPassword(
+                                context.getString(R.string.register_invalid_password_criteria_symbol)
+                            )
+
 
                             password != repeat_password -> RegisterDialogState.InvalidPassword(
                                 context.getString(R.string.register_password_mismatch)
@@ -410,7 +434,7 @@ fun NormalTextComponent(value: String) {
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal
         ),
-    color = colorResource(id = R.color.colorText)
+        color = colorResource(id = R.color.colorText)
     )
 }
 
@@ -441,7 +465,11 @@ fun Checkbox(
 
 
 @Composable
-fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit, onTextSelected2: (String) -> Unit){
+fun ClickableTextComponent(
+    value: String,
+    onTextSelected: (String) -> Unit,
+    onTextSelected2: (String) -> Unit
+) {
 
     val initialText = "Al continuar aceptas nuestra "
     val privacyPolicyText = "Política de privacidad"
@@ -461,18 +489,17 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit, onTe
         }
     }
 
-    ClickableText(text = annotatedString, onClick = {
-        offset -> annotatedString.getStringAnnotations(offset,offset)
-        .firstOrNull()?.also {span->
-            Log.d("ClickableTextComponent","{$span}")
+    ClickableText(text = annotatedString, onClick = { offset ->
+        annotatedString.getStringAnnotations(offset, offset)
+            .firstOrNull()?.also { span ->
+                Log.d("ClickableTextComponent", "{$span}")
 
-            if(span.item == termsAndConditions ){
-                onTextSelected(span.item)
-            }
-            else {
-                onTextSelected2(span.item)
-            }
+                if (span.item == termsAndConditions) {
+                    onTextSelected(span.item)
+                } else {
+                    onTextSelected2(span.item)
+                }
 
-        }
+            }
     })
 }

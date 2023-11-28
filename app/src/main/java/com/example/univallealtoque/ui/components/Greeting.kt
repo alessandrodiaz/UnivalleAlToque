@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
 import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.sign_in_google.UserData
 import java.util.Locale
 
 @Composable
@@ -33,7 +32,7 @@ fun Greeting(
         if (nameToShow != null) {
             val formattedUsername = nameToShow
             Text(
-                text = stringResource(R.string.greeting_username) + " $formattedUsername" + " 👋",
+                text = stringResource(R.string.greeting_username) + " $formattedUsername" + " 😉",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(start = 20.dp)

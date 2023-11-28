@@ -1,7 +1,6 @@
 package com.example.univallealtoque
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -50,11 +49,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.model.UserDataExpress
+import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.ui.PrivacyPolicyScreen
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
-import com.example.univallealtoque.sign_in_google.LoginState
+import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.ProfileScreen
@@ -259,11 +258,11 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.Profile.name) {
                 ProfileScreen(
-                    userData = googleAuthUiClient.getSignedInUser(),
+                    userDataGoogle = googleAuthUiClient.getSignedInUser(),
                     onSignOut = {
                         coroutineScope.launch {
                             DataStoreSingleton.saveUserData(
-                                UserDataExpress(
+                                UserDataResponseExpress(
                                     null,
                                     null,
                                     null,
