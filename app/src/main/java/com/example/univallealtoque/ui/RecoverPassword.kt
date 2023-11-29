@@ -43,11 +43,13 @@ fun RecoverPasswordScreen(
     modifier: Modifier,
 ) {
     var email by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf("") }
     val userPasswordModel: UserPasswordModel = viewModel()
     val userPasswordState by userPasswordModel.state.collectAsState()
 
     var recoveryMessage by remember { mutableStateOf("") }
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
+    var emailSent by remember { mutableStateOf(false) }
 
     LaunchedEffect(userPasswordModel.recoveryMessage) {
         userPasswordModel.recoveryMessage.collect {
@@ -65,34 +67,57 @@ fun RecoverPasswordScreen(
     ) {
 
         Text(
-            text = stringResource(R.string.recoverpassword_title),
+            text = if (emailSent) stringResource(R.string.get_code_title) else stringResource(R.string.recoverpassword_title),
             style = MaterialTheme.typography.displayLarge,
             color = Color.Black,
             modifier = Modifier.padding(bottom = 28.dp)
         )
 
-        OutlinedTextField(
-            value = email,
-            textStyle = TextStyle(
-                color = Color.Black
-            ),
-            onValueChange = { email = it },
-            label = { Text(text = stringResource(id = R.string.register_email)) },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth()
-        )
+        if (emailSent){
+            OutlinedTextField(
+
+                value = code,
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
+                onValueChange = { code = it },
+                label = { Text(text = stringResource(id = R.string.code_label)) },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+        else {
+            OutlinedTextField(
+
+                value = email,
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
+                onValueChange = { email = it },
+                label = { Text(text = stringResource(id = R.string.register_email)) },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(25.dp))
 
         Button(
             onClick = {
-                // Llama al método de recuperación de contraseña del ViewModell
-                val userEmail = RecoverPasswordModel(email)
-                val response = userPasswordModel.recoverPassword(userEmail)
+                // Verifica las condiciones y ajusta el título y el onClick
+                if (emailSent) {
+                    println("Mensaje de éxito por consola")
+                } else {
+                    val userEmail = RecoverPasswordModel(email)
+                    val response = userPasswordModel.recoverPassword(userEmail)
 
-                Log.d("response register: ", response.toString())
+                    Log.d("response register: ", response.toString())
+                }
 
             },
             modifier = Modifier
@@ -105,7 +130,7 @@ fun RecoverPasswordScreen(
                 )
         ) {
             Text(
-                text = "Enviar",
+                text =  "Enviar",
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
             )
@@ -117,6 +142,7 @@ fun RecoverPasswordScreen(
                 message = stringResource(id = R.string.recover_email_sent),
                 onDismiss = { userPasswordModel.resetState() }
             )
+            emailSent = true
         }
 
         if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {

@@ -129,6 +129,8 @@
     <string name="recover_invalid_email">Correo inválido</string>
     <string name="recover_email_sent">Hemos enviado un código de verificación a tu correo</string>
     <string name="recover_email_sent_title">Código enviado</string>
+    <string name="get_code_title">Ingresa el código que te mandamos al correo seleccionado</string>
+    <string name="code_label">Código</string>
     <string name="error">Error</string>
 
 </resources>
