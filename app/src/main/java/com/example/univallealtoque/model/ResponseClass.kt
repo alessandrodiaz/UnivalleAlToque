@@ -25,6 +25,10 @@ data class SendCodeDeleteAccountResponse(
     val message: String? = null
 )
 
+data class DeleteAccountResponse(
+    val message: String? = null
+)
+
 
 
 

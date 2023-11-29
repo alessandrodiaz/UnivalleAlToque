@@ -130,10 +130,13 @@
     <string name="delete_account_title">Eliminar cuenta</string>
     <string name="delete_account_invalid_password">Contraseña incorrecta</string>
     <string name="delete_account_description">Ingresa el código que hemos enviado a tu correo. Recuerda que esta acción es irreversible.</string>
+    <string name="delete_account_done">Tu cuenta ha sido eliminada</string>
+    <string name="delete_account_invalid_code">Código incorrecto</string>
     <!-- RECOVER PASSWORD-->
     <string name="recover_invalid_email">Correo inválido</string>
     <string name="recover_email_sent">Hemos enviado un código de verificación a tu correo</string>
     <string name="recover_email_sent_title">Código enviado</string>
     <string name="error">Error</string>
+    <string name="code">Código</string>
 
 </resources>

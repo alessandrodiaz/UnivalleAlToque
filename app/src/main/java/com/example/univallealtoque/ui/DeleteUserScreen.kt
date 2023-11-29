@@ -1,5 +1,8 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,61 +33,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
 import androidx.navigation.NavController
+import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.model.DeleteAccountModel
+import com.example.univallealtoque.model.SendCodeDeleteAccountModel
+import com.example.univallealtoque.model.UserDataResponseExpress
+import com.example.univallealtoque.user_account.DeleteAccountConfirmViewModel
+import com.example.univallealtoque.user_account.SendCodeDeleteAccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteUserScreen(
     navController: NavController,
     modifier: Modifier,
+    onSignOut: () -> Unit,
 ) {
+    var code by rememberSaveable { mutableStateOf("") }
 
-    //CHANGE PASSWORD
-    var old_password by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var repeat_password by rememberSaveable { mutableStateOf("") }
+    val sendCodeDeleteAccountModel: DeleteAccountConfirmViewModel = viewModel()
+    val sendCodeState by sendCodeDeleteAccountModel.state.collectAsState()
 
-    //DELETE ACCOUNT
-    var delete_account_password by rememberSaveable { mutableStateOf("") }
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+    val userCode = userDataFlow.value?.user_id?.toString() ?: "null"
 
-//    var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
-//    var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
-//    var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
-//    var checkboxState by remember { mutableStateOf(false) }
-//
-//    val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
-//
-//    val viewModel: RegisterViewModel = viewModel()
-//    val registerState by viewModel.state.collectAsState()
+    var navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) }
+
 
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-//            .fillMaxWidth()
-//            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
 
-        item{
+        item {
             Spacer(modifier = Modifier.height(100.dp))
-            Text(
-                text = stringResource(R.string.settings_title),
-                style = MaterialTheme.typography.displayLarge,
-                color = Color.Black,
-                modifier = Modifier.padding(bottom = 28.dp)
-            )
 
-            /**
-             * DELETE ACCOUNT
-             */
-
-            /**
-             * DELETE ACCOUNT
-             */
-            Column( modifier = Modifier.fillMaxSize(),) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = stringResource(R.string.settings_delete_account_title),
                     style = MaterialTheme.typography.displayMedium,
@@ -99,19 +89,17 @@ fun DeleteUserScreen(
                 )
 
                 OutlinedTextField(
-                    value = password,
+                    value = code,
                     textStyle = TextStyle(
                         color = Color.Black
                     ),
-                    onValueChange = { password = it },
-                    label = { Text(text = stringResource(id = R.string.register_password)) },
+                    onValueChange = { code = it },
+                    label = { Text(text = stringResource(id = R.string.code)) },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                         .fillMaxWidth(),
-                    visualTransformation = PasswordVisualTransformation(),
-
-                    )
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,7 +114,13 @@ fun DeleteUserScreen(
                         )
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = {
+                            Log.d("DATOS A ENVIAR", userCode + code)
+                            val data = DeleteAccountModel(userCode, code)
+                            val response = sendCodeDeleteAccountModel.deleteAccount(data)
+
+                            Log.d("RESPUESTA: ", response.toString())
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxHeight(),
@@ -140,6 +134,31 @@ fun DeleteUserScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
+
+                if (sendCodeState.isAccountDeleted && sendCodeState.isRequestSuccessful) {
+                    CustomAlertDialog(
+                        title = stringResource(id = R.string.delete_account_title),
+                        message = stringResource(id = R.string.delete_account_done),
+                        onDismiss = { sendCodeDeleteAccountModel.resetState() }
+                    )
+
+                    navigateHome()
+                    onSignOut()
+                }
+
+                if (!sendCodeState.isCodeValid && sendCodeState.isRequestSuccessful) {
+                    CustomAlertDialog(
+                        title = stringResource(id = R.string.error),
+                        message = stringResource(id = R.string.delete_account_invalid_code),
+                        onDismiss = {
+                            sendCodeDeleteAccountModel.resetState()
+                        }
+                    )
+
+
+
+
+                }
             }
         }
     }

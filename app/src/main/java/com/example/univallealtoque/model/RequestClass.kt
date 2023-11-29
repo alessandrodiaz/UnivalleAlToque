@@ -20,6 +20,12 @@ public class SendCodeDeleteAccountModel(
 )
 
 @Serializable
+public class DeleteAccountModel(
+    val user_id: String,
+    val code: String
+)
+
+@Serializable
 public class RegisterModel(
     val name: String,
     val last_name: String,

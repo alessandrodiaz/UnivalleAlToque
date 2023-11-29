@@ -1,5 +1,6 @@
 package com.example.univallealtoque.network
 
+import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.RecoverPasswordResponse
 import com.example.univallealtoque.model.SendCodeDeleteAccountModel
@@ -32,6 +33,9 @@ interface AlToqueService {
 
     @POST("user/delete/code")
     suspend fun sendCodeDeleteAccount(@Body jsonBody: RequestBody): SendCodeDeleteAccountResponse
+
+    @POST("user/delete/confirm")
+    suspend fun deleteAccountConfirm(@Body jsonBody: RequestBody): DeleteAccountResponse
 }
 
 object AlToqueServiceFactory {

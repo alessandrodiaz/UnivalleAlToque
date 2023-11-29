@@ -362,6 +362,22 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding),
+                    onSignOut = {
+                        coroutineScope.launch {
+                            DataStoreSingleton.saveUserData(
+                                UserDataResponseExpress(
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            )
+                        }
+                    },
                 )
             }
         }
