@@ -125,6 +125,11 @@
     <string name="settings_current_password">Contraseña actual</string>
     <string name="settings_new_password">Contraseña nueva</string>
     <string name="settings_repeat_new_password">Repetir contraseña nueva</string>
+    <!-- DELETE ACCOUNT -->
+    <string name="delete_account">Delete account</string>
+    <string name="delete_account_title">Eliminar cuenta</string>
+    <string name="delete_account_invalid_password">Contraseña incorrecta</string>
+    <string name="delete_account_description">Ingresa el código que hemos enviado a tu correo. Recuerda que esta acción es irreversible.</string>
     <!-- RECOVER PASSWORD-->
     <string name="recover_invalid_email">Correo inválido</string>
     <string name="recover_email_sent">Hemos enviado un código de verificación a tu correo</string>

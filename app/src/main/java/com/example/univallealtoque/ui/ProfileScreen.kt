@@ -165,17 +165,35 @@ fun ProfileScreen(
                 //PROFILE PICTURE
                 if (profilePhotoToShow != "null") {
                     var displayAvatarInt = 0;
-                    when (profilePhotoToShow){
-                        "avatar1" -> {displayAvatarInt = R.drawable.avatar1}
-                        "avatar2" -> {displayAvatarInt = R.drawable.avatar2}
-                        "avatar3" -> {displayAvatarInt = R.drawable.avatar3}
-                        "avatar4" -> {displayAvatarInt = R.drawable.avatar4}
-                        "avatar5" -> {displayAvatarInt = R.drawable.avatar5}
-                        "avatar6" -> {displayAvatarInt = R.drawable.avatar6}
+                    when (profilePhotoToShow) {
+                        "avatar1" -> {
+                            displayAvatarInt = R.drawable.avatar1
+                        }
+
+                        "avatar2" -> {
+                            displayAvatarInt = R.drawable.avatar2
+                        }
+
+                        "avatar3" -> {
+                            displayAvatarInt = R.drawable.avatar3
+                        }
+
+                        "avatar4" -> {
+                            displayAvatarInt = R.drawable.avatar4
+                        }
+
+                        "avatar5" -> {
+                            displayAvatarInt = R.drawable.avatar5
+                        }
+
+                        "avatar6" -> {
+                            displayAvatarInt = R.drawable.avatar6
+                        }
+
                         else -> {
                         }
                     }
-                    if (displayAvatarInt != 0){
+                    if (displayAvatarInt != 0) {
                         Image(
                             painter = painterResource(id = displayAvatarInt),
                             contentDescription = stringResource(id = R.string.login_title),
@@ -197,7 +215,7 @@ fun ProfileScreen(
 
                                 }
                         )
-                    }else{//Tiene una url a una imagen de internet
+                    } else {//Tiene una url a una imagen de internet
                         AsyncImage(
                             //bitmap = BitmapFactory.decodeFile(File(LocalContext.current.filesDir, profilePhotoToShow).absolutePath).asImageBitmap(),
                             model = profilePhotoToShow,
@@ -322,12 +340,21 @@ fun ProfileScreen(
 //                }
 //            }
 
-                if (showDialogChoosePhoto){
-                    showNewImageOptions(true, userModelExpress, {param: String -> profilePhotoToShow = param},{showDialogChooseAvatar = true},{showDialogChoosePhoto = false})
+                if (showDialogChoosePhoto) {
+                    showNewImageOptions(
+                        true,
+                        userModelExpress,
+                        { param: String -> profilePhotoToShow = param },
+                        { showDialogChooseAvatar = true },
+                        { showDialogChoosePhoto = false })
                 }
 
-                if(showDialogChooseAvatar){
-                    showNewAvatarOptions(true, userModelExpress, {param: String -> profilePhotoToShow = param},{showDialogChooseAvatar = false})
+                if (showDialogChooseAvatar) {
+                    showNewAvatarOptions(
+                        true,
+                        userModelExpress,
+                        { param: String -> profilePhotoToShow = param },
+                        { showDialogChooseAvatar = false })
                 }
 
                 phoneOfUser?.let { infoPart("Celular", it, { showDialogChangePhone = true }) }
@@ -613,17 +640,18 @@ fun showNewImageOptions(
                 LazyColumn(
                     modifier = Modifier
                 ) {
-                    item{
+                    item {
                         Button(
                             onClick = {
                                 viewModelExpress.updateBasicData(newProfilePhoto = "null")
                                 setProfilePhotoToShow("null");
-                                onClose()}) {
+                                onClose()
+                            }) {
                             Text(text = "Sin Foto")
                         }
-                        imageCaptureFromCamera(viewModelExpress,setProfilePhotoToShow)
-                        ImageSelectionScreen(viewModelExpress,setProfilePhotoToShow)
-                        Button(onClick = {setShowNewAvatarOptions();onClose()}) {
+                        imageCaptureFromCamera(viewModelExpress, setProfilePhotoToShow)
+                        ImageSelectionScreen(viewModelExpress, setProfilePhotoToShow)
+                        Button(onClick = { setShowNewAvatarOptions();onClose() }) {
                             Text(text = "Elegir Avatar")
                         }
                     }
@@ -652,13 +680,11 @@ fun showNewImageOptions(
 }
 
 
-
 @Composable
 fun imageCaptureFromCamera(
     viewModelExpress: LoginViewModelExpress,
     setProfilePhotoToShow: (imageName: String) -> Unit
-)
-{
+) {
 
     val context = LocalContext.current
     val file = context.createImageFile()
@@ -671,21 +697,18 @@ fun imageCaptureFromCamera(
 
 
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()){
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
             capturedImageUri = uri
         }
 
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ){
-        if (it)
-        {
+    ) {
+        if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
             cameraLauncher.launch(uri)
-        }
-        else
-        {
+        } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
@@ -693,27 +716,28 @@ fun imageCaptureFromCamera(
 
 
 
-        Button(onClick = {
-            val permissionCheckResult =
-                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+    Button(onClick = {
+        val permissionCheckResult =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
 
-            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
-            {
-                cameraLauncher.launch(uri)
-            }
-            else
-            {
-                permissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }) {
-            Text(text = "Tomar Foto")
+        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            cameraLauncher.launch(uri)
+        } else {
+            permissionLauncher.launch(Manifest.permission.CAMERA)
         }
+    }) {
+        Text(text = "Tomar Foto")
+    }
 
 
-    if (capturedImageUri.path?.isNotEmpty() == true)
-    {
+    if (capturedImageUri.path?.isNotEmpty() == true) {
         println("Imagen tomada: $capturedImageUri")
-        saveImageToInternalStorage(viewModelExpress,context,capturedImageUri , setProfilePhotoToShow)
+        saveImageToInternalStorage(
+            viewModelExpress,
+            context,
+            capturedImageUri,
+            setProfilePhotoToShow
+        )
     }
 }
 
@@ -739,7 +763,7 @@ fun ImageSelectionScreen(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
-            uri?.let { saveImageToInternalStorage(viewModelExpress,context, it, capturedImageUri) }
+            uri?.let { saveImageToInternalStorage(viewModelExpress, context, it, capturedImageUri) }
         }
     )
 
@@ -757,7 +781,12 @@ fun ImageSelectionScreen(
 //to work viewing the images from google drive only.
 //the viewModel I think will have the link of the image serve on google drive.
 
-fun saveImageToInternalStorage(viewModelExpress: LoginViewModelExpress,context: Context, uri: Uri, capturedImageUri: (imageName: String) -> Unit) {
+fun saveImageToInternalStorage(
+    viewModelExpress: LoginViewModelExpress,
+    context: Context,
+    uri: Uri,
+    capturedImageUri: (imageName: String) -> Unit
+) {
     val inputStream = context.contentResolver.openInputStream(uri)
     val imageName = "image.jpg"
     val outputStream = context.openFileOutput("image.jpg", Context.MODE_PRIVATE)
@@ -768,14 +797,14 @@ fun saveImageToInternalStorage(viewModelExpress: LoginViewModelExpress,context: 
             println(uri)
             StorageUtil.uploadToStorage(
                 viewModelExpress = viewModelExpress,
-                uri =uri,
-                context =context,
-                type ="image")
+                uri = uri,
+                context = context,
+                type = "image"
+            )
             println("url of uploaded image: ${viewModelExpress.stateLoginExpress}")
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -810,7 +839,7 @@ fun showNewAvatarOptions(
                 LazyColumn(
                     modifier = Modifier
                 ) {
-                    item{
+                    item {
                         var rainbowColorsBrush = remember {
                             Brush.sweepGradient(
                                 listOf(
@@ -825,7 +854,7 @@ fun showNewAvatarOptions(
                                 )
                             )
                         }
-                        Row{
+                        Row {
                             Spacer(modifier = Modifier.width(16.dp))
                             Image(
                                 painter = painterResource(id = R.drawable.avatar1),
@@ -903,7 +932,7 @@ fun showNewAvatarOptions(
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Row{
+                        Row {
                             Spacer(modifier = Modifier.width(16.dp))
                             Image(
                                 painter = painterResource(id = R.drawable.avatar4),
@@ -982,7 +1011,6 @@ fun showNewAvatarOptions(
                         }
 
 
-
                     }
                 }
 
@@ -994,7 +1022,7 @@ fun showNewAvatarOptions(
                 TextButton(
                     onClick = {
                         setProfilePhotoToShow(selectedImage)
-                        if (selectedImage != "null"){
+                        if (selectedImage != "null") {
                             viewModelExpress.updateBasicData(newProfilePhoto = selectedImage)
                         }
                         onClose()

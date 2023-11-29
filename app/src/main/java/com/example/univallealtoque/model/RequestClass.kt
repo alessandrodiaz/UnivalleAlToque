@@ -14,6 +14,12 @@ public class RecoverPasswordModel(
 )
 
 @Serializable
+public class SendCodeDeleteAccountModel(
+    val user_id: String,
+    val password: String
+)
+
+@Serializable
 public class RegisterModel(
     val name: String,
     val last_name: String,

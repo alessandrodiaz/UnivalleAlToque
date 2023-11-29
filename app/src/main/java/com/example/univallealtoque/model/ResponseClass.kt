@@ -21,6 +21,10 @@ data class RecoverPasswordResponse(
     val message: String? = null
 )
 
+data class SendCodeDeleteAccountResponse(
+    val message: String? = null
+)
+
 
 
 

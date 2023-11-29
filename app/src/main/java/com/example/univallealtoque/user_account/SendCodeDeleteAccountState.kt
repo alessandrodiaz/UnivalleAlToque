@@ -1,8 +1,7 @@
 package com.example.univallealtoque.user_account
 
-data class RecoverPasswordState (
+data class SendCodeDeleteAccountState (
     val isEmailSentSuccessfully: Boolean = false,
-    val isEmailValid: Boolean = false,
+    val isPasswordValid: Boolean = false,
     val isRequestSuccessful: Boolean = false
 )
-
