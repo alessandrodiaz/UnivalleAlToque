@@ -1,7 +1,10 @@
 package com.example.univallealtoque.network
 
+import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.RecoverPasswordResponse
+import com.example.univallealtoque.model.SendCodeDeleteAccountModel
+import com.example.univallealtoque.model.SendCodeDeleteAccountResponse
 import com.example.univallealtoque.model.UpdateBasicDataResponseExpress
 import okhttp3.RequestBody
 import retrofit2.Retrofit
@@ -16,10 +19,6 @@ private const val BASE_URL =
 
 interface AlToqueService {
 
-//    @GET("users")
-//    suspend fun getUsers(): RemoteResult
-
-
     @POST("login") // Reemplaza con la ruta correcta de tu servicio
     suspend fun loginUserExpress(@Body jsonBody: RequestBody): LoginResponseExpress
 
@@ -31,6 +30,12 @@ interface AlToqueService {
 
     @POST("user/recover")
     suspend fun recoverPassword(@Body jsonBody: RequestBody): RecoverPasswordResponse
+
+    @POST("user/delete/code")
+    suspend fun sendCodeDeleteAccount(@Body jsonBody: RequestBody): SendCodeDeleteAccountResponse
+
+    @POST("user/delete/confirm")
+    suspend fun deleteAccountConfirm(@Body jsonBody: RequestBody): DeleteAccountResponse
 }
 
 object AlToqueServiceFactory {

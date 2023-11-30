@@ -185,47 +185,44 @@ fun SignInScreen(
             modifier = modifier.size(40.dp)
         )
 
-        Text(
-            text = stringResource(R.string.login_google_description),
-            style = MaterialTheme.typography.displaySmall,
-        )
+//        Text(
+//            text = stringResource(R.string.login_google_description),
+//            style = MaterialTheme.typography.displaySmall,
+//        )
+//
+//        Spacer(
+//            modifier = modifier.size(20.dp)
+//        )
+//
+//        Box(
+//            modifier = Modifier
+//                .clip(RoundedCornerShape(16.dp))
+//                .background(MaterialTheme.colorScheme.primary)
+//                .clickable { onSignInClick() }
+//                .padding(8.dp)
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.Center
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.google),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .size(38.dp)
+//                        .padding(6.dp)
+//                )
+//                Text(
+//                    text = stringResource(R.string.login_button),
+//                    color = Color.White,
+//
+//                    style = MaterialTheme.typography.displaySmall,
+//                    modifier = Modifier
+//                        .padding(6.dp)
+//                )
+//            }
+//        }
 
-        Spacer(
-            modifier = modifier.size(20.dp)
-        )
-
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable { onSignInClick() }
-                .padding(8.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(38.dp)
-                        .padding(6.dp)
-                )
-                Text(
-                    text = stringResource(R.string.login_button),
-                    color = Color.White,
-
-                    style = MaterialTheme.typography.displaySmall,
-                    modifier = Modifier
-                        .padding(6.dp)
-                )
-            }
-        }
-
-        Spacer(
-            modifier = modifier.size(50.dp)
-        )
 
         Row(
             modifier = Modifier.clickable { navigateRegister() }
@@ -245,7 +242,7 @@ fun SignInScreen(
         }
 
         Spacer(
-            modifier = modifier.size(25.dp)
+            modifier = modifier.size(30.dp)
         )
 
         Text(

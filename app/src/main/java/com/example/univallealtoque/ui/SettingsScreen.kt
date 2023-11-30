@@ -18,42 +18,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.univallealtoque.R
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
-import com.example.univallealtoque.model.RegisterModel
-import com.example.univallealtoque.sign_in_express.RegisterViewModel
-import kotlinx.coroutines.delay
+import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.model.SendCodeDeleteAccountModel
+import com.example.univallealtoque.user_account.SendCodeDeleteAccountViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,10 +46,6 @@ fun SettingsScreen(
     modifier: Modifier,
 ) {
 
-//    var name by remember { mutableStateOf("") }
-//    var last_name by remember { mutableStateOf("") }
-//    var email by remember { mutableStateOf("") }
-
     //CHANGE PASSWORD
     var old_password by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -75,22 +54,17 @@ fun SettingsScreen(
     //DELETE ACCOUNT
     var delete_account_password by rememberSaveable { mutableStateOf("") }
 
-//    var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
-//    var navigateTermsAndConditios = {navController.navigate(UnivalleAlToqueScreen.TermsAndConditions.name)}
-//    var navigatePrivacyPolicy = {navController.navigate(UnivalleAlToqueScreen.PrivacyPolicy.name)}
-//    var checkboxState by remember { mutableStateOf(false) }
-//
-//    val dialogState = remember { mutableStateOf<RegisterDialogState?>(null) }
-//
-//    val viewModel: RegisterViewModel = viewModel()
-//    val registerState by viewModel.state.collectAsState()
+    val sendCodeDeleteAccountModel: SendCodeDeleteAccountViewModel = viewModel()
+    val sendCodeState by sendCodeDeleteAccountModel.state.collectAsState()
 
+    val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
+    val userCode = userDataFlow.value?.user_id?.toString() ?: "null"
+
+    var navigateDeleteUserScreen = { navController.navigate(UnivalleAlToqueScreen.DeleteUser.name) }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
-//            .fillMaxWidth()
-//            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -215,11 +189,11 @@ fun SettingsScreen(
                 )
 
                 OutlinedTextField(
-                    value = password,
+                    value = delete_account_password,
                     textStyle = TextStyle(
                         color = Color.Black
                     ),
-                    onValueChange = { password = it },
+                    onValueChange = { delete_account_password = it },
                     label = { Text(text = stringResource(id = R.string.register_password)) },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -242,7 +216,13 @@ fun SettingsScreen(
                         )
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = {
+                            Log.d("DATOS A ENVIAR", userCode+delete_account_password)
+                            val userPassword = SendCodeDeleteAccountModel(userCode,delete_account_password)
+                            val response = sendCodeDeleteAccountModel.sendCodeDeleteAccount(userPassword)
+
+                            Log.d("RESPUESTA: ", response.toString())
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxHeight(),
@@ -256,6 +236,24 @@ fun SettingsScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
+
+                if (sendCodeState.isEmailSentSuccessfully && sendCodeState.isRequestSuccessful) {
+                    CustomAlertDialog(
+                        title = stringResource(id = R.string.recover_email_sent_title),
+                        message = stringResource(id = R.string.recover_email_sent),
+                        onDismiss = { sendCodeDeleteAccountModel.resetState() }
+                    )
+
+                    navigateDeleteUserScreen()
+                }
+
+                if (!sendCodeState.isPasswordValid && sendCodeState.isRequestSuccessful) {
+                    CustomAlertDialog(
+                        title = stringResource(id = R.string.error),
+                        message = stringResource(id = R.string.delete_account_invalid_password),
+                        onDismiss={ sendCodeDeleteAccountModel.resetState()}
+                    )
+                }
             }
         }
     }

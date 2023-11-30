@@ -31,7 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.univallealtoque.R
-import com.example.univallealtoque.user_account.UserPasswordModel
+import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RecoverPasswordModel
@@ -44,15 +44,15 @@ fun RecoverPasswordScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
-    val userPasswordModel: UserPasswordModel = viewModel()
-    val userPasswordState by userPasswordModel.state.collectAsState()
+    val recoverPasswordViewModel: RecoverPasswordViewModel = viewModel()
+    val userPasswordState by recoverPasswordViewModel.state.collectAsState()
 
     var recoveryMessage by remember { mutableStateOf("") }
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
     var emailSent by remember { mutableStateOf(false) }
 
-    LaunchedEffect(userPasswordModel.recoveryMessage) {
-        userPasswordModel.recoveryMessage.collect {
+    LaunchedEffect(recoverPasswordViewModel.recoveryMessage) {
+        recoverPasswordViewModel.recoveryMessage.collect {
             recoveryMessage = it
         }
     }
@@ -109,12 +109,13 @@ fun RecoverPasswordScreen(
 
         Button(
             onClick = {
+
                 // Verifica las condiciones y ajusta el título y el onClick
                 if (emailSent) {
                     println("Mensaje de éxito por consola")
                 } else {
                     val userEmail = RecoverPasswordModel(email)
-                    val response = userPasswordModel.recoverPassword(userEmail)
+                    val response = recoverPasswordViewModel.recoverPassword(userEmail)
 
                     Log.d("response register: ", response.toString())
                 }
@@ -140,7 +141,7 @@ fun RecoverPasswordScreen(
             CustomAlertDialog(
                 title = stringResource(id = R.string.recover_email_sent_title),
                 message = stringResource(id = R.string.recover_email_sent),
-                onDismiss = { userPasswordModel.resetState() }
+                onDismiss = { recoverPasswordViewModel.resetState() }
             )
             emailSent = true
         }
@@ -149,7 +150,7 @@ fun RecoverPasswordScreen(
             CustomAlertDialog(
                 title = stringResource(id = R.string.error),
                 message = stringResource(id = R.string.recover_invalid_email),
-                onDismiss={ userPasswordModel.resetState()}
+                onDismiss={ recoverPasswordViewModel.resetState()}
             )
         }
 

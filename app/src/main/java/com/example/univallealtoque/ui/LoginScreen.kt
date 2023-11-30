@@ -39,11 +39,11 @@ fun LoginScreen(
 
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        if (googleAuthUiClient.getSignedInUser() != null) {
-            navController.navigate(UnivalleAlToqueScreen.Profile.name)
-        }
-    }
+//    LaunchedEffect(key1 = Unit) {
+//        if (googleAuthUiClient.getSignedInUser() != null) {
+//            navController.navigate(UnivalleAlToqueScreen.Profile.name)
+//        }
+//    }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()

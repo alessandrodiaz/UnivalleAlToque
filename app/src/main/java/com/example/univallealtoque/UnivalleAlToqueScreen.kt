@@ -55,6 +55,7 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
+import com.example.univallealtoque.ui.DeleteUserScreen
 import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RecoverPasswordScreen
@@ -72,7 +73,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     PrivacyPolicy(title = R.string.privacypolicy),
     RecoverPassword(title = R.string.recoverpassword),
     GetCode(title = R.string.getcode),
-    Settings(title=R.string.settings)
+    Settings(title = R.string.settings),
+    DeleteUser(title = R.string.delete_account)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -159,7 +161,7 @@ fun UnivalleAlToqueBottomBar(
 
         }
         IconButton(
-            onClick = {  }
+            onClick = { }
         ) {
 
             Icon(
@@ -170,7 +172,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick = if (userDataEmail!=null) navigateProfile else navigateLogin,
+            onClick = if (userDataEmail != null) navigateProfile else navigateLogin,
         ) {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
@@ -274,13 +276,13 @@ fun UnivalleAlToqueApp(
                                 )
                             )
 
-                            googleAuthUiClient.signOut()
-                            Toast.makeText(
-                                context,
-                                R.string.signed_out,
-                                Toast.LENGTH_LONG
-                            ).show()
-
+//                            googleAuthUiClient.signOut()
+//                            Toast.makeText(
+//                                context,
+//                                R.string.signed_out,
+//                                Toast.LENGTH_LONG
+//                            ).show()
+//
 //                            navController.popBackStack()
                         }
                     },
@@ -350,6 +352,32 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.DeleteUser.name) {
+                DeleteUserScreen(
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onSignOut = {
+                        coroutineScope.launch {
+                            DataStoreSingleton.saveUserData(
+                                UserDataResponseExpress(
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                )
+                            )
+                        }
+                    },
                 )
             }
         }

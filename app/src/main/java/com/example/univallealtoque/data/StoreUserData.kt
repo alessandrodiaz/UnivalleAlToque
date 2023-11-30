@@ -68,6 +68,5 @@ public class StoreUserData(private val context: Context) {
             }
         }
     }
-
 }
 
