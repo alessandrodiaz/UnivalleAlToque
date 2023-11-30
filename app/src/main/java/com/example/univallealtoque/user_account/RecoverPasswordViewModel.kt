@@ -29,7 +29,6 @@ class RecoverPasswordViewModel : ViewModel() {
         val json = gson.toJson(recoverPasswordModel, RecoverPasswordModel::class.java)
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-
         viewModelScope.launch {
             try {
                 val response = alToqueService.recoverPassword(requestBody)
@@ -40,9 +39,9 @@ class RecoverPasswordViewModel : ViewModel() {
                         RecoverPasswordState(
                             isEmailSentSuccessfully = true,
                             isEmailValid = true,
-                            isRequestSuccessful = true
+                            isRequestSuccessful = true,
+                            randomCode = response.randomCode,
                         )
-
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)
@@ -52,9 +51,9 @@ class RecoverPasswordViewModel : ViewModel() {
                     RecoverPasswordState(
                         isEmailSentSuccessfully = false,
                         isEmailValid = false,
-                        isRequestSuccessful = true
+                        isRequestSuccessful = true,
+                        randomCode = -1
                     )
-
             }
         }
     }

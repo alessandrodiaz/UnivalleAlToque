@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,6 +51,7 @@ fun RecoverPasswordScreen(
     var recoveryMessage by remember { mutableStateOf("") }
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
     var emailSent by remember { mutableStateOf(false) }
+    var failedAttemps by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(recoverPasswordViewModel.recoveryMessage) {
         recoverPasswordViewModel.recoveryMessage.collect {
@@ -112,7 +114,23 @@ fun RecoverPasswordScreen(
 
                 // Verifica las condiciones y ajusta el título y el onClick
                 if (emailSent) {
-                    println("Mensaje de éxito por consola")
+
+                    if (code.toInt() == userPasswordState.randomCode) {
+                        // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
+                        println("FUNCIONNAAAAAAAA")
+                    }
+                    else {
+                        if (failedAttemps < 4){
+                            failedAttemps++
+                            if (failedAttemps == 3) {
+                                //AQUI SE PROGRAMA EL MENSAJE DE ULTIMO INTENTO
+                            }
+                        }
+                        else {
+                            //AQUI SE PROGRAMA LA SUSPENSION DEL USUARIO
+                        }
+                    }
+
                 } else {
                     val userEmail = RecoverPasswordModel(email)
                     val response = recoverPasswordViewModel.recoverPassword(userEmail)
@@ -144,6 +162,7 @@ fun RecoverPasswordScreen(
                 onDismiss = { recoverPasswordViewModel.resetState() }
             )
             emailSent = true
+            println(userPasswordState.randomCode)
         }
 
         if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
@@ -153,7 +172,6 @@ fun RecoverPasswordScreen(
                 onDismiss={ recoverPasswordViewModel.resetState()}
             )
         }
-
 
         println("recovery message" + recoveryMessage)
 

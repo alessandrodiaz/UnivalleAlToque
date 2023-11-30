@@ -14,11 +14,12 @@ data class UserDataResponseExpress(
     val email: String?,
     var program: String?,
     var phone: String?,
-    val password: String?
+    val password: String?,
 )
 
 data class RecoverPasswordResponse(
-    val message: String? = null
+    val message: String? = null,
+    val randomCode: Int
 )
 
 data class SendCodeDeleteAccountResponse(
