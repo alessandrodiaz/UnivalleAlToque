@@ -276,13 +276,13 @@ fun UnivalleAlToqueApp(
                                 )
                             )
 
-                            googleAuthUiClient.signOut()
-                            Toast.makeText(
-                                context,
-                                R.string.signed_out,
-                                Toast.LENGTH_LONG
-                            ).show()
-
+//                            googleAuthUiClient.signOut()
+//                            Toast.makeText(
+//                                context,
+//                                R.string.signed_out,
+//                                Toast.LENGTH_LONG
+//                            ).show()
+//
 //                            navController.popBackStack()
                         }
                     },

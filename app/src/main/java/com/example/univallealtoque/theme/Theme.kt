@@ -4,7 +4,9 @@ package com.example.univallealtoque.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -52,6 +54,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnivalleAlToqueTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -62,10 +65,12 @@ fun UnivalleAlToqueTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//            if (darkTheme) dynamicDarkColorScheme(context) else
+                dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+//        darkTheme -> DarkColorScheme
+        darkTheme -> LightColorScheme
         else -> LightColorScheme
     }
     val view = LocalView.current
@@ -73,9 +78,13 @@ fun UnivalleAlToqueTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
+
+//    TextFieldDefaults.textFieldColors(
+//        containerColor = Color.White, // Cambiar el color del fondo del TextField a blanco
+//    )
 
     MaterialTheme(
         colorScheme = colorScheme,
