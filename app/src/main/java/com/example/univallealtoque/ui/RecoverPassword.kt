@@ -285,6 +285,9 @@ fun RecoverPasswordScreen(
                 onDismiss = { recoverPasswordViewModel.resetState() }
             )
             emailSent = true
+            actualRandomCode = userPasswordState.randomCode
+            date = userPasswordState.expirationDate.toString()
+//            navigateNewPassword()
         }
 
         if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
