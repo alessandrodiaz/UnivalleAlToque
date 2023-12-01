@@ -284,14 +284,16 @@ fun RecoverPasswordScreen(
         }
 
         if (!userPasswordState.isEmailSentSuccessfully && userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
+            date = userPasswordState.expirationDate.toString()
+            actualRandomCode = userPasswordState.randomCode
+
             CustomAlertDialog(
                 title = stringResource(id = R.string.error),
                 message = stringResource(id = R.string.code_exists),
-                onDismiss = { recoverPasswordViewModel.resetState() }
+                onDismiss = { recoverPasswordViewModel.resetState(); emailSent = true }
             )
-            emailSent = true
-            actualRandomCode = userPasswordState.randomCode
-            date = userPasswordState.expirationDate.toString()
+
+
 //            navigateNewPassword()
         }
 
