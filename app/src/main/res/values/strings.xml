@@ -116,6 +116,10 @@
     <!-- PERFIL -->
     <string name="logout">Logout</string>
     <string name="profile_settings">Configuración de la cuenta</string>
+    <string name="titleLogout">Confirmar salida</string>
+    <string name="messageLogout">¿Estás seguro de que deseas salir de la aplicación?</string>
+    <string name="confirmLogout">Sí</string>
+    <string name="cancelLogout">No</string>
     <!-- SETTINGS -->
     <string name="settings_title">Configuración de la cuenta</string>
     <string name="settings_delete_account_title">Eliminar cuenta</string>
