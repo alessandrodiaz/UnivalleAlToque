@@ -220,6 +220,7 @@ fun RecoverPasswordScreen(
                         )
                     }
                     Log.d("response register: ", response.toString())
+                    failedAttemps = 0
                 }
 
             },
