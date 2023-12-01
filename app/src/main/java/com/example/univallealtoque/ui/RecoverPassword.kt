@@ -211,13 +211,13 @@ fun RecoverPasswordScreen(
                         DataStoreSingleton.saveUserData(
                             UserDataResponseExpress(
                                 null,
-                                email,
                                 null,
                                 null,
                                 null,
                                 null,
                                 null,
-                                null
+                                null,
+                                email
                             )
                         )
                     }

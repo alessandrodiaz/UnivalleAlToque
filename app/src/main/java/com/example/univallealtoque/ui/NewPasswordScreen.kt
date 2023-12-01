@@ -67,7 +67,7 @@ fun NewPasswordScreen(
 
     //USER DATA FROM DATASTORE
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
-    val userCode = userDataFlow.value?.name?.toString() ?: "null"
+    val userCode = userDataFlow.value?.password?.toString() ?: "null"
 
     println(userCode)
 
