@@ -116,8 +116,8 @@
     <!-- PERFIL -->
     <string name="logout">Logout</string>
     <string name="profile_settings">Configuración de la cuenta</string>
-    <string name="titleLogout">Confirmar salida</string>
-    <string name="messageLogout">¿Estás seguro de que deseas salir de la aplicación?</string>
+    <string name="titleLogout">Cerrar sesión</string>
+    <string name="messageLogout">¿Estás seguro de que deseas cerrar tu sesión?</string>
     <string name="confirmLogout">Sí</string>
     <string name="cancelLogout">No</string>
     <!-- SETTINGS -->
@@ -144,5 +144,11 @@
     <string name="code_label">Código</string>
     <string name="error">Error</string>
     <string name="code">Código</string>
+    <string name="titleAlert">Cuidado</string>
+    <string name="messageAlert">Este es tu último intento. Si fallas serás bloqueado por 30 minutos</string>
+    <string name="confirmAlert">Ok</string>
+    <string name="expirationTitle">Alerta</string>
+    <string name="expirationMessage">Tu código ha expirado</string>
+    <string name="expirationConfirm">Ok</string>
 
 </resources>

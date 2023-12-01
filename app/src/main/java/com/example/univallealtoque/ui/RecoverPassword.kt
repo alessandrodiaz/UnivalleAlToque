@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -59,7 +61,8 @@ fun RecoverPasswordScreen(
 
     val lockoutUserViewModel: LockoutUserViewModel = viewModel()
     val lockoutUserState by lockoutUserViewModel.state.collectAsState()
-
+    var expirationDialog by remember { mutableStateOf(false)}
+    var lastAttemptDialog by remember { mutableStateOf(false) }
 
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
@@ -156,6 +159,8 @@ fun RecoverPasswordScreen(
                         if (hasExpired) {
                             println("SI EXPIRO")
                             emailSent = false
+                            expirationDialog = true
+
                         }
                         else {
                             // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
@@ -168,7 +173,8 @@ fun RecoverPasswordScreen(
                         if (failedAttemps < 4){
                             failedAttemps++
                             if (failedAttemps == 3) {
-                                //AQUI SE PROGRAMA EL MENSAJE DE ULTIMO INTENTO
+                                //CODIGOOO
+                                lastAttemptDialog = true
                             }
                         }
                         else {
@@ -179,6 +185,7 @@ fun RecoverPasswordScreen(
                             println("El usuario ha sido suspendido")
                         }
                     }
+
 
                 } else {
                     val userEmail = RecoverPasswordModel(email)
@@ -201,6 +208,24 @@ fun RecoverPasswordScreen(
                 text =  "Enviar",
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
+            )
+        }
+
+        if (expirationDialog) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.expirationTitle),
+                message = stringResource(id = R.string.expirationMessage),
+                confirmText = stringResource(id = R.string.expirationConfirm),
+                onDismiss = { expirationDialog = false }
+            )
+        }
+
+        if (lastAttemptDialog) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.titleAlert),
+                message = stringResource(id = R.string.messageAlert),
+                confirmText = stringResource(id = R.string.confirmAlert),
+                onDismiss = { lastAttemptDialog = false }
             )
         }
 
@@ -244,5 +269,7 @@ fun RecoverPasswordScreen(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
+
+
     }
 }
