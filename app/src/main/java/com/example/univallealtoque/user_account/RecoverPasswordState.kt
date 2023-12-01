@@ -5,5 +5,6 @@ data class RecoverPasswordState (
     val isEmailValid: Boolean = false,
     val isRequestSuccessful: Boolean = false,
     val randomCode: Int = -2,
+    val expirationDate: String? = ""
 )
 

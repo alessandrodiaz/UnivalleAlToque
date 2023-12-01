@@ -41,6 +41,7 @@ class RecoverPasswordViewModel : ViewModel() {
                             isEmailValid = true,
                             isRequestSuccessful = true,
                             randomCode = response.randomCode,
+                            expirationDate = response.expirationDateString,
                         )
                 }
             } catch (e: Exception) {
@@ -52,7 +53,8 @@ class RecoverPasswordViewModel : ViewModel() {
                         isEmailSentSuccessfully = false,
                         isEmailValid = false,
                         isRequestSuccessful = true,
-                        randomCode = -1
+                        randomCode = -1,
+                        expirationDate = "",
                     )
             }
         }

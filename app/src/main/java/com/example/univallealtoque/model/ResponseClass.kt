@@ -19,7 +19,8 @@ data class UserDataResponseExpress(
 
 data class RecoverPasswordResponse(
     val message: String? = null,
-    val randomCode: Int
+    val randomCode: Int,
+    val expirationDateString: String? = null
 )
 
 data class SendCodeDeleteAccountResponse(

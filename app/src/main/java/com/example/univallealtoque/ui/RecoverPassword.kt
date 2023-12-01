@@ -1,7 +1,9 @@
 package com.example.univallealtoque.ui
 
 import CustomAlertDialog
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,7 +38,10 @@ import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.model.RecoverPasswordModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecoverPasswordScreen(
@@ -49,6 +54,7 @@ fun RecoverPasswordScreen(
     val userPasswordState by recoverPasswordViewModel.state.collectAsState()
 
     var recoveryMessage by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
     var emailSent by remember { mutableStateOf(false) }
     var failedAttemps by remember { mutableIntStateOf(0) }
@@ -58,7 +64,6 @@ fun RecoverPasswordScreen(
         recoverPasswordViewModel.recoveryMessage.collect {
             recoveryMessage = it
         }
-        
     }
 
     LaunchedEffect(userPasswordState.randomCode) {
@@ -126,7 +131,26 @@ fun RecoverPasswordScreen(
                     println("El code escrito es: "+ code + " y el codigo real es " + actualRandomCode.toString())
                     println(code::class)
                     println(actualRandomCode::class)
+                    println(date)
+
+                    // Obtener la fecha actual
+                    val currentDate = LocalDateTime.now()
+
+                    // Parsear la fecha de expiración
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+                    val expirationDateTime = LocalDateTime.parse(date, formatter)
+
+                    // Comparar las fechas
+                    val hasExpired = currentDate.isAfter(expirationDateTime)
+
+                    println("expiro: " + hasExpired)
                     if (code == actualRandomCode.toString()) {
+                        if (hasExpired) {
+                            println("SI EXPIRO")
+                        }
+                        else {
+                            println("NO EXPIRO")
+                        }
                         // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
                         println("FUNCIONNAAAAAAAA")
                     }
@@ -175,6 +199,7 @@ fun RecoverPasswordScreen(
             emailSent = true
             println(userPasswordState.randomCode)
             actualRandomCode = userPasswordState.randomCode
+            date = userPasswordState.expirationDate.toString()
             println(actualRandomCode)
             println(userPasswordState.randomCode)
         }
