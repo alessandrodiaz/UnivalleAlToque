@@ -1,6 +1,7 @@
 package com.example.univallealtoque.ui
 
 import CustomAlertDialog
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,14 +41,18 @@ import com.example.univallealtoque.R
 import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.LockoutModel
 import com.example.univallealtoque.model.RecoverPasswordModel
+import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.user_account.LockoutUserViewModel
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +60,8 @@ fun RecoverPasswordScreen(
     navController: NavController,
     modifier: Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     var email by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
     val recoverPasswordViewModel: RecoverPasswordViewModel = viewModel()
@@ -70,9 +78,10 @@ fun RecoverPasswordScreen(
         mutableStateOf(false)
     }
 
+
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
-    var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
+    var navigateNewPassword = { navController.navigate(UnivalleAlToqueScreen.NewPassword.name) }
     var emailSent by remember { mutableStateOf(false) }
     var failedAttemps by remember { mutableIntStateOf(0) }
     var actualRandomCode by remember { mutableIntStateOf(userPasswordState.randomCode) }
@@ -170,6 +179,7 @@ fun RecoverPasswordScreen(
                         }
                         else {
                             // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
+                            navigateNewPassword()
 
                             println("NO EXPIRO")
                         }
@@ -194,11 +204,23 @@ fun RecoverPasswordScreen(
                         }
                     }
 
-
                 } else {
                     val userEmail = RecoverPasswordModel(email)
                     val response = recoverPasswordViewModel.recoverPassword(userEmail)
-
+                    coroutineScope.launch {
+                        DataStoreSingleton.saveUserData(
+                            UserDataResponseExpress(
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                email
+                            )
+                        )
+                    }
                     Log.d("response register: ", response.toString())
                 }
 

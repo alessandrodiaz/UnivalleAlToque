@@ -44,3 +44,9 @@ public class RegisterModel(
     val email: String,
     val password: String
 )
+
+@Serializable
+public class NewPasswordModel(
+    val email: String,
+    val new_password: String
+)

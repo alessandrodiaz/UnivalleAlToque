@@ -35,6 +35,10 @@ data class ChangePasswordResponse(
     val message: String? = null,
 )
 
+data class NewPasswordResponse(
+    val message: String? = null,
+)
+
 
 
 

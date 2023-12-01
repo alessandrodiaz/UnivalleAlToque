@@ -1,6 +1,7 @@
 package com.example.univallealtoque
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ import com.example.univallealtoque.ui.LoginScreen
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.google.android.gms.auth.api.identity.Identity
@@ -62,6 +64,7 @@ import com.example.univallealtoque.ui.RecoverPasswordScreen
 import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.SettingsScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
+import com.example.univallealtoque.ui.NewPasswordScreen
 
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
@@ -74,7 +77,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     RecoverPassword(title = R.string.recoverpassword),
     GetCode(title = R.string.getcode),
     Settings(title = R.string.settings),
-    DeleteUser(title = R.string.delete_account)
+    DeleteUser(title = R.string.delete_account),
+    NewPassword(title = R.string.new_password)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -184,6 +188,7 @@ fun UnivalleAlToqueBottomBar(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
@@ -378,6 +383,16 @@ fun UnivalleAlToqueApp(
                             )
                         }
                     },
+                )
+            }
+            composable(route = UnivalleAlToqueScreen.NewPassword.name) {
+                NewPasswordScreen(
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    userEmail = "",
                 )
             }
         }

@@ -3,6 +3,7 @@ package com.example.univallealtoque.network
 import com.example.univallealtoque.model.ChangePasswordResponse
 import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.LoginResponseExpress
+import com.example.univallealtoque.model.NewPasswordResponse
 import com.example.univallealtoque.model.RecoverPasswordResponse
 import com.example.univallealtoque.model.SendCodeDeleteAccountModel
 import com.example.univallealtoque.model.SendCodeDeleteAccountResponse
@@ -43,6 +44,9 @@ interface AlToqueService {
 
     @POST("user/change/password")
     suspend fun changePassword(@Body jsonBody: RequestBody): ChangePasswordResponse
+
+    @POST("user/newpassword")
+    suspend fun newPassword(@Body jsonBody: RequestBody): NewPasswordResponse
 }
 
 object AlToqueServiceFactory {

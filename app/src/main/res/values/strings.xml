@@ -13,6 +13,8 @@
     <string name="forgotpassword">Olvidé mi contraseña</string>
     <string name="getcode">Get Code</string>
     <string name="invalidemail">El correo no se encuentra registrado</string>
+    <string name="new_password">New password</string>
+    <string name="new_password_title">Crear nueva contraseña</string>
 
     <!-- LOGIN -->
     <string name="login_title">Iniciar sesión</string>
