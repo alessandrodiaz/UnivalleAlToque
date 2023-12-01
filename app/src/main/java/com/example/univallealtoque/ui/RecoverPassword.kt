@@ -123,9 +123,10 @@ fun RecoverPasswordScreen(
 
                 // Verifica las condiciones y ajusta el título y el onClick
                 if (emailSent) {
-                    println("El code escrito es: "+code.toInt() + " y el codigo real es " + actualRandomCode)
-
-                    if (code.trim().toInt() == actualRandomCode) {
+                    println("El code escrito es: "+ code + " y el codigo real es " + actualRandomCode.toString())
+                    println(code::class)
+                    println(actualRandomCode::class)
+                    if (code == actualRandomCode.toString()) {
                         // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
                         println("FUNCIONNAAAAAAAA")
                     }
