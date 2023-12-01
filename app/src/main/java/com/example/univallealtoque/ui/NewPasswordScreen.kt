@@ -82,7 +82,7 @@ fun NewPasswordScreen(
     ) {
 
         item {
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = stringResource(R.string.new_password_title),
                 style = MaterialTheme.typography.displayLarge,

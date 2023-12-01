@@ -135,6 +135,7 @@
     <string name="settings_password_updated">Tu contraseña ha sido actualizada</string>
     <string name="settings_password_invalid_title">Contraseña incorrecta</string>
     <string name="settings_password_invalid">La contraseña actual es incorrecta</string>
+
     <!-- DELETE ACCOUNT -->
     <string name="delete_account">Delete account</string>
     <string name="delete_account_title">Eliminar cuenta</string>
@@ -160,5 +161,6 @@
     <string name="lockoutUserMessage">Intentalo de nuevo mas tarde</string>
     <string name="wrongCodeTitle">Codigo Incorrecto</string>
     <string name="wrongCodeMessage">Intentalo de nuevo</string>
+    <string name="code_exists">Ya hemos enviado un código previamente a tu correo</string>
 
 </resources>

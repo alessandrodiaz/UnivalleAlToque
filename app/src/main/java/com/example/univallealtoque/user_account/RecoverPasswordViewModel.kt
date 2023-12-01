@@ -55,6 +55,16 @@ class RecoverPasswordViewModel : ViewModel() {
                             expirationDate = response.expirationDateString,
                             userSuspended = true
                         )
+                } else if (response.message == "Code already sent"){
+                    _state.value =
+                        RecoverPasswordState(
+                            isEmailSentSuccessfully = false,
+                            isEmailValid = true,
+                            isRequestSuccessful = true,
+                            randomCode = response.randomCode,
+                            expirationDate = response.expirationDateString,
+                            userSuspended = false
+                        )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)

@@ -69,7 +69,7 @@ fun RecoverPasswordScreen(
 
     val lockoutUserViewModel: LockoutUserViewModel = viewModel()
     val lockoutUserState by lockoutUserViewModel.state.collectAsState()
-    var expirationDialog by remember { mutableStateOf(false)}
+    var expirationDialog by remember { mutableStateOf(false) }
     var lastAttemptDialog by remember { mutableStateOf(false) }
     var suspendDialog by remember {
         mutableStateOf(false)
@@ -114,7 +114,7 @@ fun RecoverPasswordScreen(
             modifier = Modifier.padding(bottom = 28.dp)
         )
 
-        if (emailSent){
+        if (emailSent) {
             OutlinedTextField(
 
                 value = code,
@@ -128,8 +128,7 @@ fun RecoverPasswordScreen(
                     .padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
             )
-        }
-        else {
+        } else {
             OutlinedTextField(
 
                 value = email,
@@ -153,7 +152,7 @@ fun RecoverPasswordScreen(
 
                 // Verifica las condiciones y ajusta el título y el onClick
                 if (emailSent) {
-                    println("El code escrito es: "+ code + " y el codigo real es " + actualRandomCode.toString())
+                    println("El code escrito es: " + code + " y el codigo real es " + actualRandomCode.toString())
                     println(code::class)
                     println(actualRandomCode::class)
                     println(date)
@@ -176,25 +175,22 @@ fun RecoverPasswordScreen(
                             emailSent = false
                             expirationDialog = true
 
-                        }
-                        else {
+                        } else {
                             // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
                             navigateNewPassword()
 
                             println("NO EXPIRO")
                         }
                         println("FUNCIONNAAAAAAAA")
-                    }
-                    else {
+                    } else {
                         failedAttemps++
-                        if (failedAttemps <= 3){
+                        if (failedAttemps <= 3) {
                             if (failedAttemps == 3) {
                                 //CODIGOOO
                                 lastAttemptDialog = true
                             }
                             wrongCode = true
-                        }
-                        else {
+                        } else {
                             //AQUI SE PROGRAMA LA SUSPENSION DEL USUARIO
                             val userEmail = LockoutModel(email)
                             val response = lockoutUserViewModel.lockoutUser(userEmail)
@@ -235,7 +231,7 @@ fun RecoverPasswordScreen(
                 )
         ) {
             Text(
-                text =  "Enviar",
+                text = "Enviar",
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
             )
@@ -282,11 +278,20 @@ fun RecoverPasswordScreen(
             println(userPasswordState.randomCode)
         }
 
+        if (!userPasswordState.isEmailSentSuccessfully && userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.error),
+                message = stringResource(id = R.string.code_exists),
+                onDismiss = { recoverPasswordViewModel.resetState() }
+            )
+            emailSent = true
+        }
+
         if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.error),
                 message = stringResource(id = R.string.recover_invalid_email),
-                onDismiss={ recoverPasswordViewModel.resetState()}
+                onDismiss = { recoverPasswordViewModel.resetState() }
             )
         }
 
@@ -294,7 +299,7 @@ fun RecoverPasswordScreen(
             CustomAlertDialog(
                 title = stringResource(id = R.string.lockoutUserTitle),
                 message = stringResource(id = R.string.lockoutUserMessage),
-                onDismiss={
+                onDismiss = {
                     recoverPasswordViewModel.resetState()
                     suspendDialog = false
                 }
