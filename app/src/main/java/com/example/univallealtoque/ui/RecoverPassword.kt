@@ -63,6 +63,12 @@ fun RecoverPasswordScreen(
     val lockoutUserState by lockoutUserViewModel.state.collectAsState()
     var expirationDialog by remember { mutableStateOf(false)}
     var lastAttemptDialog by remember { mutableStateOf(false) }
+    var suspendDialog by remember {
+        mutableStateOf(false)
+    }
+    var wrongCode by remember {
+        mutableStateOf(false)
+    }
 
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
@@ -170,19 +176,21 @@ fun RecoverPasswordScreen(
                         println("FUNCIONNAAAAAAAA")
                     }
                     else {
-                        if (failedAttemps < 4){
-                            failedAttemps++
+                        failedAttemps++
+                        if (failedAttemps <= 3){
                             if (failedAttemps == 3) {
                                 //CODIGOOO
                                 lastAttemptDialog = true
                             }
+                            wrongCode = true
                         }
                         else {
                             //AQUI SE PROGRAMA LA SUSPENSION DEL USUARIO
                             val userEmail = LockoutModel(email)
                             val response = lockoutUserViewModel.lockoutUser(userEmail)
                             println(response)
-                            println("El usuario ha sido suspendido")
+                            suspendDialog = true
+                            emailSent = false
                         }
                     }
 
@@ -229,6 +237,15 @@ fun RecoverPasswordScreen(
             )
         }
 
+        if (wrongCode) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.wrongCodeTitle),
+                message = stringResource(id = R.string.wrongCodeMessage),
+                confirmText = stringResource(id = R.string.expirationConfirm),
+                onDismiss = { wrongCode = false }
+            )
+        }
+
         if (userPasswordState.isEmailSentSuccessfully && userPasswordState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.recover_email_sent_title),
@@ -251,11 +268,14 @@ fun RecoverPasswordScreen(
             )
         }
 
-        if (userPasswordState.userSuspended) {
+        if (userPasswordState.userSuspended || suspendDialog) {
             CustomAlertDialog(
-                title = "Usuario Suspendido",
-                message = "Intentalo de nuevo mas tarde",
-                onDismiss={ recoverPasswordViewModel.resetState()}
+                title = stringResource(id = R.string.lockoutUserTitle),
+                message = stringResource(id = R.string.lockoutUserMessage),
+                onDismiss={
+                    recoverPasswordViewModel.resetState()
+                    suspendDialog = false
+                }
             )
         }
 
@@ -269,7 +289,5 @@ fun RecoverPasswordScreen(
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
-
-
     }
 }

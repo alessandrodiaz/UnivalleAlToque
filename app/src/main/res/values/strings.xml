@@ -150,5 +150,9 @@
     <string name="expirationTitle">Alerta</string>
     <string name="expirationMessage">Tu código ha expirado</string>
     <string name="expirationConfirm">Ok</string>
+    <string name="lockoutUserTitle">Usuario Suspendido</string>
+    <string name="lockoutUserMessage">Intentalo de nuevo mas tarde</string>
+    <string name="wrongCodeTitle">Codigo Incorrecto</string>
+    <string name="wrongCodeMessage">Intentalo de nuevo</string>
 
 </resources>
