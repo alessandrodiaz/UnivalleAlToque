@@ -52,12 +52,21 @@ fun RecoverPasswordScreen(
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
     var emailSent by remember { mutableStateOf(false) }
     var failedAttemps by remember { mutableIntStateOf(0) }
+    var actualRandomCode by remember { mutableIntStateOf(userPasswordState.randomCode) }
 
     LaunchedEffect(recoverPasswordViewModel.recoveryMessage) {
         recoverPasswordViewModel.recoveryMessage.collect {
             recoveryMessage = it
         }
+        
     }
+
+    LaunchedEffect(userPasswordState.randomCode) {
+        if (userPasswordState.randomCode != -2) {
+            actualRandomCode = userPasswordState.randomCode
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -114,8 +123,9 @@ fun RecoverPasswordScreen(
 
                 // Verifica las condiciones y ajusta el título y el onClick
                 if (emailSent) {
+                    println("El code escrito es: "+code.toInt() + " y el codigo real es " + actualRandomCode)
 
-                    if (code.toInt() == userPasswordState.randomCode) {
+                    if (code.trim().toInt() == actualRandomCode) {
                         // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
                         println("FUNCIONNAAAAAAAA")
                     }
@@ -162,6 +172,9 @@ fun RecoverPasswordScreen(
                 onDismiss = { recoverPasswordViewModel.resetState() }
             )
             emailSent = true
+            println(userPasswordState.randomCode)
+            actualRandomCode = userPasswordState.randomCode
+            println(actualRandomCode)
             println(userPasswordState.randomCode)
         }
 
