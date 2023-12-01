@@ -1,7 +1,9 @@
 package com.example.univallealtoque.ui
 
 import CustomAlertDialog
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,8 +37,15 @@ import com.example.univallealtoque.R
 import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.LockoutModel
 import com.example.univallealtoque.model.RecoverPasswordModel
+import com.example.univallealtoque.user_account.LockoutUserViewModel
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecoverPasswordScreen(
@@ -43,15 +53,30 @@ fun RecoverPasswordScreen(
     modifier: Modifier,
 ) {
     var email by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf("") }
     val recoverPasswordViewModel: RecoverPasswordViewModel = viewModel()
     val userPasswordState by recoverPasswordViewModel.state.collectAsState()
 
+    val lockoutUserViewModel: LockoutUserViewModel = viewModel()
+    val lockoutUserState by lockoutUserViewModel.state.collectAsState()
+
+
     var recoveryMessage by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
     var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
+    var emailSent by remember { mutableStateOf(false) }
+    var failedAttemps by remember { mutableIntStateOf(0) }
+    var actualRandomCode by remember { mutableIntStateOf(userPasswordState.randomCode) }
 
     LaunchedEffect(recoverPasswordViewModel.recoveryMessage) {
         recoverPasswordViewModel.recoveryMessage.collect {
             recoveryMessage = it
+        }
+    }
+
+    LaunchedEffect(userPasswordState.randomCode) {
+        if (userPasswordState.randomCode != -2) {
+            actualRandomCode = userPasswordState.randomCode
         }
     }
 
@@ -65,34 +90,102 @@ fun RecoverPasswordScreen(
     ) {
 
         Text(
-            text = stringResource(R.string.recoverpassword_title),
+            text = if (emailSent) stringResource(R.string.get_code_title) else stringResource(R.string.recoverpassword_title),
             style = MaterialTheme.typography.displayLarge,
             color = Color.Black,
             modifier = Modifier.padding(bottom = 28.dp)
         )
 
-        OutlinedTextField(
-            value = email,
-            textStyle = TextStyle(
-                color = Color.Black
-            ),
-            onValueChange = { email = it },
-            label = { Text(text = stringResource(id = R.string.register_email)) },
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxWidth()
-        )
+        if (emailSent){
+            OutlinedTextField(
+
+                value = code,
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
+                onValueChange = { code = it },
+                label = { Text(text = stringResource(id = R.string.code_label)) },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+        else {
+            OutlinedTextField(
+
+                value = email,
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
+                onValueChange = { email = it },
+                label = { Text(text = stringResource(id = R.string.register_email)) },
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(25.dp))
 
         Button(
             onClick = {
-                // Llama al método de recuperación de contraseña del ViewModell
-                val userEmail = RecoverPasswordModel(email)
-                val response = recoverPasswordViewModel.recoverPassword(userEmail)
 
-                Log.d("response register: ", response.toString())
+                // Verifica las condiciones y ajusta el título y el onClick
+                if (emailSent) {
+                    println("El code escrito es: "+ code + " y el codigo real es " + actualRandomCode.toString())
+                    println(code::class)
+                    println(actualRandomCode::class)
+                    println(date)
+
+                    // Obtener la fecha actual
+                    val currentDate = Instant.now().atZone(ZoneId.of("GMT")).toLocalDateTime()
+
+                    // Parsear la fecha de expiración
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+                    val expirationDateTime = LocalDateTime.parse(date, formatter)
+
+                    // Comparar las fechas
+                    val hasExpired = currentDate.isAfter(expirationDateTime)
+
+                    println("expiro: " + hasExpired)
+                    println("fecha actual: " + currentDate + " fecha codigo: " + expirationDateTime)
+                    if (code == actualRandomCode.toString()) {
+                        if (hasExpired) {
+                            println("SI EXPIRO")
+                            emailSent = false
+                        }
+                        else {
+                            // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
+
+                            println("NO EXPIRO")
+                        }
+                        println("FUNCIONNAAAAAAAA")
+                    }
+                    else {
+                        if (failedAttemps < 4){
+                            failedAttemps++
+                            if (failedAttemps == 3) {
+                                //AQUI SE PROGRAMA EL MENSAJE DE ULTIMO INTENTO
+                            }
+                        }
+                        else {
+                            //AQUI SE PROGRAMA LA SUSPENSION DEL USUARIO
+                            val userEmail = LockoutModel(email)
+                            val response = lockoutUserViewModel.lockoutUser(userEmail)
+                            println(response)
+                            println("El usuario ha sido suspendido")
+                        }
+                    }
+
+                } else {
+                    val userEmail = RecoverPasswordModel(email)
+                    val response = recoverPasswordViewModel.recoverPassword(userEmail)
+
+                    Log.d("response register: ", response.toString())
+                }
 
             },
             modifier = Modifier
@@ -105,7 +198,7 @@ fun RecoverPasswordScreen(
                 )
         ) {
             Text(
-                text = "Enviar",
+                text =  "Enviar",
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
             )
@@ -117,6 +210,12 @@ fun RecoverPasswordScreen(
                 message = stringResource(id = R.string.recover_email_sent),
                 onDismiss = { recoverPasswordViewModel.resetState() }
             )
+            emailSent = true
+            println(userPasswordState.randomCode)
+            actualRandomCode = userPasswordState.randomCode
+            date = userPasswordState.expirationDate.toString()
+            println(actualRandomCode)
+            println(userPasswordState.randomCode)
         }
 
         if (!userPasswordState.isEmailValid && userPasswordState.isRequestSuccessful) {
@@ -127,6 +226,13 @@ fun RecoverPasswordScreen(
             )
         }
 
+        if (userPasswordState.userSuspended) {
+            CustomAlertDialog(
+                title = "Usuario Suspendido",
+                message = "Intentalo de nuevo mas tarde",
+                onDismiss={ recoverPasswordViewModel.resetState()}
+            )
+        }
 
         println("recovery message" + recoveryMessage)
 

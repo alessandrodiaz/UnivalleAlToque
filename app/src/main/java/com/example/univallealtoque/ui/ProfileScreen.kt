@@ -123,6 +123,7 @@ fun ProfileScreen(
     var emailOfUser by remember { mutableStateOf(emailToShow) }
     var phoneOfUser by remember { mutableStateOf(phoneToShow) }
     var programOfUser by remember { mutableStateOf(programToShow) }
+    var showAlertDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(userDataFlow.value) {
         emailOfUser = userDataFlow.value?.email ?: "null"
@@ -423,9 +424,7 @@ fun ProfileScreen(
                     }
                     IconButton(onClick =
                     {
-                        onSignOut()
-                        userModelExpress.resetLoginStateExpress()
-                        navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+                        showAlertDialog = true
                     }) {
 
                         Image(
@@ -437,6 +436,51 @@ fun ProfileScreen(
                         )
                     }
                 }
+
+                if (showAlertDialog) {
+                    AlertDialog(
+                        containerColor = Color.White,
+                        onDismissRequest = { /* No realizar ninguna acción al hacer clic fuera del cuadro de diálogo */ },
+                        title = {
+                            Text(
+                                text = stringResource(id = R.string.titleLogout),
+                                style = MaterialTheme.typography.displayMedium,
+                                color = Color.Black
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(id = R.string.messageLogout),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Black
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    // Lógica para salir de la sesión
+                                    onSignOut()
+                                    userModelExpress.resetLoginStateExpress()
+                                    navController.navigate(UnivalleAlToqueScreen.HomePage.name)
+                                    showAlertDialog = false
+                                }
+                            ) {
+                                Text(stringResource(id = R.string.confirmLogout))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    // Lógica para cancelar la salida
+                                    showAlertDialog = false
+                                }
+                            ) {
+                                Text(stringResource(id = R.string.cancelLogout))
+                            }
+                        }
+                    )
+                }
+
 
                 Spacer(modifier = Modifier.height(95.dp))
 

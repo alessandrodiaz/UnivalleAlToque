@@ -29,7 +29,6 @@ class RecoverPasswordViewModel : ViewModel() {
         val json = gson.toJson(recoverPasswordModel, RecoverPasswordModel::class.java)
         val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
 
-
         viewModelScope.launch {
             try {
                 val response = alToqueService.recoverPassword(requestBody)
@@ -40,9 +39,22 @@ class RecoverPasswordViewModel : ViewModel() {
                         RecoverPasswordState(
                             isEmailSentSuccessfully = true,
                             isEmailValid = true,
-                            isRequestSuccessful = true
+                            isRequestSuccessful = true,
+                            randomCode = response.randomCode,
+                            expirationDate = response.expirationDateString,
+                            userSuspended = false
                         )
-
+                }
+                else if (response.message == "El usuario está suspendido") {
+                    _state.value =
+                        RecoverPasswordState(
+                            isEmailSentSuccessfully = false,
+                            isEmailValid = false,
+                            isRequestSuccessful = false,
+                            randomCode = response.randomCode,
+                            expirationDate = response.expirationDateString,
+                            userSuspended = true
+                        )
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error al recuperar la contraseña por correo", e)
@@ -52,9 +64,10 @@ class RecoverPasswordViewModel : ViewModel() {
                     RecoverPasswordState(
                         isEmailSentSuccessfully = false,
                         isEmailValid = false,
-                        isRequestSuccessful = true
+                        isRequestSuccessful = true,
+                        randomCode = -1,
+                        expirationDate = "",
                     )
-
             }
         }
     }
