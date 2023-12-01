@@ -197,6 +197,8 @@ fun RecoverPasswordScreen(
                             println(response)
                             suspendDialog = true
                             emailSent = false
+                            failedAttemps = 0
+                            code = ""
                         }
                     }
 
@@ -242,7 +244,9 @@ fun RecoverPasswordScreen(
                 title = stringResource(id = R.string.expirationTitle),
                 message = stringResource(id = R.string.expirationMessage),
                 confirmText = stringResource(id = R.string.expirationConfirm),
-                onDismiss = { expirationDialog = false }
+                onDismiss = {
+                    recoverPasswordViewModel.resetState()
+                    expirationDialog = false }
             )
         }
 
