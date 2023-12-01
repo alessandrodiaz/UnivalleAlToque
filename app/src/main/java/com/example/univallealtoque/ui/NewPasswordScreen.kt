@@ -33,14 +33,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.datastore.dataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.ChangePasswordModel
+import com.example.univallealtoque.model.NewPasswordModel
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.model.SendCodeDeleteAccountModel
 import com.example.univallealtoque.user_account.ChangePasswordViewModel
+import com.example.univallealtoque.user_account.NewPasswordViewModel
 import com.example.univallealtoque.user_account.SendCodeDeleteAccountViewModel
 
 
@@ -49,24 +52,27 @@ import com.example.univallealtoque.user_account.SendCodeDeleteAccountViewModel
 fun NewPasswordScreen(
     navController: NavController,
     modifier: Modifier,
+    userEmail: String,
 ) {
 
-    //CHANGE PASSWORD
+    //NEW PASSWORD
 
     var password by rememberSaveable { mutableStateOf("") }
     var repeat_password by rememberSaveable { mutableStateOf("") }
 
-    val changePasswordModel: ChangePasswordViewModel = viewModel()
-    val changePasswordState by changePasswordModel.state.collectAsState()
+    val newPasswordModel: NewPasswordViewModel = viewModel()
+    val newPasswordState by newPasswordModel.state.collectAsState()
 
     val dialogState = remember { mutableStateOf<ChangePasswordDialogState?>(null) }
 
     //USER DATA FROM DATASTORE
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
-    val userCode = userDataFlow.value?.user_id?.toString() ?: "null"
+    val userCode = userDataFlow.value?.name?.toString() ?: "null"
+
+    println(userCode)
 
     var navigateDeleteUserScreen = { navController.navigate(UnivalleAlToqueScreen.DeleteUser.name) }
-    var navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name) }
+    var navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) }
 
     LazyColumn(
         modifier = Modifier
@@ -178,10 +184,10 @@ fun NewPasswordScreen(
                                     "DATOS A ENVIAR",
                                     userCode + " " + " " + password + " " + repeat_password
                                 )
-                                //val data = ChangePasswordModel(userCode, password)
-                                //val response = changePasswordModel.changePassword(data)
+                                val data = NewPasswordModel(userCode, password)
+                                val response = newPasswordModel.newPassword(data)
 
-                                //Log.d("RESPUESTA: ", response.toString())
+                                Log.d("RESPUESTA: ", response.toString())
 
                             } else {
                                 dialogState.value = validationState
@@ -223,23 +229,16 @@ fun NewPasswordScreen(
 
                 }
 
-                if (changePasswordState.isPasswordUpdated && changePasswordState.isRequestSuccessful) {
+                if (newPasswordState.isPasswordUpdated && newPasswordState.isRequestSuccessful) {
                     CustomAlertDialog(
                         title = stringResource(id = R.string.settings_password_updated_title),
                         message = stringResource(id = R.string.settings_password_updated),
-                        onDismiss = { changePasswordModel.resetState() }
+                        onDismiss = { newPasswordModel.resetState() }
                     )
 
-                    navigateProfile()
+                    navigateLogin()
                 }
 
-                if (!changePasswordState.isOldPasswordValid && changePasswordState.isRequestSuccessful) {
-                    CustomAlertDialog(
-                        title = stringResource(id = R.string.settings_password_invalid_title),
-                        message = stringResource(id = R.string.settings_password_invalid),
-                        onDismiss = { changePasswordModel.resetState() }
-                    )
-                }
             }
 
 

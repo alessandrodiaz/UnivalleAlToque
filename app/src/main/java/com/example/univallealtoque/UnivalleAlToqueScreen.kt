@@ -392,6 +392,7 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding),
+                    userEmail = "",
                 )
             }
         }

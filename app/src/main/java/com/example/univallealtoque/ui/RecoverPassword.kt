@@ -1,6 +1,7 @@
 package com.example.univallealtoque.ui
 
 import CustomAlertDialog
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,14 +39,18 @@ import com.example.univallealtoque.R
 import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.LockoutModel
 import com.example.univallealtoque.model.RecoverPasswordModel
+import com.example.univallealtoque.model.UserDataResponseExpress
 import com.example.univallealtoque.user_account.LockoutUserViewModel
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +58,8 @@ fun RecoverPasswordScreen(
     navController: NavController,
     modifier: Modifier,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     var email by remember { mutableStateOf("") }
     var code by remember { mutableStateOf("") }
     val recoverPasswordViewModel: RecoverPasswordViewModel = viewModel()
@@ -59,10 +67,6 @@ fun RecoverPasswordScreen(
 
     val lockoutUserViewModel: LockoutUserViewModel = viewModel()
     val lockoutUserState by lockoutUserViewModel.state.collectAsState()
-
-    var newPassword by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var showChangePasswordUI by remember { mutableStateOf(false) }
 
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
@@ -162,7 +166,8 @@ fun RecoverPasswordScreen(
                         }
                         else {
                             // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
-                           navigateNewPassword()
+                            navigateNewPassword()
+
                             println("NO EXPIRO")
                         }
                         println("FUNCIONNAAAAAAAA")
@@ -186,7 +191,20 @@ fun RecoverPasswordScreen(
                 } else {
                     val userEmail = RecoverPasswordModel(email)
                     val response = recoverPasswordViewModel.recoverPassword(userEmail)
-
+                    coroutineScope.launch {
+                        DataStoreSingleton.saveUserData(
+                            UserDataResponseExpress(
+                                null,
+                                email,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                            )
+                        )
+                    }
                     Log.d("response register: ", response.toString())
                 }
 
@@ -206,6 +224,7 @@ fun RecoverPasswordScreen(
                 color = Color.White,
             )
         }
+
 
         if (userPasswordState.isEmailSentSuccessfully && userPasswordState.isRequestSuccessful) {
             CustomAlertDialog(
@@ -249,3 +268,4 @@ fun RecoverPasswordScreen(
         }
     }
 }
+
