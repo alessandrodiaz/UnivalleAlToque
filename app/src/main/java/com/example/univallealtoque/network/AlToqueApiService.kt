@@ -36,6 +36,9 @@ interface AlToqueService {
 
     @POST("user/delete/confirm")
     suspend fun deleteAccountConfirm(@Body jsonBody: RequestBody): DeleteAccountResponse
+
+    @PUT("user/lockout")
+    suspend fun lockoutUserByEmail(@Body jsonBody: RequestBody): DeleteAccountResponse
 }
 
 object AlToqueServiceFactory {

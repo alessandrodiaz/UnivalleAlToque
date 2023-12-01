@@ -42,6 +42,18 @@ class RecoverPasswordViewModel : ViewModel() {
                             isRequestSuccessful = true,
                             randomCode = response.randomCode,
                             expirationDate = response.expirationDateString,
+                            userSuspended = false
+                        )
+                }
+                else if (response.message == "El usuario está suspendido") {
+                    _state.value =
+                        RecoverPasswordState(
+                            isEmailSentSuccessfully = false,
+                            isEmailValid = false,
+                            isRequestSuccessful = false,
+                            randomCode = response.randomCode,
+                            expirationDate = response.expirationDateString,
+                            userSuspended = true
                         )
                 }
             } catch (e: Exception) {

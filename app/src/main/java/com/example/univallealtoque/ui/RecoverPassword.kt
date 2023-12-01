@@ -37,8 +37,12 @@ import com.example.univallealtoque.R
 import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 import androidx.navigation.NavController
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.model.LockoutModel
 import com.example.univallealtoque.model.RecoverPasswordModel
+import com.example.univallealtoque.user_account.LockoutUserViewModel
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,6 +56,10 @@ fun RecoverPasswordScreen(
     var code by remember { mutableStateOf("") }
     val recoverPasswordViewModel: RecoverPasswordViewModel = viewModel()
     val userPasswordState by recoverPasswordViewModel.state.collectAsState()
+
+    val lockoutUserViewModel: LockoutUserViewModel = viewModel()
+    val lockoutUserState by lockoutUserViewModel.state.collectAsState()
+
 
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
@@ -71,7 +79,6 @@ fun RecoverPasswordScreen(
             actualRandomCode = userPasswordState.randomCode
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -134,7 +141,7 @@ fun RecoverPasswordScreen(
                     println(date)
 
                     // Obtener la fecha actual
-                    val currentDate = LocalDateTime.now()
+                    val currentDate = Instant.now().atZone(ZoneId.of("GMT")).toLocalDateTime()
 
                     // Parsear la fecha de expiración
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX")
@@ -144,14 +151,17 @@ fun RecoverPasswordScreen(
                     val hasExpired = currentDate.isAfter(expirationDateTime)
 
                     println("expiro: " + hasExpired)
+                    println("fecha actual: " + currentDate + " fecha codigo: " + expirationDateTime)
                     if (code == actualRandomCode.toString()) {
                         if (hasExpired) {
                             println("SI EXPIRO")
+                            emailSent = false
                         }
                         else {
+                            // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
+
                             println("NO EXPIRO")
                         }
-                        // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
                         println("FUNCIONNAAAAAAAA")
                     }
                     else {
@@ -163,6 +173,10 @@ fun RecoverPasswordScreen(
                         }
                         else {
                             //AQUI SE PROGRAMA LA SUSPENSION DEL USUARIO
+                            val userEmail = LockoutModel(email)
+                            val response = lockoutUserViewModel.lockoutUser(userEmail)
+                            println(response)
+                            println("El usuario ha sido suspendido")
                         }
                     }
 
@@ -208,6 +222,14 @@ fun RecoverPasswordScreen(
             CustomAlertDialog(
                 title = stringResource(id = R.string.error),
                 message = stringResource(id = R.string.recover_invalid_email),
+                onDismiss={ recoverPasswordViewModel.resetState()}
+            )
+        }
+
+        if (userPasswordState.userSuspended) {
+            CustomAlertDialog(
+                title = "Usuario Suspendido",
+                message = "Intentalo de nuevo mas tarde",
                 onDismiss={ recoverPasswordViewModel.resetState()}
             )
         }
