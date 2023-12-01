@@ -60,10 +60,13 @@ fun RecoverPasswordScreen(
     val lockoutUserViewModel: LockoutUserViewModel = viewModel()
     val lockoutUserState by lockoutUserViewModel.state.collectAsState()
 
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var showChangePasswordUI by remember { mutableStateOf(false) }
 
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
-    var navigateGetCode = { navController.navigate(UnivalleAlToqueScreen.GetCode.name) }
+    var navigateNewPassword = { navController.navigate(UnivalleAlToqueScreen.NewPassword.name) }
     var emailSent by remember { mutableStateOf(false) }
     var failedAttemps by remember { mutableIntStateOf(0) }
     var actualRandomCode by remember { mutableIntStateOf(userPasswordState.randomCode) }
@@ -159,7 +162,7 @@ fun RecoverPasswordScreen(
                         }
                         else {
                             // Aqui programa Alejandro Marroquin Almeida el cambio de contraseña
-
+                           navigateNewPassword()
                             println("NO EXPIRO")
                         }
                         println("FUNCIONNAAAAAAAA")
