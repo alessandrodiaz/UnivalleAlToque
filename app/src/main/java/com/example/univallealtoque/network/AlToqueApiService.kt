@@ -1,5 +1,6 @@
 package com.example.univallealtoque.network
 
+import com.example.univallealtoque.model.ChangePasswordResponse
 import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.RecoverPasswordResponse
@@ -39,6 +40,9 @@ interface AlToqueService {
 
     @PUT("user/lockout")
     suspend fun lockoutUserByEmail(@Body jsonBody: RequestBody): DeleteAccountResponse
+
+    @POST("user/change/password")
+    suspend fun changePassword(@Body jsonBody: RequestBody): ChangePasswordResponse
 }
 
 object AlToqueServiceFactory {

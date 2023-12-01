@@ -127,8 +127,12 @@
     <string name="settings_delete_account_button">BORRAR CUENTA</string>
     <string name="settings_change_password_title">Cambiar contraseña</string>
     <string name="settings_current_password">Contraseña actual</string>
-    <string name="settings_new_password">Contraseña nueva</string>
-    <string name="settings_repeat_new_password">Repetir contraseña nueva</string>
+    <string name="settings_new_password">Nueva contraseña</string>
+    <string name="settings_repeat_new_password">Repetir nueva contraseña</string>
+    <string name="settings_password_updated_title">Contraseña actualizada</string>
+    <string name="settings_password_updated">Tu contraseña ha sido actualizada</string>
+    <string name="settings_password_invalid_title">Contraseña incorrecta</string>
+    <string name="settings_password_invalid">La contraseña actual es incorrecta</string>
     <!-- DELETE ACCOUNT -->
     <string name="delete_account">Delete account</string>
     <string name="delete_account_title">Eliminar cuenta</string>

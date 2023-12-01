@@ -31,6 +31,13 @@ public class DeleteAccountModel(
 )
 
 @Serializable
+public class ChangePasswordModel(
+    val user_id: String,
+    val old_password: String,
+    val new_password: String
+)
+
+@Serializable
 public class RegisterModel(
     val name: String,
     val last_name: String,

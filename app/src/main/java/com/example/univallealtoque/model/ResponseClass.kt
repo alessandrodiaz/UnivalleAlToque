@@ -31,6 +31,10 @@ data class DeleteAccountResponse(
     val message: String? = null
 )
 
+data class ChangePasswordResponse(
+    val message: String? = null,
+)
+
 
 
 
