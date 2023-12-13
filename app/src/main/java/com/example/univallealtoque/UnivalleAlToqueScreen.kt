@@ -247,7 +247,6 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding)
-//                    userData = googleAuthUiClient.getSignedInUser()
                 )
             }
 
@@ -332,7 +331,6 @@ fun UnivalleAlToqueApp(
             composable(route = UnivalleAlToqueScreen.RecoverPassword.name) {
                 RecoverPasswordScreen(
                     navController = navController,
-
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()
