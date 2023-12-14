@@ -57,6 +57,7 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
+import com.example.univallealtoque.ui.CreateNewActivityScreen
 import com.example.univallealtoque.ui.DeleteUserScreen
 import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.ProfileScreen
@@ -78,7 +79,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     GetCode(title = R.string.getcode),
     Settings(title = R.string.settings),
     DeleteUser(title = R.string.delete_account),
-    NewPassword(title = R.string.new_password)
+    NewPassword(title = R.string.new_password),
+    CreateNewActivity(title = R.string.create_new_activity)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -130,6 +132,7 @@ fun UnivalleAlToqueBottomBar(
     navigateLogin: () -> Unit,
     navigateHome: () -> Unit,
     navigateProfile: () -> Unit,
+    navigateCreateActivity: () -> Unit,
     userModelExpressState: LoginState,
 ) {
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
@@ -153,7 +156,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick = { /* Acción de navegación */ }
+            onClick = navigateCreateActivity
         ) {
 
             Icon(
@@ -232,13 +235,14 @@ fun UnivalleAlToqueApp(
                 navigateLogin = { navController.navigate(UnivalleAlToqueScreen.Login.name) },
                 navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) },
                 navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name) },
+                navigateCreateActivity = { navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name) },
                 userModelExpressState = loginViewModelExpressState,
             )
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = UnivalleAlToqueScreen.HomePage.name,
+            startDestination = UnivalleAlToqueScreen.CreateNewActivity.name,
         ) {
 
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
@@ -247,6 +251,7 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding)
+//                    userData = googleAuthUiClient.getSignedInUser()
                 )
             }
 
@@ -349,7 +354,6 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.Settings.name) {
                 SettingsScreen(
-
                     navController = navController,
                     modifier = Modifier
                         .background(Color.White)
@@ -391,6 +395,17 @@ fun UnivalleAlToqueApp(
                         .fillMaxSize()
                         .padding(innerPadding),
                     userEmail = "",
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.CreateNewActivity.name){
+                CreateNewActivityScreen(
+                    userModelExpress = loginViewModelExpress,
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(16.dp),
                 )
             }
         }
