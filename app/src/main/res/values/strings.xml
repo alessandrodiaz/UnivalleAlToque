@@ -15,6 +15,7 @@
     <string name="invalidemail">El correo no se encuentra registrado</string>
     <string name="new_password">New password</string>
     <string name="new_password_title">Crear nueva contraseña</string>
+    <string name="create_new_activity">Create New Activity</string>
 
     <!-- LOGIN -->
     <string name="login_title">Iniciar sesión</string>
@@ -100,6 +101,7 @@
     <string name="que_queres_hacer">¿Qué querés hacer?</string>
     <string name="content_description_profile">Boton perfil</string>
     <string name="content_description_home">Boton home</string>
+
     <!-- CATEGORIAS -->
     <string name="gym">Gym</string>
     <string name="rumba">Rumba</string>
@@ -162,5 +164,6 @@
     <string name="wrongCodeTitle">Codigo Incorrecto</string>
     <string name="wrongCodeMessage">Intentalo de nuevo</string>
     <string name="code_exists">Ya hemos enviado un código previamente a tu correo</string>
+
 
 </resources>
