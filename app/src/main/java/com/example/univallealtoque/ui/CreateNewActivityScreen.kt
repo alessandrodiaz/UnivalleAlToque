@@ -2,8 +2,11 @@ package com.example.univallealtoque.ui
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,9 +47,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import com.example.univallealtoque.R
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.UserDataResponseExpress
 
@@ -78,6 +86,9 @@ fun CreateNewActivityScreen(
     navController: NavController,
     modifier: Modifier
 ) {
+
+    //var profilePhotoToShow = userDataFlow.value?.profile_photo ?: "null"
+
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
     val userModelExpressState by userModelExpress.loginOrUpdateResponseFromServer.collectAsState()
 
@@ -94,6 +105,10 @@ fun CreateNewActivityScreen(
     var value by remember {
         mutableStateOf("")
     }
+
+    var isClicked by remember { mutableStateOf(false) }
+    val borderWidth = 4.dp
+    var showDialogChoosePhoto by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -300,6 +315,42 @@ fun CreateNewActivityScreen(
                 }
             }
 
+            Text(
+                text = "Foto:",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 0.dp)
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.user),
+                contentDescription = stringResource(id = R.string.login_title),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(160.dp)
+                    .padding(borderWidth)
+                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .clickable {
+                        // Toggle the value on each click
+                        isClicked = !isClicked
+                        // Print to console
+                        println("Image Clicked: $isClicked")
+                        showDialogChoosePhoto = true
+
+                    }
+            )
+
+            //if (showDialogChoosePhoto) {
+            //    showNewImageOptions(
+            //        true,
+            //        userModelExpress,
+            //        { param: String -> profilePhotoToShow = param },
+            //        { showDialogChoosePhoto = false })
+            //}
+
+
             Button(
                 onClick = {
                     Log.d("d","sdnfsdnfsd")
@@ -330,6 +381,7 @@ fun CreateNewActivityScreen(
                                 saturdayStart = myNewActivityRequest.saturdayStart,
                                 saturdayEnd = myNewActivityRequest.saturdayEnd,
                             )
+                            Toast.makeText(context, "Actividad creada con éxito!", Toast.LENGTH_SHORT).show()
                         }else{
                             Toast.makeText(context, "Error: Debes iniciar sesion primero (userId not found)", Toast.LENGTH_SHORT).show()
                         }
@@ -429,3 +481,4 @@ fun DemoSearchableDropdown(
         }
     }
 }
+
