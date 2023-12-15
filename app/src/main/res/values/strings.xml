@@ -166,7 +166,8 @@
     <string name="code_exists">Ya hemos enviado un código previamente a tu correo</string>
     <!-- MY GROUPS -->
     <string name="my_groups">Mis grupos</string>
-    <string name="my_groups_title">Mis grupos inscritos</string>
+    <string name="my_groups_title">Mis actividades inscritas</string>
+    <string name="my_groups_no_activities">No tienes actividades inscritas 😥</string>
 
 
 </resources>
