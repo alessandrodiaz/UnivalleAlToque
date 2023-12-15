@@ -1,5 +1,7 @@
 package com.example.univallealtoque.model
 
+import android.app.Activity
+
 data class LoginResponseExpress(
     val userData: UserDataResponseExpress? = null,
     val token: String? = null,
@@ -39,6 +41,21 @@ data class NewPasswordResponse(
     val message: String? = null,
 )
 
+data class EnrolledActivitiesResponse(
+    val message: String? = null,
+    val activities: List<ActivitiesList>
+)
+
+data class ActivitiesList(
+    val group_id: Int? = null,
+    val group_name: String?  = null,
+    val group_description: String?  = null,
+    val group_photo: String?  = null,
+    val event_id: Int?  = null,
+    val event_name: String?  = null,
+    val event_description: String?  = null,
+    val event_photo: String? = null
+)
 
 
 
