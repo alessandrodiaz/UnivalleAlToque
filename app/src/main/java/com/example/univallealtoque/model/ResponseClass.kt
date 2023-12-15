@@ -57,6 +57,17 @@ data class ActivitiesList(
     val event_photo: String? = null
 )
 
+data class EventsListResponse(
+    val message: String? = null,
+    val events: List<EventsList>
+)
+
+data class EventsList(
+    val event_id: Int?  = null,
+    val event_name: String?  = null,
+    val photo: String? = null
+)
+
 
 
 
