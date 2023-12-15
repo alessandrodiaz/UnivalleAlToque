@@ -1,6 +1,7 @@
 package com.example.univallealtoque.ui
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -257,12 +258,10 @@ fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
 
 @Composable
 fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier) {
-    val data = listOf("a", "b", "c", "d", "e", "f")
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        //border = BorderStroke(2.dp,Color.Gray),
         modifier = modifier
 
     ) {
@@ -286,14 +285,12 @@ fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier
                     Card(
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
-                        // Usa la información de "event" para mostrar tus datos
                         AsyncImage(
-                            model = event.photo, // Usa el recurso de la foto del evento
+                            model = event.photo,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .size(114.dp)
-                                .padding(8.dp)
                         )
                     }
                 }
