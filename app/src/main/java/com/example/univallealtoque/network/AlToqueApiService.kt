@@ -1,6 +1,7 @@
 package com.example.univallealtoque.network
 
 import com.example.univallealtoque.model.ChangePasswordResponse
+import com.example.univallealtoque.model.CreateNewActivityResponseExpress
 import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.NewPasswordResponse
@@ -16,8 +17,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 
-private const val BASE_URL =
-    "https://univalle-al-toque-backend.vercel.app"
+//private const val BASE_URL = "https://univalle-al-toque-backend.vercel.app"
+private const val BASE_URL = "http://10.0.2.2:9000/"
 
 interface AlToqueService {
 
@@ -47,6 +48,9 @@ interface AlToqueService {
 
     @POST("user/newpassword")
     suspend fun newPassword(@Body jsonBody: RequestBody): NewPasswordResponse
+
+    @POST("createnewactivity")
+    suspend fun createNewActivity(@Body jsonBody: RequestBody): CreateNewActivityResponseExpress
 }
 
 object AlToqueServiceFactory {
