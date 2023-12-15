@@ -57,6 +57,7 @@ data class ActivitiesList(
     val event_photo: String? = null
 )
 
+
 data class SemilleroResponse(
     val group_name: String?  = null,
     val group_description: String?  = null,
@@ -79,7 +80,14 @@ data class SemilleroResponse(
     val isEnrolled: Boolean = false,
     val message: String? = null,
 )
+data class EventsListResponse(
+    val message: String? = null,
+    val events: List<EventsList>
+)
 
+data class EventsList(
+    val event_id: Int?  = null,
+    val event_name: String?  = null,
+    val photo: String? = null
 
-
-
+)

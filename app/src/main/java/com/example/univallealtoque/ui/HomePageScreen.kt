@@ -1,5 +1,7 @@
 package com.example.univallealtoque.ui
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,13 +34,37 @@ import androidx.compose.ui.unit.sp
 import com.example.univallealtoque.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.example.univallealtoque.activities.EnrolledActivitiesViewModel
+import com.example.univallealtoque.activities.GetEventsViewModel
+import com.example.univallealtoque.model.EnrolledActivitiesModel
+import com.example.univallealtoque.model.EventsList
 import com.example.univallealtoque.ui.components.Greeting
 
 data class Semilleros(val name: String, val time: String, val imageRes: Int)
+
 @Composable
 fun HomePageScreen(
     modifier: Modifier,
 ) {
+    val getEventsModel: GetEventsViewModel = viewModel()
+    val getEventsState by getEventsModel.state.collectAsState()
+    val eventsList by getEventsModel.events.collectAsState()
+
+//    getEventsModel.resetState()
+
+    LaunchedEffect(key1 = getEventsState.isRequestSuccessful) {
+        if (!getEventsState.isListObtained && !getEventsState.isRequestSuccessful) {
+            val response = getEventsModel.getEvents()
+            Log.d("LISTA ACTIVIDADES: ", response.toString())
+        }
+    }
 
     var categoryNames = listOf(
         stringResource(id = R.string.gym),
@@ -50,9 +76,21 @@ fun HomePageScreen(
     )
 
     val semilleros = listOf(
-        Semilleros(stringResource(id = R.string.futbol), stringResource(id = R.string.futbol_time), R.drawable.futbol),
-        Semilleros(stringResource(id = R.string.natacion), stringResource(id = R.string.natacion_time), R.drawable.natacion),
-        Semilleros(stringResource(id = R.string.rugby), stringResource(id = R.string.rugby_time), R.drawable.rugby),
+        Semilleros(
+            stringResource(id = R.string.futbol),
+            stringResource(id = R.string.futbol_time),
+            R.drawable.futbol
+        ),
+        Semilleros(
+            stringResource(id = R.string.natacion),
+            stringResource(id = R.string.natacion_time),
+            R.drawable.natacion
+        ),
+        Semilleros(
+            stringResource(id = R.string.rugby),
+            stringResource(id = R.string.rugby_time),
+            R.drawable.rugby
+        ),
     )
 
     LazyColumn(
@@ -60,8 +98,11 @@ fun HomePageScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            //SALUDO
             Greeting()
             Spacer(modifier = Modifier.height(16.dp))
+
+            //TITULO
             Text(
                 text = stringResource(id = R.string.proximos_eventos),
                 textAlign = TextAlign.Start,
@@ -72,15 +113,32 @@ fun HomePageScreen(
                     .padding(start = 20.dp, top = 0.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            EventsComponent(stringResource(id = R.string.esta_semana),Modifier.size(width = 380.dp, height = 280.dp))
+
+            //EVENTOS
+
+            if (getEventsState.isListObtained) {
+                EventsComponent(
+                    events = eventsList,
+                    stringResource(id = R.string.esta_semana),
+                    Modifier.size(width = 380.dp, height = 280.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
+
+            //SECCIONES
             CardComponent(
                 stringResource(id = R.string.que_queres_hacer),
                 categoryNames,
                 Modifier.size(width = 380.dp, height = 248.dp)
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
-            CardComponent(stringResource(id = R.string.semilleros), listOf(), Modifier.size(width = 380.dp, height = 30.dp))
+
+            //SEMILLEROS
+            CardComponent(
+                stringResource(id = R.string.semilleros),
+                listOf(),
+                Modifier.size(width = 380.dp, height = 30.dp)
+            )
             semilleros.forEach { semillero ->
                 SemilleroItem(semillero = semillero, modifier = Modifier)
             }
@@ -122,8 +180,6 @@ fun SemilleroItem(semillero: Semilleros, modifier: Modifier) {
         }
     }
 }
-
-
 
 
 @Composable
@@ -178,7 +234,7 @@ fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifie
 @Composable
 fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
     Column(
-        modifier = modifier.padding(top  = 8.dp),
+        modifier = modifier.padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -199,14 +255,13 @@ fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
         )
     }
 }
+
 @Composable
-fun EventsComponent(myText: String,modifier: Modifier){
-    val data = listOf("a", "b", "c", "d", "e", "f")
+fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        //border = BorderStroke(2.dp,Color.Gray),
         modifier = modifier
 
     ) {
@@ -219,31 +274,25 @@ fun EventsComponent(myText: String,modifier: Modifier){
             textAlign = TextAlign.Start,
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(8.dp)
-        ) {
-            items(data) { item ->
-                val imageRes = when (item) {
-                    "a" -> R.drawable.aa // Reemplaza con el recurso adecuado
-                    "b" -> R.drawable.bb // Reemplaza con el recurso adecuado
-                    "c" -> R.drawable.cc // Reemplaza con el recurso adecuado
-                    "d" -> R.drawable.dd // Reemplaza con el recurso adecuado
-                    "e" -> R.drawable.ee // Reemplaza con el recurso adecuado
-                    "f" -> R.drawable.ff // Reemplaza con el recurso adecuado
-                    else -> R.drawable.c // Reemplaza con una imagen predeterminada
-                }
-                Card(
-                    modifier = Modifier.padding(top = 8.dp,end=8.dp,)
-                ) {
-                    Image(
-                        painter = painterResource(id = imageRes),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(114.dp)
+        val chunkedEvents =
+            events.chunked(events.size / 2) // Dividir la lista de eventos en dos sublistas
 
-                    )
+        chunkedEvents.forEach { chunk ->
+            LazyRow(
+                contentPadding = PaddingValues(8.dp)
+            ) {
+                items(chunk) { event ->
+                    Card(
+                        modifier = Modifier.padding(start = 8.dp)
+                    ) {
+                        AsyncImage(
+                            model = event.photo,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(114.dp)
+                        )
+                    }
                 }
             }
         }
