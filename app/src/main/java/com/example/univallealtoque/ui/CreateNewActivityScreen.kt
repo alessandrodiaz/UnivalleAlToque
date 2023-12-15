@@ -315,32 +315,6 @@ fun CreateNewActivityScreen(
                 }
             }
 
-            Text(
-                text = "Foto:",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 0.dp)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.user),
-                contentDescription = stringResource(id = R.string.login_title),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(160.dp)
-                    .padding(borderWidth)
-                    .clip(androidx.compose.foundation.shape.CircleShape)
-                    .clickable {
-                        // Toggle the value on each click
-                        isClicked = !isClicked
-                        // Print to console
-                        println("Image Clicked: $isClicked")
-                        showDialogChoosePhoto = true
-
-                    }
-            )
 
             //if (showDialogChoosePhoto) {
             //    showNewImageOptions(
