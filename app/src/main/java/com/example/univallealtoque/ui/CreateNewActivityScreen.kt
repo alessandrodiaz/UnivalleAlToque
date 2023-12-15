@@ -169,7 +169,7 @@ fun CreateNewActivityScreen(
                 myHint = "Tipo Actividad",
                 myArrayOptions = typeActivity,
                 { param: String -> myNewActivityRequest.typeOfActivity = param },
-                myComponentWithDP = 300, )
+                myComponentWithDP = 210, )
             Text(
                 text = "Descripción",
                 textAlign = TextAlign.Center,
@@ -216,7 +216,7 @@ fun CreateNewActivityScreen(
                     myNewActivityRequest.numberOfSlotsAvailable = param.toInt();
                     myNewActivityRequest.slots = param.toInt();
                 },
-                myComponentWithDP = 300)
+                myComponentWithDP = 140)
 
             Text(
                 text = "Horario:",
@@ -244,72 +244,72 @@ fun CreateNewActivityScreen(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                         if (item == "Martes"){
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                         if (item == "Miercoles"){
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                         if (item == "Jueves"){
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                         if (item == "Viernes"){
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                         if (item == "Sabado"){
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayStart = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayEnd = param },
-                                myComponentWithDP = 150)
+                                myComponentWithDP = 130)
                         }
                     }
                 }
@@ -333,8 +333,13 @@ fun CreateNewActivityScreen(
                     myNewActivityRequest.description = descriptionOfActivityInputText
 
                     if ( myNewActivityRequest.typeOfActivity != null){
-
-                        if (userId != null) {
+                        if (
+                            myNewActivityRequest.slots == null ||
+                            myNewActivityRequest.numberOfSlotsAvailable == null
+                            ){
+                            Toast.makeText(context, "Error: Debes ingresar el numero de cupos primero", Toast.LENGTH_SHORT).show()
+                        }
+                        else if(userId != null) {
                             userModelExpress.createNewActivity(
                                 creatorId = userId,
                                 nameOfActivity = myNewActivityRequest.nameOfActivity,
