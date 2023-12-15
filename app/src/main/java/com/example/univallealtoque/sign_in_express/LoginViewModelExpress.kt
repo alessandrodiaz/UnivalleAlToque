@@ -181,6 +181,76 @@ class LoginViewModelExpress() : ViewModel() {
         }
     }
 
+    fun createNewActivity(
+        nameOfActivity: String? = null,
+        typeOfActivity: String? = null,
+        description: String? = null,
+        numberOfSlotsAvailable:Int? = null,
+        slots:Int? = null,
+        mondayStart: String? = null, // "00:00",
+        mondayEnd: String? = null, // "00:00",
+        tuesdayStart: String? = null, // "00:00",
+        tuesdayEnd: String? = null, // "00:00",
+        wednesdayStart: String? = null, // "00:00",
+        wednesdayEnd: String? = null, // "00:00",
+        thursdayStart: String? = null, // "00:00",
+        thursdayEnd: String? = null, // "00:00",
+        fridayStart: String? = null, // "00:00",
+        fridayEnd: String? = null, // "00:00",
+        saturdayStart: String? = null, // "00:00",
+        saturdayEnd: String? = null, // "00:00",
+    ) {
+
+        viewModelScope.launch {
+
+            val userData = DataStoreSingleton.getUserData().first()
+
+            var jsonUserData: String = ""
+
+            userData?.let {
+                val userDataMap = mapOf(
+                    "event_name" to (if (typeOfActivity == "Evento") nameOfActivity else null),
+                    "group_name" to (if (typeOfActivity == "Semillero") nameOfActivity else null),
+                    "event_description" to (if (typeOfActivity == "Evento") description else null),
+                    "group_description" to (if (typeOfActivity == "Semillero") description else null),
+                    "available_slots" to numberOfSlotsAvailable,
+                    "slots" to slots,
+                    "monday_start" to mondayStart,
+                    "monday_end" to mondayEnd,
+                    "tuesday_start" to tuesdayStart,
+                    "tuesday_end" to tuesdayEnd,
+                    "wednesday_start" to wednesdayStart,
+                    "wednesday_end" to wednesdayEnd,
+                    "thursday_start" to thursdayStart,
+                    "thursday_end" to thursdayEnd,
+                    "friday_start" to fridayStart,
+                    "friday_end" to fridayEnd,
+                    "saturday_start" to saturdayStart,
+                    "saturday_end" to saturdayEnd,
+                )
+
+                val gson = GsonBuilder().setPrettyPrinting().create()
+
+                jsonUserData = gson.toJson(userDataMap)
+
+                println(jsonUserData)
+            }
+
+            val alToqueService = AlToqueServiceFactory.makeAlToqueService()
+
+            val requestBody = jsonUserData.toRequestBody("application/json".toMediaTypeOrNull())
+            println("------>>>>>>$jsonUserData")
+
+            try {
+                val response = alToqueService.createNewActivity(requestBody)
+
+                println("RESPONSE FROM EXPRESS " + response)
+            } catch (e: Exception) {
+                println("Error al realizar la actualizacion: ${e.message}")
+            }
+        }
+    }
+
 
     fun resetLoginStateExpress() {
         _stateLoginExpress.update { LoginState() }

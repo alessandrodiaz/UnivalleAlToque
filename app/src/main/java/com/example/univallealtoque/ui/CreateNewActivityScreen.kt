@@ -50,24 +50,22 @@ data class CreateNewActivityRequest(
     var nameOfActivity: String? = null,
     var typeOfActivity: String? = null,
     var description: String? = null,
-    var numberOfSpaceAvailable:Int? = null,
-    var schedule: Schedule
+    var numberOfSlotsAvailable:Int? = null,
+    var slots:Int? = null,
+    var mondayStart: String? = null, // "00:00",
+    var mondayEnd: String? = null, // "00:00",
+    var tuesdayStart: String? = null, // "00:00",
+    var tuesdayEnd: String? = null, // "00:00",
+    var wednesdayStart: String? = null, // "00:00",
+    var wednesdayEnd: String? = null, // "00:00",
+    var thursdayStart: String? = null, // "00:00",
+    var thursdayEnd: String? = null, // "00:00",
+    var fridayStart: String? = null, // "00:00",
+    var fridayEnd: String? = null, // "00:00",
+    var saturdayStart: String? = null, // "00:00",
+    var saturdayEnd: String? = null, // "00:00",
 )
 
-data class Schedule (
-    var mondayStart: String? = "00:00",
-    var mondayEnd: String? = "00:00",
-    var tuesdayStart: String? = "00:00",
-    var tuesdayEnd: String? = "00:00",
-    var wednesdayStart: String? = "00:00",
-    var wednesdayEnd: String? = "00:00",
-    var thursdayStart: String? = "00:00",
-    var thursdayEnd: String? = "00:00",
-    var fridayStart: String? = "00:00",
-    var fridayEnd: String? = "00:00",
-    var saturdayStart: String? = "00:00",
-    var saturdayEnd: String? = "00:00"
-)
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -91,7 +89,7 @@ fun CreateNewActivityScreen(
         mutableStateOf("")
     }
     var hours = Array(24) { i -> "%02d:00".format(i) }
-    var weekDays = arrayOf("Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo")
+    var weekDays = arrayOf("Lunes","Martes","Miercoles","Jueves","Viernes","Sabado")
     var typeActivity = arrayOf("Semillero","Evento")
     var numberVacancies = arrayOf("10","20","30","40","50","1000")
     LazyColumn(
