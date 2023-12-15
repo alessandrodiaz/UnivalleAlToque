@@ -67,6 +67,7 @@ import com.example.univallealtoque.ui.RegisterScreen
 import com.example.univallealtoque.ui.SettingsScreen
 import com.example.univallealtoque.ui.TermsAndConditionsScreen
 import com.example.univallealtoque.ui.NewPasswordScreen
+import com.example.univallealtoque.ui.SemilleroScreen
 
 
 enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
@@ -82,7 +83,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     DeleteUser(title = R.string.delete_account),
     NewPassword(title = R.string.new_password),
     CreateNewActivity(title = R.string.create_new_activity),
-    MyGroups(title = R.string.my_groups_title)
+    MyGroups(title = R.string.my_groups_title),
+    Semillero(title= R.string.semillero_title)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,6 +139,7 @@ fun UnivalleAlToqueBottomBar(
     navigateCreateActivity: () -> Unit,
     navigateMyGroups: () -> Unit,
     userModelExpressState: LoginState,
+    navigateSemillero: () -> Unit
 ) {
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
     val userDataEmail = userDataFlow.value?.email
@@ -159,7 +162,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick = {  }
+            onClick =  navigateSemillero
         ) {
 
             Icon(
@@ -241,6 +244,7 @@ fun UnivalleAlToqueApp(
                 navigateCreateActivity = { navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name) },
                 navigateMyGroups = { navController.navigate(UnivalleAlToqueScreen.MyGroups.name) },
                 userModelExpressState = loginViewModelExpressState,
+                navigateSemillero = {navController.navigate(UnivalleAlToqueScreen.Semillero.name)}
             )
         }
     ) { innerPadding ->
@@ -415,6 +419,15 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.MyGroups.name){
                 MyGroupsScreen(
+                    navController = navController,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.Semillero.name){
+                SemilleroScreen(
                     navController = navController,
                     modifier = Modifier
                         .fillMaxSize()
