@@ -50,3 +50,8 @@ public class NewPasswordModel(
     val email: String,
     val new_password: String
 )
+
+@Serializable
+public class EnrolledActivitiesModel(
+    val user_id: String,
+)
