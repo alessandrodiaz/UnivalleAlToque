@@ -55,3 +55,8 @@ public class NewPasswordModel(
 public class EnrolledActivitiesModel(
     val user_id: String,
 )
+
+@Serializable
+public class SemilleroModel(
+    val user_id: String,
+)

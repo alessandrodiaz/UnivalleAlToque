@@ -168,6 +168,8 @@
     <string name="my_groups">Mis grupos</string>
     <string name="my_groups_title">Mis actividades inscritas</string>
     <string name="my_groups_no_activities">No tienes actividades inscritas 😥</string>
+    <string name="semillero_title">Semillero</string>
+    <string name="register_semillero">Inscribirme</string>
 
 
 </resources>

@@ -7,6 +7,7 @@ import com.example.univallealtoque.model.EnrolledActivitiesResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.NewPasswordResponse
 import com.example.univallealtoque.model.RecoverPasswordResponse
+import com.example.univallealtoque.model.SemilleroResponse
 import com.example.univallealtoque.model.SendCodeDeleteAccountModel
 import com.example.univallealtoque.model.SendCodeDeleteAccountResponse
 import com.example.univallealtoque.model.UpdateBasicDataResponseExpress
@@ -14,6 +15,7 @@ import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
@@ -56,6 +58,10 @@ interface AlToqueService {
 
     @POST("activity/list")
     suspend fun enrolledActivities(@Body jsonBody: RequestBody): EnrolledActivitiesResponse
+
+    @GET("activity/semillero")
+    suspend fun semilleroInfo(@Body jsonBody: RequestBody): SemilleroResponse
+
 }
 
 object AlToqueServiceFactory {
