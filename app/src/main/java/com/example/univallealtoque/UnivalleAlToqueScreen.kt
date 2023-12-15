@@ -60,6 +60,7 @@ import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.CreateNewActivityScreen
 import com.example.univallealtoque.ui.DeleteUserScreen
 import com.example.univallealtoque.ui.GetCodeScreen
+import com.example.univallealtoque.ui.MyGroupsScreen
 import com.example.univallealtoque.ui.ProfileScreen
 import com.example.univallealtoque.ui.RecoverPasswordScreen
 import com.example.univallealtoque.ui.RegisterScreen
@@ -80,7 +81,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     Settings(title = R.string.settings),
     DeleteUser(title = R.string.delete_account),
     NewPassword(title = R.string.new_password),
-    CreateNewActivity(title = R.string.create_new_activity)
+    CreateNewActivity(title = R.string.create_new_activity),
+    MyGroups(title = R.string.my_groups_title)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,6 +135,7 @@ fun UnivalleAlToqueBottomBar(
     navigateHome: () -> Unit,
     navigateProfile: () -> Unit,
     navigateCreateActivity: () -> Unit,
+    navigateMyGroups: () -> Unit,
     userModelExpressState: LoginState,
 ) {
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
@@ -168,7 +171,7 @@ fun UnivalleAlToqueBottomBar(
 
         }
         IconButton(
-            onClick = { }
+            onClick = navigateMyGroups
         ) {
 
             Icon(
@@ -236,6 +239,7 @@ fun UnivalleAlToqueApp(
                 navigateHome = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) },
                 navigateProfile = { navController.navigate(UnivalleAlToqueScreen.Profile.name) },
                 navigateCreateActivity = { navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name) },
+                navigateMyGroups = { navController.navigate(UnivalleAlToqueScreen.MyGroups.name) },
                 userModelExpressState = loginViewModelExpressState,
             )
         }
@@ -406,6 +410,16 @@ fun UnivalleAlToqueApp(
                         .background(Color.White)
                         .fillMaxSize()
                         .padding(16.dp),
+                )
+            }
+
+            composable(route = UnivalleAlToqueScreen.MyGroups.name){
+                MyGroupsScreen(
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(innerPadding),
                 )
             }
         }
