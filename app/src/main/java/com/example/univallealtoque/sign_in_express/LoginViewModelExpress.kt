@@ -182,6 +182,7 @@ class LoginViewModelExpress() : ViewModel() {
     }
 
     fun createNewActivity(
+        creatorId: Int,
         nameOfActivity: String? = null,
         typeOfActivity: String? = null,
         description: String? = null,
@@ -209,12 +210,14 @@ class LoginViewModelExpress() : ViewModel() {
 
             userData?.let {
                 val userDataMap = mapOf(
+                    "type_of_activity" to typeOfActivity,
                     "event_name" to (if (typeOfActivity == "Evento") nameOfActivity else null),
                     "group_name" to (if (typeOfActivity == "Semillero") nameOfActivity else null),
                     "event_description" to (if (typeOfActivity == "Evento") description else null),
                     "group_description" to (if (typeOfActivity == "Semillero") description else null),
                     "available_slots" to numberOfSlotsAvailable,
                     "slots" to slots,
+                    "creator_id" to creatorId,
                     "monday_start" to mondayStart,
                     "monday_end" to mondayEnd,
                     "tuesday_start" to tuesdayStart,
@@ -228,7 +231,7 @@ class LoginViewModelExpress() : ViewModel() {
                     "saturday_start" to saturdayStart,
                     "saturday_end" to saturdayEnd,
                 )
-
+                println(userDataMap)
                 val gson = GsonBuilder().setPrettyPrinting().create()
 
                 jsonUserData = gson.toJson(userDataMap)

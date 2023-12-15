@@ -19,7 +19,8 @@ import retrofit2.http.PUT
 
 
 private const val BASE_URL = "https://univalle-al-toque-backend.vercel.app"
-//private const val BASE_URL = "http://10.0.2.2:9000"
+
+//private const val BASE_URL = "http://10.0.2.2:9000/"
 
 interface AlToqueService {
 
