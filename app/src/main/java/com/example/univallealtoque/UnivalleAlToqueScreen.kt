@@ -417,7 +417,6 @@ fun UnivalleAlToqueApp(
                 MyGroupsScreen(
                     navController = navController,
                     modifier = Modifier
-                        .background(Color.White)
                         .fillMaxSize()
                         .padding(innerPadding),
                 )
