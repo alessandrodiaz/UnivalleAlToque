@@ -60,10 +60,8 @@ interface AlToqueService {
     @POST("activity/list")
     suspend fun enrolledActivities(@Body jsonBody: RequestBody): EnrolledActivitiesResponse
 
-
-    @GET("activity/semillero")
+    @POST("activity/semillero")
     suspend fun semilleroInfo(@Body jsonBody: RequestBody): SemilleroResponse
-
 
     @GET("events")
     suspend fun getEvents(): EventsListResponse

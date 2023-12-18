@@ -169,7 +169,15 @@
     <string name="my_groups_title">Mis actividades inscritas</string>
     <string name="my_groups_no_activities">No tienes actividades inscritas 😥</string>
     <string name="semillero_title">Semillero</string>
-    <string name="register_semillero">Inscribirme</string>
+    <string name="register_semillero">INSCRIBIRME</string>
+    <string name="already_Enrolled_semillero">YA ESTAS INSCRITO</string>
+    <string name="semillero_Unrolled">SALIR</string>
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miércoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+    <string name="saturday">Sábado</string>
 
 
 </resources>

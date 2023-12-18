@@ -59,4 +59,5 @@ public class EnrolledActivitiesModel(
 @Serializable
 public class SemilleroModel(
     val user_id: String,
+    val semillero_id: String
 )
