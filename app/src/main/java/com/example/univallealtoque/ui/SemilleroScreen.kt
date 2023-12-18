@@ -79,7 +79,7 @@ fun SemilleroScreen(
     if (userCode != null && userCode != "null"){
         LaunchedEffect(key1 = semillerosSatate.isRequestSuccessful) {
             if (!semillerosSatate.isRequestSuccessful) {
-                val data = SemilleroModel(userCode, semillero_id = "4")
+                val data = SemilleroModel(userCode, semillero_id = "26")
                 val response = semillerosVIewModel.semilleroInfo(data)
             }
         }
