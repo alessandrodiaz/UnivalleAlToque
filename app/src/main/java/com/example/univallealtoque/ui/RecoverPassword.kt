@@ -78,7 +78,6 @@ fun RecoverPasswordScreen(
         mutableStateOf(false)
     }
 
-
     var recoveryMessage by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
     var navigateNewPassword = { navController.navigate(UnivalleAlToqueScreen.NewPassword.name) }

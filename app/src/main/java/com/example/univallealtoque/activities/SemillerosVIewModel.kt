@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.univallealtoque.model.ActivitiesList
 import com.example.univallealtoque.model.SemilleroModel
+import com.example.univallealtoque.model.semillerosList
 import com.example.univallealtoque.network.AlToqueServiceFactory
 import com.example.univallealtoque.user_account.LockoutUserState
 import com.google.gson.GsonBuilder
@@ -18,14 +19,16 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class SemillerosVIewModel:ViewModel() {
-
     private val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
     private val _state = MutableStateFlow(SemillerosSatate())
     val state = _state.asStateFlow()
 
-    private val _activities = MutableStateFlow<List<ActivitiesList>>(emptyList())
-    val activities: StateFlow<List<ActivitiesList>> = _activities.asStateFlow()
+    private val _activities = MutableStateFlow(semillerosList())
+    val activities: StateFlow<semillerosList> = _activities.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     fun semilleroInfo(semillerosModel: SemilleroModel) {
 
@@ -35,37 +38,32 @@ class SemillerosVIewModel:ViewModel() {
 
         viewModelScope.launch {
             try {
+
+                _isLoading.value = true
                 val response = alToqueService.semilleroInfo(requestBody)
                 println("RESPONSE"+response)
 
-                if (response.message == "Semillero sent") {
+                if (response.message == "Semillero Sent") {
+                    _activities.value = response.semilleroInfoArray.firstOrNull()!!
+
+                    println("FINAL " +_activities)
+                    println("OBTENIDO "+ response.semilleroInfoArray)
+                    Log.d("OBTENIDO DESDE EL SERVER: ", response.semilleroInfoArray.toString())
+
                     _state.value =
                         SemillerosSatate(
+                            semilleros = response.semilleroInfoArray,
                             isRequestSuccessful = true,
-                            name = response.group_name,
-                            description = response.group_description,
-                            slots = response.slots,
-                            available_slots = response.available_slots,
-                            monday_start = response.monday_start,
-                            monday_end = response.monday_end,
-                            tuesday_start = response.tuesday_start,
-                            tuesday_end = response.tuesday_end,
-                            wednesday_start = response.wednesday_start,
-                            wednesday_end= response.wednesday_end,
-                            thursday_start = response.thursday_start,
-                            thursday_end = response.thursday_end,
-                            friday_start = response.friday_start,
-                            friday_end = response.friday_end,
-                            saturday_start = response.saturday_start,
-                            saturday_end= response.saturday_end,
-                            place = response.place,
-                            isEnrolled = false
+                            isEnrolled = response.isUserEnrolled
+
                         )
                 }
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, "Error", e)
                 println("Error message: $e.error")
 
+            }finally {
+                _isLoading.value = false
             }
         }
     }
@@ -73,5 +71,4 @@ class SemillerosVIewModel:ViewModel() {
     fun resetState() {
         _state.update { SemillerosSatate() }
     }
-
 }

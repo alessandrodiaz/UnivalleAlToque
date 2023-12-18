@@ -58,6 +58,12 @@ data class ActivitiesList(
 )
 
 data class SemilleroResponse(
+    val message: String? = null,
+    val semilleroInfoArray: List<semillerosList>,
+    val isUserEnrolled: Boolean = false,
+)
+
+data class semillerosList(
     val group_name: String?  = null,
     val group_description: String?  = null,
     val slots: String?  = null,
@@ -76,8 +82,6 @@ data class SemilleroResponse(
     val saturday_end: String? = null,
     val photo: String? = null,
     val place: String? = null,
-    val isEnrolled: Boolean = false,
-    val message: String? = null,
 )
 
 
