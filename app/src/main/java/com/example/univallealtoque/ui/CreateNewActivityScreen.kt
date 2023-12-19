@@ -2,19 +2,17 @@ package com.example.univallealtoque.ui
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,25 +42,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.example.univallealtoque.R
 import com.example.univallealtoque.data.DataStoreSingleton
-import com.example.univallealtoque.model.UserDataResponseExpress
 
 data class CreateNewActivityRequest(
     var nameOfActivity: String? = null,
     var typeOfActivity: String? = null,
     var description: String? = null,
-    var numberOfSlotsAvailable:Int? = null,
-    var slots:Int? = null,
+    var numberOfSlotsAvailable: Int? = null,
+    var slots: Int? = null,
     var mondayStart: String? = null, // "00:00",
     var mondayEnd: String? = null, // "00:00",
     var tuesdayStart: String? = null, // "00:00",
@@ -76,7 +71,6 @@ data class CreateNewActivityRequest(
     var saturdayStart: String? = null, // "00:00",
     var saturdayEnd: String? = null, // "00:00",
 )
-
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -113,24 +107,29 @@ fun CreateNewActivityScreen(
     val context = LocalContext.current
 
     var hours = Array(24) { i -> "%02d:00".format(i) }
-    var weekDays = arrayOf("Lunes","Martes","Miercoles","Jueves","Viernes","Sabado")
-    var typeActivity = arrayOf("Semillero","Evento")
-    var numberVacancies = arrayOf("10","20","30","40","50","1000")
+    var weekDays = arrayOf("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado")
+    var typeActivity = arrayOf("Semillero", "Evento")
+    var numberVacancies = arrayOf("10", "20", "30", "40", "50", "1000")
     LazyColumn(
         modifier = modifier
     ) {
         item {
-            Spacer(modifier = Modifier.height(52.dp))
+            Spacer(modifier = Modifier.height(70.dp))
             Text(
                 text = "Agregar nueva actividad",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.Black
             )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+
+            // NOMBRE DE LA ACTIVIDADd
             Text(
                 text = "Nombre de la actividad",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
@@ -141,7 +140,7 @@ fun CreateNewActivityScreen(
                 onValueChange = { nameOfActivityInputText = it },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
-                    onDone = {keyboardController?.hide()}),
+                    onDone = { keyboardController?.hide() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
@@ -157,10 +156,12 @@ fun CreateNewActivityScreen(
                     }
             )
 
+
+            // TIPO
             Text(
-                text = "Tipo:",
+                text = "Tipo de actividad",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 0.dp)
@@ -169,11 +170,15 @@ fun CreateNewActivityScreen(
                 myHint = "Tipo Actividad",
                 myArrayOptions = typeActivity,
                 { param: String -> myNewActivityRequest.typeOfActivity = param },
-                myComponentWithDP = 210, )
+                myComponentWithDP = 210,
+            )
+
+
+            // DESCRIPCION
             Text(
                 text = "Descripción",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
@@ -184,7 +189,7 @@ fun CreateNewActivityScreen(
                 onValueChange = { descriptionOfActivityInputText = it },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
-                    onDone = {keyboardController?.hide()}),
+                    onDone = { keyboardController?.hide() }),
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
@@ -192,7 +197,7 @@ fun CreateNewActivityScreen(
                         color = if (hasFocusDescription) Color.Red else Color.Black,
                         shape = RoundedCornerShape(12.dp)
                     )
-                    .height(120.dp)
+                    .height(100.dp)
                     .padding(start = 16.dp, top = 8.dp, end = 8.dp)
                     .background(Color.White)
                     .onFocusEvent { focusState ->
@@ -200,10 +205,12 @@ fun CreateNewActivityScreen(
                     }
             )
 
+
+            // NUMERO DE CUPOS
             Text(
                 text = "Número de Cupos",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
@@ -216,18 +223,29 @@ fun CreateNewActivityScreen(
                     myNewActivityRequest.numberOfSlotsAvailable = param.toInt();
                     myNewActivityRequest.slots = param.toInt();
                 },
-                myComponentWithDP = 140)
+                myComponentWithDP = 140
+            )
 
+
+            // HORARIOO
             Text(
-                text = "Horario:",
+                text = "Horario",
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 0.dp)
+
             )
 
-            Column{
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 weekDays.forEach { item ->
                     Row {
                         Text(
@@ -236,80 +254,93 @@ fun CreateNewActivityScreen(
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color.Black,
                             modifier = Modifier
-                                .width(76.dp)
-                                .padding(top = 16.dp,end = 12.dp, bottom = 0.dp)
+                                .width(80.dp)
+                                .padding(top = 16.dp, end = 10.dp, bottom = 0.dp)
+                                .align(Alignment.CenterVertically)
                         )
-                        if (item == "Lunes"){
+                        if (item == "Lunes") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
-                        if (item == "Martes"){
+                        if (item == "Martes") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
-                        if (item == "Miercoles"){
+                        if (item == "Miercoles") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
-                        if (item == "Jueves"){
+                        if (item == "Jueves") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
-                        if (item == "Viernes"){
+                        if (item == "Viernes") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
-                        if (item == "Sabado"){
+                        if (item == "Sabado") {
                             DemoSearchableDropdown(
                                 myHint = "Inicio",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayStart = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                             DemoSearchableDropdown(
                                 myHint = "Fin",
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayEnd = param },
-                                myComponentWithDP = 130)
+                                myComponentWithDP = 130
+                            )
                         }
                     }
                 }
@@ -324,26 +355,29 @@ fun CreateNewActivityScreen(
             //        { showDialogChoosePhoto = false })
             //}
 
-
+            // BOTÓN AGREGAR ACTIVIDAD
             Button(
                 onClick = {
-                    Log.d("d","sdnfsdnfsd")
+                    Log.d("d", "sdnfsdnfsd")
                     val userId = userDataFlow.value?.user_id
                     myNewActivityRequest.nameOfActivity = nameOfActivityInputText
                     myNewActivityRequest.description = descriptionOfActivityInputText
 
-                    if ( myNewActivityRequest.typeOfActivity != null){
+                    if (myNewActivityRequest.typeOfActivity != null) {
                         if (
                             myNewActivityRequest.slots == null ||
                             myNewActivityRequest.numberOfSlotsAvailable == null
-                            ){
-                            Toast.makeText(context, "Error: Debes ingresar el numero de cupos primero", Toast.LENGTH_SHORT).show()
-                        }
-                        else if(userId != null) {
+                        ) {
+                            Toast.makeText(
+                                context,
+                                "Error: Debes ingresar el numero de cupos primero",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (userId != null) {
                             userModelExpress.createNewActivity(
                                 creatorId = userId,
                                 nameOfActivity = myNewActivityRequest.nameOfActivity,
-                                typeOfActivity= myNewActivityRequest.typeOfActivity,
+                                typeOfActivity = myNewActivityRequest.typeOfActivity,
                                 description = myNewActivityRequest.description,
                                 numberOfSlotsAvailable = myNewActivityRequest.numberOfSlotsAvailable,
                                 slots = myNewActivityRequest.slots,
@@ -360,15 +394,26 @@ fun CreateNewActivityScreen(
                                 saturdayStart = myNewActivityRequest.saturdayStart,
                                 saturdayEnd = myNewActivityRequest.saturdayEnd,
                             )
-                            Toast.makeText(context, "Actividad creada con éxito!", Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(context, "Error: Debes iniciar sesion primero (userId not found)", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Actividad creada con éxito!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Error: Debes iniciar sesion primero (userId not found)",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
-                    }else{
-                        Toast.makeText(context, "Error: Debes de elegir el tipo de actividad primero", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error: Debes de elegir el tipo de actividad primero",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
 
 
                 },
@@ -397,7 +442,8 @@ fun DemoSearchableDropdown(
     myHint: String,
     myArrayOptions: Array<String>,
     setVariableTo: (varName: String) -> Unit,
-    myComponentWithDP: Int) {
+    myComponentWithDP: Int
+) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf("") }
@@ -405,13 +451,14 @@ fun DemoSearchableDropdown(
     Box(
         modifier = Modifier
             .width(myComponentWithDP.dp) // Ajusta el ancho según tu preferencia
-            .padding(top= 16.dp, end= 16.dp, bottom = 16.dp)
+            .padding(top = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
-            val filteredOptions = myArrayOptions.filter { it.contains(selectedText, ignoreCase = true) }
+            val filteredOptions =
+                myArrayOptions.filter { it.contains(selectedText, ignoreCase = true) }
 
             TextField(
                 value = selectedText,
@@ -423,12 +470,10 @@ fun DemoSearchableDropdown(
                     //    selectedText = it
                     //}
                 },
+                readOnly = true,
                 label = { Text(text = myHint) },
                 textStyle = TextStyle(color = if (selectedText.isNotEmpty()) Color.Black else Color.Gray),
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = {keyboardController?.hide()}),
                 modifier = Modifier
                     .menuAnchor()
             )
@@ -460,4 +505,7 @@ fun DemoSearchableDropdown(
         }
     }
 }
+
+
+
 
