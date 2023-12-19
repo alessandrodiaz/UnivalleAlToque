@@ -307,10 +307,10 @@ fun EventsComponent(
                         modifier = Modifier.padding(start = 8.dp),
                         onClick = {
                             CoroutineScope(Dispatchers.Main).launch {
-                            val imageID = event.event_id.toString() ?: "no_id_provided"
-                            AppDataStoreSingleton.saveAppData(imageID)
-                            navigateEvento()
-                        }
+                                val imageID = event.event_id.toString() ?: "no_id_provided"
+                                AppDataStoreSingleton.saveAppData(imageID)
+                                navigateEvento()
+                            }
                         }
                     ) {
                         AsyncImage(

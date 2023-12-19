@@ -3,6 +3,7 @@ package com.example.univallealtoque.ui
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,8 +46,12 @@ import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.activities.EnrolledActivitiesViewModel
+import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.EnrolledActivitiesModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,10 +69,10 @@ fun MyGroupsScreen(
 
     //GET ACTIVITIES
     // Utilizando LaunchedEffect para ejecutar la lógica una vez al ingresar a la pantalla
-    if (userCode != null && userCode != "null"){
+    if (userCode != null && userCode != "null") {
         LaunchedEffect(key1 = enrolledActivitiesState.isRequestSuccessful) {
             if (!enrolledActivitiesState.isListObtained && !enrolledActivitiesState.isRequestSuccessful) {
-                Log.d("USER CODE " , userCode)
+                Log.d("USER CODE ", userCode)
                 val data = EnrolledActivitiesModel(userCode)
                 val response = enrolledActivitiesModel.enrolledActivities(data)
                 Log.d("LISTA ACTIVIDADES: ", response.toString())
@@ -94,7 +99,7 @@ fun MyGroupsScreen(
                     modifier = Modifier.padding(start = 18.dp, bottom = 18.dp)
                 )
 
-                if(activitiesList.isEmpty()){
+                if (activitiesList.isEmpty()) {
                     Text(
                         text = stringResource(id = R.string.my_groups_no_activities),
                         style = MaterialTheme.typography.titleMedium,
@@ -104,9 +109,16 @@ fun MyGroupsScreen(
                 } else {
                     activitiesList.forEach { activity ->
                         ActivityCard(
-                            imagen = activity.group_photo ?: activity.event_photo ?: "Sin imagen", // Reemplaza con tu lógica para obtener la imagen
+                            imagen = activity.group_photo ?: activity.event_photo
+                            ?: "Sin imagen", // Reemplaza con tu lógica para obtener la imagen
                             titulo = activity.group_name ?: activity.event_name ?: "Sin título",
-                            descripcion = activity.group_description?.limitTextLength(100) ?: activity.event_description?.limitTextLength(100) ?: "Sin descripción"
+                            descripcion = activity.group_description?.limitTextLength(90)
+                                ?: activity.event_description?.limitTextLength(90)
+                                ?: "Sin descripción",
+                            id = activity.group_id?.toString() ?: activity.event_id?.toString()
+                            ?: "null",
+                            tipo = if (activity.group_id != null) "group" else "event",
+                            navController = navController
                         )
                     }
                 }
@@ -141,14 +153,31 @@ fun MyGroupsScreen(
 fun ActivityCard(
     imagen: String?,
     titulo: String,
-    descripcion: String
+    descripcion: String,
+    id: String,
+    tipo: String,
+    navController: NavController
 ) {
+    var navigateSemillero = { navController.navigate(UnivalleAlToqueScreen.Semillero.name) }
+    var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clip(shape = RoundedCornerShape(8.dp))
             .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp))
+            .clickable {
+                CoroutineScope(Dispatchers.Main).launch {
+                    println("EL ID ES: " + id + tipo)
+                    AppDataStoreSingleton.saveAppData(id)
+                    if (tipo =="group"){
+                        navigateSemillero()
+                    } else {
+                        navigateEvento()
+                    }
+                }
+            }
     ) {
         Box(
             modifier = Modifier
@@ -171,11 +200,12 @@ fun ActivityCard(
             Text(
                 text = titulo,
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold),
-                modifier = Modifier.padding(top = 12.dp, bottom = 18.dp)
+                modifier = Modifier.padding(top = 12.dp, bottom = 18.dp, end = 10.dp)
             )
             Text(
                 text = descripcion,
-                style = TextStyle(fontSize = 14.sp)
+                style = TextStyle(fontSize = 14.sp),
+                modifier = Modifier.padding(end = 10.dp, bottom = 10.dp)
             )
         }
     }
