@@ -46,10 +46,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.data.DataStoreSingleton
 
 data class CreateNewActivityRequest(
@@ -109,7 +110,7 @@ fun CreateNewActivityScreen(
     var hours = Array(24) { i -> "%02d:00".format(i) }
     var weekDays = arrayOf("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado")
     var typeActivity = arrayOf("Semillero", "Evento")
-    var numberVacancies = arrayOf("10", "20", "30", "40", "50", "1000")
+//    var numberVacancies = arrayOf("3", "5", "10", "20", "30", "1000")
     LazyColumn(
         modifier = modifier
     ) {
@@ -216,14 +217,31 @@ fun CreateNewActivityScreen(
                     .padding(top = 16.dp, bottom = 16.dp)
             )
 
-            DemoSearchableDropdown(
-                myHint = "Cupos",
-                myArrayOptions = numberVacancies,
-                { param: String ->
-                    myNewActivityRequest.numberOfSlotsAvailable = param.toInt();
-                    myNewActivityRequest.slots = param.toInt();
+            val maxDigits = 4
+
+            BasicTextField(
+                value = value.take(maxDigits),
+                onValueChange = {
+                    val newValue = it.filter { char -> char.isDigit() }
+                    value = newValue
+                    if (newValue.isNotEmpty()) {
+                        myNewActivityRequest.numberOfSlotsAvailable = newValue.toInt()
+                        myNewActivityRequest.slots = newValue.toInt()
+                    }
                 },
-                myComponentWithDP = 140
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardActions = KeyboardActions(
+                    onDone = { keyboardController?.hide() }),
+                modifier = Modifier
+                    .width(100.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color.Black,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .height(40.dp)
+                    .padding(start = 16.dp, top = 8.dp, end = 8.dp)
+                    .background(Color.White)
             )
 
 
@@ -354,7 +372,7 @@ fun CreateNewActivityScreen(
             //        { param: String -> profilePhotoToShow = param },
             //        { showDialogChoosePhoto = false })
             //}
-
+            var navigateMyGroups = { navController.navigate(UnivalleAlToqueScreen.MyGroups.name) }
             // BOTÓN AGREGAR ACTIVIDAD
             Button(
                 onClick = {
@@ -399,6 +417,9 @@ fun CreateNewActivityScreen(
                                 "Actividad creada con éxito!",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            navigateMyGroups()
+
                         } else {
                             Toast.makeText(
                                 context,
@@ -455,7 +476,8 @@ fun DemoSearchableDropdown(
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
+            onExpandedChange = { expanded = !expanded },
+            modifier = Modifier.background(Color.White)
         ) {
             val filteredOptions =
                 myArrayOptions.filter { it.contains(selectedText, ignoreCase = true) }
@@ -481,14 +503,15 @@ fun DemoSearchableDropdown(
             if (filteredOptions.isNotEmpty()) {
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { /* No ocultar el menú al cambiar el texto */ }
+                    onDismissRequest = { /* No ocultar el menú al cambiar el texto */ },
+                            modifier = Modifier.background(Color.White)
                 ) {
-                    filteredOptions.forEach { item ->
+                    myArrayOptions.forEach { item ->
                         DropdownMenuItem(
                             text = {
                                 Text(
                                     text = item,
-                                    color = if (item == selectedText) Color.Black else Color.Unspecified
+                                    color = Color.Black
                                 )
                             },
                             onClick = {
