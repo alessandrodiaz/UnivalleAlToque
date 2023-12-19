@@ -36,26 +36,37 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.activities.EnrolledActivitiesViewModel
 import com.example.univallealtoque.activities.GetEventsViewModel
+import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.model.EnrolledActivitiesModel
 import com.example.univallealtoque.model.EventsList
 import com.example.univallealtoque.ui.components.Greeting
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 data class Semilleros(val name: String, val time: String, val imageRes: Int)
 
 @Composable
 fun HomePageScreen(
     modifier: Modifier,
+    navController: NavController,
 ) {
     val getEventsModel: GetEventsViewModel = viewModel()
     val getEventsState by getEventsModel.state.collectAsState()
     val eventsList by getEventsModel.events.collectAsState()
+
 
 //    getEventsModel.resetState()
 
@@ -120,7 +131,8 @@ fun HomePageScreen(
                 EventsComponent(
                     events = eventsList,
                     stringResource(id = R.string.esta_semana),
-                    Modifier.size(width = 380.dp, height = 280.dp)
+                    Modifier.size(width = 380.dp, height = 280.dp),
+                    navController = navController
                 )
             }
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
@@ -256,8 +268,14 @@ fun ImageAndTextComponent(imageRes: Int, text: String, modifier: Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier) {
+fun EventsComponent(
+    events: List<EventsList>,
+    myText: String,
+    modifier: Modifier,
+    navController: NavController
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -277,13 +295,23 @@ fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier
         val chunkedEvents =
             events.chunked(events.size / 2) // Dividir la lista de eventos en dos sublistas
 
+        var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Semillero.name) }
+
         chunkedEvents.forEach { chunk ->
             LazyRow(
                 contentPadding = PaddingValues(8.dp)
             ) {
                 items(chunk) { event ->
+
                     Card(
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp),
+                        onClick = {
+                            CoroutineScope(Dispatchers.Main).launch {
+                            val imageID = event.event_id.toString() ?: "no_id_provided"
+                            AppDataStoreSingleton.saveAppData(imageID)
+                            navigateEvento()
+                        }
+                        }
                     ) {
                         AsyncImage(
                             model = event.photo,
@@ -292,6 +320,7 @@ fun EventsComponent(events: List<EventsList>, myText: String, modifier: Modifier
                             modifier = Modifier
                                 .size(114.dp)
                         )
+
                     }
                 }
             }

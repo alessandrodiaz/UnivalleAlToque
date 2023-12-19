@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.theme.UnivalleAlToqueTheme
 import com.google.android.gms.tasks.OnFailureListener
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataStoreSingleton.initialize(this)
+        AppDataStoreSingleton.initialize(this)
         val mAuth = FirebaseAuth.getInstance();
         val user = mAuth.currentUser
 

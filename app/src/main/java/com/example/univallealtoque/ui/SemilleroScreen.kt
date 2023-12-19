@@ -52,6 +52,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.activities.SemillerosVIewModel
+import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.model.EnrolledActivitiesModel
 import com.example.univallealtoque.model.RegisterModel
@@ -74,12 +75,18 @@ fun SemilleroScreen(
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
     val userCode = userDataFlow.value?.user_id?.toString() ?: "null"
 
+    //GET APP DATA
+    val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
+    val imageID = appDataFlow.value?.toString() ?: "no_id_provided"
+
+    Log.d("ID IMAGEN",imageID)
+
     //GET ACTIVITIES
     // Utilizando LaunchedEffect para ejecutar la lógica una vez al ingresar a la pantalla
-    if (userCode != null && userCode != "null"){
+    if (userCode != null && userCode != "null") {
         LaunchedEffect(key1 = semillerosSatate.isRequestSuccessful) {
             if (!semillerosSatate.isRequestSuccessful) {
-                val data = SemilleroModel(userCode, semillero_id = "26")
+                val data = SemilleroModel(userCode, semillero_id = imageID)
                 val response = semillerosVIewModel.semilleroInfo(data)
             }
         }
@@ -87,7 +94,7 @@ fun SemilleroScreen(
 
     val isLoading by semillerosVIewModel.isLoading.collectAsState()
 
-    if (isLoading){
+    if (isLoading) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,14 +108,15 @@ fun SemilleroScreen(
                 color = Color.Red// Puedes ajustar el tamaño del indicador según tus necesidades
             )
         }
-    }
-    else{
-        val name = semillerosList.group_name?: "Seminario 1"
-        val description = semillerosList.group_description ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
+    } else {
+        val name = semillerosList.group_name ?: "Seminario 1"
+        val description = semillerosList.group_description
+            ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
         val slots = semillerosList.slots ?: "5"
         val availableSlots = semillerosList.available_slots ?: "5"
-        val photo = semillerosList.photo?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
-        val place = semillerosList.place?: "Plazoleta"
+        val photo = semillerosList.photo
+            ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
+        val place = semillerosList.place ?: "Plazoleta"
 
         data class DayInfo(
             val dayName: String,
@@ -117,12 +125,36 @@ fun SemilleroScreen(
         )
 
         val daysOfWeek = listOf(
-            DayInfo(stringResource(id = R.string.monday), semillerosList.monday_start ?: "null", semillerosList.monday_end?: "null"),
-            DayInfo(stringResource(id = R.string.tuesday), semillerosList.tuesday_start?: "null", semillerosList.tuesday_end?: "null"),
-            DayInfo(stringResource(id = R.string.wednesday), semillerosList.wednesday_start?: "null", semillerosList.wednesday_end?: "null"),
-            DayInfo(stringResource(id = R.string.thursday), semillerosList.thursday_start?: "null", semillerosList.thursday_end?: "null"),
-            DayInfo(stringResource(id = R.string.friday), semillerosList.friday_start?: "null", semillerosList.friday_end?: "null"),
-            DayInfo(stringResource(id = R.string.saturday), semillerosList.saturday_start?: "null", semillerosList.saturday_end?: "null")
+            DayInfo(
+                stringResource(id = R.string.monday),
+                semillerosList.monday_start ?: "null",
+                semillerosList.monday_end ?: "null"
+            ),
+            DayInfo(
+                stringResource(id = R.string.tuesday),
+                semillerosList.tuesday_start ?: "null",
+                semillerosList.tuesday_end ?: "null"
+            ),
+            DayInfo(
+                stringResource(id = R.string.wednesday),
+                semillerosList.wednesday_start ?: "null",
+                semillerosList.wednesday_end ?: "null"
+            ),
+            DayInfo(
+                stringResource(id = R.string.thursday),
+                semillerosList.thursday_start ?: "null",
+                semillerosList.thursday_end ?: "null"
+            ),
+            DayInfo(
+                stringResource(id = R.string.friday),
+                semillerosList.friday_start ?: "null",
+                semillerosList.friday_end ?: "null"
+            ),
+            DayInfo(
+                stringResource(id = R.string.saturday),
+                semillerosList.saturday_start ?: "null",
+                semillerosList.saturday_end ?: "null"
+            )
         )
 
 
@@ -137,7 +169,7 @@ fun SemilleroScreen(
                     .fillMaxHeight()
                     .align(Alignment.TopStart)
             ) {
-                item{
+                item {
                     AsyncImage(
                         model = photo,
                         contentDescription = "Imagen",
@@ -151,12 +183,22 @@ fun SemilleroScreen(
                         Text(
                             text = name,
                             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
-                            modifier = Modifier.padding(top = 12.dp, bottom = 18.dp, start=12.dp, end=12.dp)
+                            modifier = Modifier.padding(
+                                top = 12.dp,
+                                bottom = 18.dp,
+                                start = 12.dp,
+                                end = 12.dp
+                            )
                         )
                         Text(
-                            text =  description,
+                            text = description,
                             style = TextStyle(fontSize = 16.sp),
-                            modifier = Modifier.padding(top = 12.dp, bottom = 18.dp, start=14.dp, end=14.dp)
+                            modifier = Modifier.padding(
+                                top = 12.dp,
+                                bottom = 18.dp,
+                                start = 14.dp,
+                                end = 14.dp
+                            )
                         )
 
                         Row {
@@ -165,14 +207,18 @@ fun SemilleroScreen(
                                 contentDescription = stringResource(R.string.content_description_home),
                                 modifier = Modifier
                                     .size(70.dp)
-                                    .padding(horizontal = 10.dp)
-                                ,
+                                    .padding(horizontal = 10.dp),
                                 tint = Color.Black,
                             )
                             Text(
                                 text = "$availableSlots/$slots",
                                 style = TextStyle(fontSize = 16.sp),
-                                modifier = Modifier.padding(top = 22.dp, bottom = 18.dp, start=10.dp, end=10.dp)
+                                modifier = Modifier.padding(
+                                    top = 22.dp,
+                                    bottom = 18.dp,
+                                    start = 10.dp,
+                                    end = 10.dp
+                                )
                             )
                         }
 
@@ -188,8 +234,7 @@ fun SemilleroScreen(
                                 contentDescription = stringResource(R.string.content_description_home),
                                 modifier = Modifier
                                     .size(70.dp)
-                                    .padding(horizontal = 10.dp)
-                                ,
+                                    .padding(horizontal = 10.dp),
                                 tint = Color.Black,
                             )
                             Column {
@@ -199,7 +244,10 @@ fun SemilleroScreen(
                                             Text(
                                                 text = day.dayName,
                                                 style = TextStyle(fontSize = 16.sp),
-                                                modifier = Modifier.padding( end = 10.dp, start=10.dp)
+                                                modifier = Modifier.padding(
+                                                    end = 10.dp,
+                                                    start = 10.dp
+                                                )
                                             )
                                             Text(
                                                 text = "${day.startTime} - ${day.endTime}",
@@ -217,18 +265,22 @@ fun SemilleroScreen(
                                 contentDescription = stringResource(R.string.content_description_home),
                                 modifier = Modifier
                                     .size(70.dp)
-                                    .padding(horizontal = 10.dp)
-                                ,
+                                    .padding(horizontal = 10.dp),
                                 tint = Color.Black,
                             )
                             Text(
                                 text = place,
                                 style = TextStyle(fontSize = 16.sp),
-                                modifier = Modifier.padding(top = 22.dp, bottom = 18.dp, start=10.dp, end=10.dp)
+                                modifier = Modifier.padding(
+                                    top = 22.dp,
+                                    bottom = 18.dp,
+                                    start = 10.dp,
+                                    end = 10.dp
+                                )
                             )
                         }
                     }
-                    if (!isEnrolled){
+                    if (!isEnrolled) {
                         Button(
                             onClick = {
 
@@ -248,8 +300,7 @@ fun SemilleroScreen(
                                 color = Color.White
                             )
                         }
-                    }
-                    else {
+                    } else {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()

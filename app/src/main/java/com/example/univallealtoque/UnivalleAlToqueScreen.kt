@@ -258,7 +258,8 @@ fun UnivalleAlToqueApp(
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(innerPadding),
+                    navController = navController,
 //                    userData = googleAuthUiClient.getSignedInUser()
                 )
             }
