@@ -295,9 +295,9 @@ fun EventsComponent(
     ) {
 
         val chunkedEvents =
-            events.chunked(events.size / 2) // Dividir la lista de eventos en dos sublistas
+            events.chunked(events.size / 2 + events.size % 2) // Dividir la lista de eventos en dos sublistas
 
-        var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Semillero.name) }
+        var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Activity.name) }
 
         chunkedEvents.forEach { chunk ->
             LazyRow(
@@ -319,7 +319,7 @@ fun EventsComponent(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .size(114.dp)
-                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(12.dp)),
+                                .border(1.dp, Color.LightGray, shape = RoundedCornerShape(12.dp)),
                         ) {
                             AsyncImage(
                                 model = event.photo,
