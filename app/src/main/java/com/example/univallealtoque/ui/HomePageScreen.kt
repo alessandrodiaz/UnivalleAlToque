@@ -1,55 +1,44 @@
 package com.example.univallealtoque.ui
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.univallealtoque.R
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
-import com.example.univallealtoque.activities.EnrolledActivitiesViewModel
 import com.example.univallealtoque.activities.GetEventsViewModel
 import com.example.univallealtoque.data.AppDataStoreSingleton
-import com.example.univallealtoque.model.EnrolledActivitiesModel
 import com.example.univallealtoque.model.EventsList
 import com.example.univallealtoque.ui.components.Greeting
 import kotlinx.coroutines.CoroutineScope
@@ -66,9 +55,6 @@ fun HomePageScreen(
     val getEventsModel: GetEventsViewModel = viewModel()
     val getEventsState by getEventsModel.state.collectAsState()
     val eventsList by getEventsModel.events.collectAsState()
-
-
-//    getEventsModel.resetState()
 
     LaunchedEffect(key1 = getEventsState.isRequestSuccessful) {
         if (!getEventsState.isListObtained && !getEventsState.isRequestSuccessful) {
@@ -117,13 +103,12 @@ fun HomePageScreen(
             Text(
                 text = stringResource(id = R.string.proximos_eventos),
                 textAlign = TextAlign.Start,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.displayLarge,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, top = 0.dp)
+                    .padding(start = 20.dp, bottom = 16.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+//            Spacer(modifier = Modifier.height(16.dp))
 
             //EVENTOS
 
@@ -131,25 +116,58 @@ fun HomePageScreen(
                 EventsComponent(
                     events = eventsList,
                     stringResource(id = R.string.esta_semana),
-                    Modifier.size(width = 380.dp, height = 280.dp),
+                    Modifier.size(width = 400.dp, height = 280.dp),
                     navController = navController
                 )
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(50.dp),
+                        color = Color.Red// Puedes ajustar el tamaño del indicador según tus necesidades
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
 
             //SECCIONES
+            Text(
+                text = stringResource(id = R.string.que_queres_hacer),
+                style = MaterialTheme.typography.displayLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                textAlign = TextAlign.Start,
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             CardComponent(
                 stringResource(id = R.string.que_queres_hacer),
                 categoryNames,
-                Modifier.size(width = 380.dp, height = 248.dp)
+                Modifier.size(width = 410.dp, height = 340.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
 
             //SEMILLEROS
+            Text(
+                text = stringResource(id = R.string.semilleros),
+                style = MaterialTheme.typography.displayLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp),
+                textAlign = TextAlign.Start,
+            )
+
             CardComponent(
                 stringResource(id = R.string.semilleros),
                 listOf(),
-                Modifier.size(width = 380.dp, height = 30.dp)
+                Modifier.size(width = 400.dp, height = 30.dp)
             )
             semilleros.forEach { semillero ->
                 SemilleroItem(semillero = semillero, modifier = Modifier)
@@ -203,24 +221,16 @@ fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifie
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        //border = BorderStroke(2.dp,Color.Gray),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
 
     ) {
-        Text(
-            text = myText,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Start,
-        )
+
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 68.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(40.dp),
-            contentPadding = PaddingValues(start = 40.dp, end = 40.dp)
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 10.dp)
         ) {
             items(categoryNames) { item ->
                 val imageRes = when (item) {
@@ -280,17 +290,9 @@ fun EventsComponent(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
 
     ) {
-        Text(
-            text = myText,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Start,
-        )
 
         val chunkedEvents =
             events.chunked(events.size / 2) // Dividir la lista de eventos en dos sublistas
@@ -313,13 +315,21 @@ fun EventsComponent(
                             }
                         }
                     ) {
-                        AsyncImage(
-                            model = event.photo,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .size(114.dp)
-                        )
+                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(12.dp)),
+                        ) {
+                            AsyncImage(
+                                model = event.photo,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(113.dp)
+                            )
+                        }
+
 
                     }
                 }

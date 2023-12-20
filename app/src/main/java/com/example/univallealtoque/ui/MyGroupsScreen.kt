@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -62,6 +64,7 @@ fun MyGroupsScreen(
     val enrolledActivitiesModel: EnrolledActivitiesViewModel = viewModel()
     val enrolledActivitiesState by enrolledActivitiesModel.state.collectAsState()
     val activitiesList by enrolledActivitiesModel.activities.collectAsState()
+    val isLoading by enrolledActivitiesModel.isLoading.collectAsState()
 
     //USER DATA FROM DATASTORE
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
@@ -99,53 +102,81 @@ fun MyGroupsScreen(
                     modifier = Modifier.padding(start = 18.dp, bottom = 18.dp)
                 )
 
-                if (activitiesList.isEmpty()) {
-                    Text(
-                        text = stringResource(id = R.string.my_groups_no_activities),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black,
-                        modifier = Modifier.padding(start = 18.dp, bottom = 18.dp, top = 20.dp)
-                    )
-                } else {
-                    activitiesList.forEach { activity ->
-                        ActivityCard(
-                            imagen = activity.group_photo ?: activity.event_photo
-                            ?: "Sin imagen", // Reemplaza con tu lógica para obtener la imagen
-                            titulo = activity.group_name ?: activity.event_name ?: "Sin título",
-                            descripcion = activity.group_description?.limitTextLength(90)
-                                ?: activity.event_description?.limitTextLength(90)
-                                ?: "Sin descripción",
-                            id = activity.group_id?.toString() ?: activity.event_id?.toString()
-                            ?: "null",
-                            tipo = if (activity.group_id != null) "group" else "event",
-                            navController = navController
+                if (isLoading) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(50.dp),
+                            color = Color.Red// Puedes ajustar el tamaño del indicador según tus necesidades
                         )
                     }
+                } else if (userCode == "null") {
+                    Text(
+                        text = stringResource(id = R.string.my_groups_no_login),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Black,
+                        modifier = Modifier.padding(start = 18.dp, bottom = 18.dp)
+                    )
+
+                } else {
+                    if (activitiesList.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.my_groups_no_activities),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.Black,
+                            modifier = Modifier.padding(start = 18.dp, bottom = 18.dp, top = 20.dp)
+                        )
+                    } else {
+                        activitiesList.forEach { activity ->
+                            ActivityCard(
+                                imagen = activity.group_photo ?: activity.event_photo
+                                ?: "Sin imagen", // Reemplaza con tu lógica para obtener la imagen
+                                titulo = activity.group_name ?: activity.event_name ?: "Sin título",
+                                descripcion = activity.group_description?.limitTextLength(90)
+                                    ?: activity.event_description?.limitTextLength(90)
+                                    ?: "Sin descripción",
+                                id = activity.group_id?.toString() ?: activity.event_id?.toString()
+                                ?: "null",
+                                tipo = if (activity.group_id != null) "group" else "event",
+                                navController = navController
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = modifier.height(60.dp))
                 }
 
-                Spacer(modifier = modifier.height(60.dp))
             }
         }
 
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name)
-            },
-            contentColor = MaterialTheme.colorScheme.background,
-            containerColor = Color(0xFFEA1F01),
-            modifier = Modifier
-                .padding(bottom = 90.dp, end = 40.dp)
-                .size(56.dp)
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
+        if (userCode != "null") {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name)
+                },
+                contentColor = MaterialTheme.colorScheme.background,
+                containerColor = Color(0xFFEA1F01),
                 modifier = Modifier
+                    .padding(bottom = 90.dp, end = 40.dp)
                     .size(56.dp)
                     .align(Alignment.BottomEnd)
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add",
+                    modifier = Modifier
+                        .size(56.dp)
+                        .align(Alignment.BottomEnd)
+                )
+            }
         }
+
     }
 }
 
@@ -171,7 +202,7 @@ fun ActivityCard(
                 CoroutineScope(Dispatchers.Main).launch {
                     println("EL ID ES: " + id + tipo)
                     AppDataStoreSingleton.saveAppData(id)
-                    if (tipo =="group"){
+                    if (tipo == "group") {
                         navigateSemillero()
                     } else {
                         navigateEvento()

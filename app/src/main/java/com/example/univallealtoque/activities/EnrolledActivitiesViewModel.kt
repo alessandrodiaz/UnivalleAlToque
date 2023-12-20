@@ -25,6 +25,9 @@ class EnrolledActivitiesViewModel : ViewModel() {
     private val _activities = MutableStateFlow<List<ActivitiesList>>(emptyList())
     val activities: StateFlow<List<ActivitiesList>> = _activities.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
 
     fun enrolledActivities(enrolledActivitiesModel: EnrolledActivitiesModel) {
 
@@ -35,6 +38,8 @@ class EnrolledActivitiesViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
+                _isLoading.value = true
+
                 val response = alToqueService.enrolledActivities(requestBody)
                 println("RESPONSE"+response)
 
@@ -65,6 +70,8 @@ class EnrolledActivitiesViewModel : ViewModel() {
                         activities = null
                     )
 
+            } finally {
+                _isLoading.value = false
             }
         }
     }
