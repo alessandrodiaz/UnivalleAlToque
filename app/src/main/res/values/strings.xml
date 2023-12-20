@@ -164,11 +164,14 @@
     <string name="wrongCodeTitle">Codigo Incorrecto</string>
     <string name="wrongCodeMessage">Intentalo de nuevo</string>
     <string name="code_exists">Ya hemos enviado un código previamente a tu correo</string>
+
     <!-- MY GROUPS -->
     <string name="my_groups">Mis grupos</string>
     <string name="my_groups_title">Mis actividades inscritas</string>
     <string name="my_groups_no_activities">No tienes actividades inscritas 😥</string>
     <string name="my_groups_no_login">Inicia sesión para inscribirte y crear nuevas actividades</string>
+
+    <!-- SEMILLEROS Y EVENTOS -->
     <string name="semillero_title">Semillero</string>
     <string name="register_semillero">INSCRIBIRME</string>
     <string name="already_Enrolled_semillero">YA ESTAS INSCRITO</string>
@@ -182,6 +185,7 @@
     <string name="activity_title">Actividad</string>
 
 
-
+    <!-- CREAR NUEVA ACTIVIDAD -->
+    <string name="create_activity_photo">Agregar foto</string>
 
 </resources>
