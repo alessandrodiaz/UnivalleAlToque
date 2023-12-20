@@ -61,3 +61,9 @@ public class SemilleroModel(
     val user_id: String,
     val semillero_id: String
 )
+
+@Serializable
+public class EventModel(
+    val user_id: String,
+    val event_id: String
+)

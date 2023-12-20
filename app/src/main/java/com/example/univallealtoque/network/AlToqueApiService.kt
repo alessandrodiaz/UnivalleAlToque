@@ -4,6 +4,7 @@ import com.example.univallealtoque.model.ChangePasswordResponse
 import com.example.univallealtoque.model.CreateNewActivityResponseExpress
 import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.EnrolledActivitiesResponse
+import com.example.univallealtoque.model.EventResponse
 import com.example.univallealtoque.model.EventsListResponse
 import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.NewPasswordResponse
@@ -62,6 +63,9 @@ interface AlToqueService {
 
     @POST("activity/semillero")
     suspend fun semilleroInfo(@Body jsonBody: RequestBody): SemilleroResponse
+
+    @POST("activity/event")
+    suspend fun eventInfo(@Body jsonBody: RequestBody): EventResponse
 
     @GET("events")
     suspend fun getEvents(): EventsListResponse

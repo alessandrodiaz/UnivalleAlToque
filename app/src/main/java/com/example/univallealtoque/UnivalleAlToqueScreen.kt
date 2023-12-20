@@ -59,6 +59,7 @@ import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
 import com.example.univallealtoque.ui.CreateNewActivityScreen
 import com.example.univallealtoque.ui.DeleteUserScreen
+import com.example.univallealtoque.ui.EventScreen
 import com.example.univallealtoque.ui.GetCodeScreen
 import com.example.univallealtoque.ui.MyGroupsScreen
 import com.example.univallealtoque.ui.ProfileScreen
@@ -84,7 +85,8 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     NewPassword(title = R.string.new_password),
     CreateNewActivity(title = R.string.create_new_activity),
     MyGroups(title = R.string.my_groups_title),
-    Semillero(title= R.string.semillero_title)
+    Semillero(title= R.string.semillero_title),
+    Activity(title = R.string.activity_title)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -139,7 +141,8 @@ fun UnivalleAlToqueBottomBar(
     navigateCreateActivity: () -> Unit,
     navigateMyGroups: () -> Unit,
     userModelExpressState: LoginState,
-    navigateSemillero: () -> Unit
+    navigateSemillero: () -> Unit,
+    navigateActivity: () -> Unit
 ) {
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
     val userDataEmail = userDataFlow.value?.email
@@ -162,7 +165,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick =  navigateSemillero
+            onClick =  navigateActivity
         ) {
 
             Icon(
@@ -244,7 +247,8 @@ fun UnivalleAlToqueApp(
                 navigateCreateActivity = { navController.navigate(UnivalleAlToqueScreen.CreateNewActivity.name) },
                 navigateMyGroups = { navController.navigate(UnivalleAlToqueScreen.MyGroups.name) },
                 userModelExpressState = loginViewModelExpressState,
-                navigateSemillero = {navController.navigate(UnivalleAlToqueScreen.Semillero.name)}
+                navigateSemillero = {navController.navigate(UnivalleAlToqueScreen.Semillero.name)},
+                navigateActivity = {navController.navigate(UnivalleAlToqueScreen.Activity.name)}
             )
         }
     ) { innerPadding ->
@@ -435,6 +439,16 @@ fun UnivalleAlToqueApp(
                         .padding(innerPadding),
                 )
             }
+
+            composable(route = UnivalleAlToqueScreen.Activity.name){
+                EventScreen(
+                    navController = navController,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                )
+            }
+
         }
     }
 }

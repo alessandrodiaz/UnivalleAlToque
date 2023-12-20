@@ -84,6 +84,33 @@ data class semillerosList(
     val photo: String? = null,
     val place: String? = null,
 )
+
+data class EventResponse(
+    val message: String? = null,
+    val eventInfoArray: List<eventList>,
+    val isUserEnrolled: Boolean = false,
+)
+
+data class eventList(
+    val event_name: String?  = null,
+    val event_description: String?  = null,
+    val slots: String?  = null,
+    val available_slots: String?  = null,
+    val monday_start: String? = null,
+    val monday_end: String? = null,
+    val tuesday_start: String? = null,
+    val tuesday_end: String? = null,
+    val wednesday_start: String? = null,
+    val wednesday_end: String? = null,
+    val thursday_start: String? = null,
+    val thursday_end: String? = null,
+    val friday_start: String? = null,
+    val friday_end: String? = null,
+    val saturday_start: String? = null,
+    val saturday_end: String? = null,
+    val photo: String? = null,
+    val place: String? = null,
+)
 data class EventsListResponse(
     val message: String? = null,
     val events: List<EventsList>
