@@ -122,3 +122,15 @@ data class EventsList(
     val photo: String? = null
 
 )
+
+data class SemillerosListResponse(
+    val message: String? = null,
+    val activities: List<SemillerosHomeList>
+)
+
+data class SemillerosHomeList(
+    val group_id: Int?  = null,
+    val group_name: String?  = null,
+    val group_description: String? = null,
+    val photo: String? = null
+)
