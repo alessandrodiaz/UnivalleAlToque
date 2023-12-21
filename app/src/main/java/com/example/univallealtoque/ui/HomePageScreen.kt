@@ -102,7 +102,6 @@ fun HomePageScreen(
                     .fillMaxWidth()
                     .padding(start = 20.dp, bottom = 16.dp)
             )
-//            Spacer(modifier = Modifier.height(16.dp))
 
             //EVENTOS
 
@@ -164,7 +163,6 @@ fun HomePageScreen(
             if (getSemillerosState.isListObtained) {
                 SemillerosItems(
                     semilleros = semillerosList,
-                    Modifier.size(width = 400.dp, height = 550.dp),
                     navController = navController
                 )
                 Log.d("SEMILLEROS LIST OBTAINED", "La lista de semilleros se ha obtenido correctamente.")
@@ -173,7 +171,7 @@ fun HomePageScreen(
             CardComponent(
                 stringResource(id = R.string.semilleros),
                 listOf(),
-                Modifier.size(width = 400.dp, height = 30.dp)
+                Modifier.size(width = 400.dp, height = 300.dp)
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
         }
@@ -184,24 +182,14 @@ fun HomePageScreen(
 @Composable
 fun SemillerosItems(
     semilleros: List<SemillerosHomeList>,
-    modifier: Modifier,
     navController: NavController
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
 
-        LazyColumn(
-            modifier = Modifier.fillMaxHeight(),
-            contentPadding = PaddingValues(8.dp),
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal=10.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(semilleros) { semillero ->
+            semilleros.forEach { semillero ->
                 Card(
                     modifier = Modifier.clickable {
                         CoroutineScope(Dispatchers.Main).launch {
@@ -219,7 +207,7 @@ fun SemillerosItems(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(100.dp) // Puedes ajustar la altura según tus preferencias
+                                .height(200.dp) // Puedes ajustar la altura según tus preferencias
                                 .border(2.dp, Color.LightGray, shape = RoundedCornerShape(12.dp)), // Aquí se agrega el borde
                         ) {
                             AsyncImage(
@@ -245,7 +233,7 @@ fun SemillerosItems(
                 }
             }
         }
-    }
+//    }
 }
 
 @Composable

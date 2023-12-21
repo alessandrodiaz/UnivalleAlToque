@@ -354,7 +354,7 @@ fun EventScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .fillMaxHeight()
-                                .padding(top = 20.dp, bottom = 80.dp),
+                                .padding(top = 20.dp, bottom = 80.dp, start = 30.dp, end = 30.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
 
@@ -388,7 +388,7 @@ fun EventScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .fillMaxHeight()
-                                .padding(top = 20.dp, bottom = 80.dp),
+                                .padding(top = 20.dp, bottom = 80.dp, start = 30.dp, end = 30.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
 
