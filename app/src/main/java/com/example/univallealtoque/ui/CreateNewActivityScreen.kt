@@ -376,7 +376,7 @@ fun CreateNewActivityScreen(
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == stringResource(id = R.string.tuesday)) {
+                        if (item == stringResource(id = R.string.thursday)) {
                             DemoSearchableDropdown(
                                 myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
