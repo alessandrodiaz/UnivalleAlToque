@@ -167,6 +167,7 @@
 
     <!-- SEMILLEROS Y EVENTOS -->
     <string name="semillero_title">Semillero</string>
+    <string name="event_title">Event</string>
     <string name="register_semillero">INSCRIBIRME</string>
     <string name="already_Enrolled_semillero">YA ESTAS INSCRITO</string>
     <string name="semillero_Unrolled">SALIR</string>
@@ -182,5 +183,12 @@
 
     <!-- CREAR NUEVA ACTIVIDAD -->
     <string name="create_activity_photo">Agregar foto</string>
-
+    <string name="add_new_activity">Agregar nueva actividad</string>
+    <string name="name_of_activity">Nombre de la actividad</string>
+    <string name="type_of_activity">Tipo de actividad</string>
+    <string name="number_of_slots">Cupos</string>
+    <string name="description">Descripción</string>
+    <string name="schedule">Horario</string>
+    <string name="start">Inicio</string>
+    <string name="end">Fin</string>
 </resources>

@@ -124,8 +124,8 @@ fun CreateNewActivityScreen(
     val context = LocalContext.current
 
     var hours = Array(24) { i -> "%02d:00".format(i) }
-    var weekDays = arrayOf("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado")
-    var typeActivity = arrayOf("Semillero", "Evento")
+    var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
+    var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
 
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
 
@@ -138,7 +138,7 @@ fun CreateNewActivityScreen(
             Spacer(modifier = Modifier.height(70.dp))
 
             Text(
-                text = "Agregar nueva actividad",
+                text = stringResource(id = R.string.add_new_activity),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.Black
@@ -149,7 +149,7 @@ fun CreateNewActivityScreen(
 
             // NOMBRE DE LA ACTIVIDAD
             Text(
-                text = "Nombre de la actividad",
+                text = stringResource(id = R.string.name_of_activity),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -181,7 +181,7 @@ fun CreateNewActivityScreen(
 
             // TIPO
             Text(
-                text = "Tipo de actividad",
+                text = stringResource(id = R.string.type_of_activity),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -189,7 +189,7 @@ fun CreateNewActivityScreen(
                     .padding(top = 16.dp, bottom = 0.dp)
             )
             DemoSearchableDropdown(
-                myHint = "Tipo Actividad",
+                myHint = stringResource(id = R.string.type_of_activity),
                 myArrayOptions = typeActivity,
                 { param: String -> myNewActivityRequest.typeOfActivity = param },
                 myComponentWithDP = 210,
@@ -198,7 +198,7 @@ fun CreateNewActivityScreen(
 
             // DESCRIPCION
             Text(
-                text = "Descripción",
+                text = stringResource(id = R.string.description),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -262,7 +262,7 @@ fun CreateNewActivityScreen(
 
             // NUMERO DE CUPOS
             Text(
-                text = "Número de Cupos",
+                text = stringResource(id = R.string.number_of_slots),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -305,7 +305,7 @@ fun CreateNewActivityScreen(
 
             // HORARIO
             Text(
-                text = "Horario",
+                text = stringResource(id = R.string.schedule),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -334,85 +334,85 @@ fun CreateNewActivityScreen(
                                 .padding(top = 16.dp, end = 10.dp, bottom = 0.dp)
                                 .align(Alignment.CenterVertically)
                         )
-                        if (item == "Lunes") {
+                        if (item == stringResource(id = R.string.monday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.mondayEnd = param },
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == "Martes") {
+                        if (item == stringResource(id = R.string.tuesday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.tuesdayEnd = param },
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == "Miercoles") {
+                        if (item == stringResource(id = R.string.wednesday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.wednesdayEnd = param },
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == "Jueves") {
+                        if (item == stringResource(id = R.string.tuesday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.thursdayEnd = param },
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == "Viernes") {
+                        if (item == stringResource(id = R.string.friday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.fridayEnd = param },
                                 myComponentWithDP = 130
                             )
                         }
-                        if (item == "Sabado") {
+                        if (item == stringResource(id = R.string.saturday)) {
                             DemoSearchableDropdown(
-                                myHint = "Inicio",
+                                myHint = stringResource(id = R.string.start),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayStart = param },
                                 myComponentWithDP = 130
                             )
                             DemoSearchableDropdown(
-                                myHint = "Fin",
+                                myHint = stringResource(id = R.string.end),
                                 myArrayOptions = hours,
                                 { param: String -> myNewActivityRequest.saturdayEnd = param },
                                 myComponentWithDP = 130
