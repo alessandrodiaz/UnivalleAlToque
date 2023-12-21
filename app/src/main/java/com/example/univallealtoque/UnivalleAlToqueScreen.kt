@@ -165,7 +165,7 @@ fun UnivalleAlToqueBottomBar(
             )
         }
         IconButton(
-            onClick =  navigateActivity
+            onClick =  navigateSemillero
         ) {
 
             Icon(

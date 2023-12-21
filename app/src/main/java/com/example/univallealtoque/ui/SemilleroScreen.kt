@@ -1,5 +1,6 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -37,6 +38,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,10 +56,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
+import com.example.univallealtoque.activities.CancelEnrollmentModelView
+import com.example.univallealtoque.activities.EnrollmentModelView
 import com.example.univallealtoque.activities.SemillerosVIewModel
 import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.model.CancelEnrollmentModel
 import com.example.univallealtoque.model.EnrolledActivitiesModel
+import com.example.univallealtoque.model.EnrollmentModel
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.model.SemilleroModel
 import com.example.univallealtoque.user_account.RecoverPasswordViewModel
@@ -69,7 +78,15 @@ fun SemilleroScreen(
     val semillerosSatate by semillerosVIewModel.state.collectAsState()
     val semillerosList by semillerosVIewModel.activities.collectAsState()
 
-    val isEnrolled = semillerosSatate.isEnrolled
+    val enrollmentViewModel: EnrollmentModelView = viewModel()
+    val enrollmentState by enrollmentViewModel.state.collectAsState()
+
+    val cancelEnrollmentModelView: CancelEnrollmentModelView = viewModel()
+    val cancelEnrollmentState by cancelEnrollmentModelView.state.collectAsState()
+
+    var fullSlotsDialog by remember { mutableStateOf(false) }
+    var hasDecreasedSlots by remember { mutableStateOf(false) }
+    var addSlots by remember { mutableStateOf(false) }
 
     //USER DATA FROM DATASTORE
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
@@ -112,11 +129,12 @@ fun SemilleroScreen(
         val name = semillerosList.group_name ?: "Seminario 1"
         val description = semillerosList.group_description
             ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
-        val slots = semillerosList.slots ?: "5"
-        val availableSlots = semillerosList.available_slots ?: "5"
+        val slots = semillerosList.slots ?: "1"
         val photo = semillerosList.photo
             ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
         val place = semillerosList.place ?: "Plazoleta"
+        var isEnrolled by remember { mutableStateOf(semillerosSatate.isEnrolled) }
+        var availableSlots by remember { mutableIntStateOf(semillerosList.available_slots?.toIntOrNull() ?: 0) }
 
         data class DayInfo(
             val dayName: String,
@@ -157,7 +175,39 @@ fun SemilleroScreen(
             )
         )
 
+        if (enrollmentState.isRequestSuccessful && !hasDecreasedSlots) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.enrollment_satisfied),
+                message = "Gracias por unirte",
+                onDismiss = {
+                    hasDecreasedSlots = true // Marcar como true para que no se vuelva a ejecutar
+                    enrollmentViewModel.resetState()
+                    isEnrolled = true
+                    availableSlots -= 1
+                }
+            )
+        }
 
+        if (cancelEnrollmentState.isRequestSuccessful && !addSlots) {
+            CustomAlertDialog(
+                title = "Has cancelado la inscripción",
+                message = "Puedes unirte de nuevo cuando quieras",
+                onDismiss = {
+                    addSlots = true // Marcar como true para que no se vuelva a ejecutar
+                    cancelEnrollmentModelView.resetState()
+                    isEnrolled = false
+                    availableSlots += 1
+                }
+            )
+        }
+
+        if (fullSlotsDialog) {
+            CustomAlertDialog(
+                title = "Ya no hay cupos",
+                message = "prueba con otra actividad",
+                onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
+            )
+        }
 
         Box(
             modifier = Modifier
@@ -283,7 +333,13 @@ fun SemilleroScreen(
                     if (!isEnrolled) {
                         Button(
                             onClick = {
-
+                                if (availableSlots.toInt() == 0) {
+                                    fullSlotsDialog = true
+                                }
+                                else {
+                                    val dataEnrollment = EnrollmentModel(userCode, activity_id = imageID, activity_type = "group")
+                                    val response = enrollmentViewModel.enrollment(dataEnrollment)
+                                }
                             },
                             modifier = Modifier
                                 .fillMaxSize()
@@ -316,8 +372,8 @@ fun SemilleroScreen(
                         }
                         Button(
                             onClick = {
-
-
+                                val dataEnrollment = CancelEnrollmentModel(userCode, activity_id = imageID, activity_type = "group")
+                                val response = cancelEnrollmentModelView.cancelEnrollment(dataEnrollment)
                             },
                             modifier = Modifier
                                 .fillMaxSize()

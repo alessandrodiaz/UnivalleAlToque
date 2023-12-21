@@ -122,3 +122,11 @@ data class EventsList(
     val photo: String? = null
 
 )
+
+data class ErrollmentResponse(
+    val message: String? = null,
+)
+
+data class CancelErrollmentResponse(
+    val message: String? = null,
+)
