@@ -171,7 +171,7 @@ fun HomePageScreen(
             CardComponent(
                 stringResource(id = R.string.semilleros),
                 listOf(),
-                Modifier.size(width = 400.dp, height = 300.dp)
+                Modifier.size(width = 400.dp, height = 30.dp)
             )
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
         }
