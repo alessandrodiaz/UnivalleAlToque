@@ -4,11 +4,9 @@ import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.univallealtoque.model.ActivitiesList
 import com.example.univallealtoque.model.SemilleroModel
 import com.example.univallealtoque.model.semillerosList
 import com.example.univallealtoque.network.AlToqueServiceFactory
-import com.example.univallealtoque.user_account.LockoutUserState
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +19,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 class SemillerosVIewModel:ViewModel() {
     private val alToqueService = AlToqueServiceFactory.makeAlToqueService()
 
-    private val _state = MutableStateFlow(SemillerosSatate())
+    private val _state = MutableStateFlow(SemilleroState())
     val state = _state.asStateFlow()
 
     private val _activities = MutableStateFlow(semillerosList())
@@ -51,7 +49,7 @@ class SemillerosVIewModel:ViewModel() {
                     Log.d("OBTENIDO DESDE EL SERVER: ", response.semilleroInfoArray.toString())
 
                     _state.value =
-                        SemillerosSatate(
+                        SemilleroState(
                             semilleros = response.semilleroInfoArray,
                             isRequestSuccessful = true,
                             isEnrolled = response.isUserEnrolled
@@ -69,6 +67,6 @@ class SemillerosVIewModel:ViewModel() {
     }
 
     fun resetState() {
-        _state.update { SemillerosSatate() }
+        _state.update { SemilleroState() }
     }
 }

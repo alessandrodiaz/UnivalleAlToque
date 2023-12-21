@@ -2,35 +2,29 @@ package com.example.univallealtoque.ui
 
 import CustomAlertDialog
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,13 +38,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -66,7 +59,6 @@ import com.example.univallealtoque.model.EnrolledActivitiesModel
 import com.example.univallealtoque.model.EnrollmentModel
 import com.example.univallealtoque.model.RegisterModel
 import com.example.univallealtoque.model.SemilleroModel
-import com.example.univallealtoque.user_account.RecoverPasswordViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,7 +88,7 @@ fun SemilleroScreen(
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
     val imageID = appDataFlow.value?.toString() ?: "no_id_provided"
 
-    Log.d("ID IMAGEN",imageID)
+    Log.d("ID IMAGEN", imageID)
 
     //GET ACTIVITIES
     // Utilizando LaunchedEffect para ejecutar la lógica una vez al ingresar a la pantalla
@@ -215,21 +207,29 @@ fun SemilleroScreen(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .padding(4.dp)
                     .fillMaxHeight()
                     .align(Alignment.TopStart)
             ) {
                 item {
-                    AsyncImage(
-                        model = photo,
-                        contentDescription = "Imagen",
-                        contentScale = ContentScale.Crop,
+                    // IMAGEN SUPERIOR
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .clip(shape = RoundedCornerShape(8.dp))
-                    )
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 11)
+                    ) {
+                        AsyncImage(
+                            model = photo,
+                            contentDescription = "Imagen",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
                     Spacer(modifier = Modifier.height(10.dp))
-                    Column {
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
+                    ) {
                         Text(
                             text = name,
                             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
@@ -396,6 +396,7 @@ fun SemilleroScreen(
         }
     }
 }
+
 
 
 

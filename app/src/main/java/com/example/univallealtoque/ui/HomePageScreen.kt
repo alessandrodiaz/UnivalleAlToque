@@ -38,8 +38,10 @@ import coil.compose.AsyncImage
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.activities.GetEventsViewModel
+import com.example.univallealtoque.activities.GetSemillerosViewModel
 import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.model.EventsList
+import com.example.univallealtoque.model.SemillerosHomeList
 import com.example.univallealtoque.ui.components.Greeting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,12 +58,22 @@ fun HomePageScreen(
     val getEventsState by getEventsModel.state.collectAsState()
     val eventsList by getEventsModel.events.collectAsState()
 
-    LaunchedEffect(key1 = getEventsState.isRequestSuccessful) {
+    val getSemillerosModel: GetSemillerosViewModel = viewModel()
+    val getSemillerosState by getSemillerosModel.state.collectAsState()
+    val semillerosList by getSemillerosModel.semilleros.collectAsState()
+
+    LaunchedEffect(key1 = listOf(getEventsState.isRequestSuccessful, getSemillerosState.isRequestSuccessful)) {
         if (!getEventsState.isListObtained && !getEventsState.isRequestSuccessful) {
-            val response = getEventsModel.getEvents()
-            Log.d("LISTA ACTIVIDADES: ", response.toString())
+            val responseEvents = getEventsModel.getEvents()
+            Log.d("LISTA ACTIVIDADES: ", responseEvents.toString())
+        }
+
+        if (!getSemillerosState.isListObtained && !getSemillerosState.isRequestSuccessful) {
+            val responseSemilleros = getSemillerosModel.getSemilleros()
+            Log.d("LISTA SEMILLEROS: ", responseSemilleros.toString())
         }
     }
+
 
     var categoryNames = listOf(
         stringResource(id = R.string.gym),
@@ -70,24 +82,6 @@ fun HomePageScreen(
         stringResource(id = R.string.piscina),
         stringResource(id = R.string.in_english),
         stringResource(id = R.string.taekwondo),
-    )
-
-    val semilleros = listOf(
-        Semilleros(
-            stringResource(id = R.string.futbol),
-            stringResource(id = R.string.futbol_time),
-            R.drawable.futbol
-        ),
-        Semilleros(
-            stringResource(id = R.string.natacion),
-            stringResource(id = R.string.natacion_time),
-            R.drawable.natacion
-        ),
-        Semilleros(
-            stringResource(id = R.string.rugby),
-            stringResource(id = R.string.rugby_time),
-            R.drawable.rugby
-        ),
     )
 
     LazyColumn(
@@ -119,6 +113,7 @@ fun HomePageScreen(
                     Modifier.size(width = 400.dp, height = 280.dp),
                     navController = navController
                 )
+                Log.d("EVENTS LIST OBTAINED", "La lista de eventos se ha obtenido correctamente.")
             } else {
                 Column(
                     modifier = Modifier
@@ -164,53 +159,94 @@ fun HomePageScreen(
                 textAlign = TextAlign.Start,
             )
 
+            Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
+
+            if (getSemillerosState.isListObtained) {
+                SemillerosItems(
+                    semilleros = semillerosList,
+                    Modifier.size(width = 400.dp, height = 550.dp),
+                    navController = navController
+                )
+                Log.d("SEMILLEROS LIST OBTAINED", "La lista de semilleros se ha obtenido correctamente.")
+            }
+
             CardComponent(
                 stringResource(id = R.string.semilleros),
                 listOf(),
                 Modifier.size(width = 400.dp, height = 30.dp)
             )
-            semilleros.forEach { semillero ->
-                SemilleroItem(semillero = semillero, modifier = Modifier)
-            }
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre las tarjetas
         }
     }
-
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SemilleroItem(semillero: Semilleros, modifier: Modifier) {
+fun SemillerosItems(
+    semilleros: List<SemillerosHomeList>,
+    modifier: Modifier,
+    navController: NavController
+) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+        ),
         modifier = modifier
-            .padding(8.dp)
-            .clickable { /* Acción cuando se hace clic en el semillero */ }
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Image(
-                painter = painterResource(id = semillero.imageRes),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(75.dp) // Ajusta la altura de la imagen
-            )
 
-            // Nombre y hora del semillero
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(text = semillero.name, fontSize = 16.sp)
-                Text(text = semillero.time, fontSize = 12.sp, color = Color.Gray)
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight(),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(semilleros) { semillero ->
+                Card(
+                    modifier = Modifier.clickable {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val groupId = semillero.group_id.toString() ?: "no_id_provided"
+                            AppDataStoreSingleton.saveAppData(groupId)
+                            navController.navigate(UnivalleAlToqueScreen.Semillero.name)
+                        }
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp) // Puedes ajustar la altura según tus preferencias
+                                .border(2.dp, Color.LightGray, shape = RoundedCornerShape(12.dp)), // Aquí se agrega el borde
+                        ) {
+                            AsyncImage(
+                                model = semillero.photo,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(12.dp)) // Aquí se redondean los bordes
+                            )
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            semillero.group_name?.let { Text(text = it, fontSize = 16.sp) }
+                            semillero.group_description?.let { Text(text = it, fontSize = 12.sp, color = Color.Gray) }
+                        }
+                    }
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun CardComponent(myText: String, categoryNames: List<String>, modifier: Modifier) {
@@ -295,9 +331,9 @@ fun EventsComponent(
     ) {
 
         val chunkedEvents =
-            events.chunked(events.size / 2) // Dividir la lista de eventos en dos sublistas
+            events.chunked(events.size / 2 + events.size % 2) // Dividir la lista de eventos en dos sublistas
 
-        var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Semillero.name) }
+        var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Activity.name) }
 
         chunkedEvents.forEach { chunk ->
             LazyRow(
@@ -319,7 +355,7 @@ fun EventsComponent(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .size(114.dp)
-                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(12.dp)),
+                                .border(1.dp, Color.LightGray, shape = RoundedCornerShape(12.dp)),
                         ) {
                             AsyncImage(
                                 model = event.photo,

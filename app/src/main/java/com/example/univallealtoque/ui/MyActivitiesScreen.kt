@@ -1,7 +1,6 @@
 package com.example.univallealtoque.ui
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,9 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -190,7 +187,7 @@ fun ActivityCard(
     navController: NavController
 ) {
     var navigateSemillero = { navController.navigate(UnivalleAlToqueScreen.Semillero.name) }
-    var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.HomePage.name) }
+    var navigateEvento = { navController.navigate(UnivalleAlToqueScreen.Activity.name) }
 
     Row(
         modifier = Modifier

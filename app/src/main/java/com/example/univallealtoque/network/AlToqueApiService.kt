@@ -13,6 +13,7 @@ import com.example.univallealtoque.model.LoginResponseExpress
 import com.example.univallealtoque.model.NewPasswordResponse
 import com.example.univallealtoque.model.RecoverPasswordResponse
 import com.example.univallealtoque.model.SemilleroResponse
+import com.example.univallealtoque.model.SemillerosListResponse
 import com.example.univallealtoque.model.SendCodeDeleteAccountModel
 import com.example.univallealtoque.model.SendCodeDeleteAccountResponse
 import com.example.univallealtoque.model.UpdateBasicDataResponseExpress
@@ -77,6 +78,9 @@ interface AlToqueService {
 
     @GET("events")
     suspend fun getEvents(): EventsListResponse
+
+    @GET("activities")
+    suspend fun getSemilleros(): SemillerosListResponse
 
 }
 
