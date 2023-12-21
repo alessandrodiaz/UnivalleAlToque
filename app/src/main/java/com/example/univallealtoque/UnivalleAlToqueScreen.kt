@@ -57,6 +57,8 @@ import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.sign_in_google.GoogleAuthUiClient
 import com.example.univallealtoque.sign_in_express.LoginState
 import com.example.univallealtoque.sign_in_google.SignInViewModel
+import com.example.univallealtoque.ui.CreateNewActivityEventScreen
+import com.example.univallealtoque.ui.CreateNewActivityGroupScreen
 import com.example.univallealtoque.ui.CreateNewActivityScreen
 import com.example.univallealtoque.ui.DeleteUserScreen
 import com.example.univallealtoque.ui.EventScreen
@@ -86,7 +88,9 @@ enum class UnivalleAlToqueScreen(@StringRes val title: Int) {
     CreateNewActivity(title = R.string.create_new_activity),
     MyGroups(title = R.string.my_groups_title),
     Semillero(title= R.string.semillero_title),
-    Activity(title = R.string.activity_title)
+    Activity(title = R.string.activity_title),
+    CreateNewActivityEvent(title = R.string.activity_event_title),
+    CreateNewActivityGroup(title= R.string.activity_group_title)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -413,7 +417,6 @@ fun UnivalleAlToqueApp(
 
             composable(route = UnivalleAlToqueScreen.CreateNewActivity.name){
                 CreateNewActivityScreen(
-                    userModelExpress = loginViewModelExpress,
                     navController = navController,
                     modifier = Modifier
                         .background(Color.White)
@@ -448,7 +451,26 @@ fun UnivalleAlToqueApp(
                         .padding(innerPadding),
                 )
             }
-
+            composable(route = UnivalleAlToqueScreen.CreateNewActivityEvent.name){
+                CreateNewActivityEventScreen(
+                    userModelExpress = loginViewModelExpress,
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                )
+            }
+            composable(route = UnivalleAlToqueScreen.CreateNewActivityGroup.name){
+                CreateNewActivityGroupScreen(
+                    userModelExpress = loginViewModelExpress,
+                    navController = navController,
+                    modifier = Modifier
+                        .background(Color.White)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                )
+            }
         }
     }
 }

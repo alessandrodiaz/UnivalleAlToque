@@ -178,6 +178,8 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sábado</string>
     <string name="activity_title">Actividad</string>
+    <string name="activity_event_title">Crear Evento</string>
+    <string name="activity_group_title">Crear Semillero</string>
     <string name="enrollment_satisfied">Te has inscrito satisfactoriamente</string>
 
 
