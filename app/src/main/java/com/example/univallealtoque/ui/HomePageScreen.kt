@@ -207,7 +207,7 @@ fun SemillerosItems(
                         CoroutineScope(Dispatchers.Main).launch {
                             val groupId = semillero.group_id.toString() ?: "no_id_provided"
                             AppDataStoreSingleton.saveAppData(groupId)
-                            navController.navigate(UnivalleAlToqueScreen.Activity.name)
+                            navController.navigate(UnivalleAlToqueScreen.Semillero.name)
                         }
                     }
                 ) {
