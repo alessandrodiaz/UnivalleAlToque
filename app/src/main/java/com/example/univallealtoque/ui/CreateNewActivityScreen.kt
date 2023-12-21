@@ -83,6 +83,7 @@ data class CreateNewActivityRequest(
     var fridayEnd: String? = null, // "00:00",
     var saturdayStart: String? = null, // "00:00",
     var saturdayEnd: String? = null, // "00:00",
+    var placeOfActivity: String? = null
 )
 
 
@@ -103,10 +104,13 @@ fun CreateNewActivityScreen(
 
     var nameOfActivityInputText by remember { mutableStateOf("") }
     var descriptionOfActivityInputText by remember { mutableStateOf("") }
+    var placeOfActivityInputText by remember { mutableStateOf("") }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var hasFocusNameOfActivity by remember { mutableStateOf(false) }
     var hasFocusDescription by remember { mutableStateOf(false) }
+    var hasFocusPlace by remember { mutableStateOf(false) }
+    var hasFocusCupos by remember { mutableStateOf(false) }
     var myColor by remember { mutableStateOf(Color.Blue) }
 
     var value by remember {
@@ -143,7 +147,7 @@ fun CreateNewActivityScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
 
-            // NOMBRE DE LA ACTIVIDADd
+            // NOMBRE DE LA ACTIVIDAD
             Text(
                 text = "Nombre de la actividad",
                 textAlign = TextAlign.Center,
@@ -162,8 +166,8 @@ fun CreateNewActivityScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
-                        width = 2.dp,
-                        color = if (hasFocusNameOfActivity) Color.Red else Color.Black,
+                        width = 1.dp,
+                        color = if (hasFocusNameOfActivity) Color.Red else Color.Gray,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .height(40.dp)
@@ -211,8 +215,8 @@ fun CreateNewActivityScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .border(
-                        width = 2.dp,
-                        color = if (hasFocusDescription) Color.Red else Color.Black,
+                        width = 1.dp,
+                        color = if (hasFocusDescription) Color.Red else Color.Gray,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .height(100.dp)
@@ -220,6 +224,38 @@ fun CreateNewActivityScreen(
                     .background(Color.White)
                     .onFocusEvent { focusState ->
                         hasFocusDescription = focusState.isFocused
+                    }
+            )
+
+            // LUGAR
+            Text(
+                text = "Lugar",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.displayMedium,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 16.dp)
+            )
+
+
+            BasicTextField(
+                value = placeOfActivityInputText,
+                onValueChange = { placeOfActivityInputText = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = { keyboardController?.hide() }),
+                modifier = Modifier
+                    .width(150.dp)
+                    .border(
+                        width = 1.dp,
+                        color = if (hasFocusPlace) Color.Red else Color.Gray,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .height(40.dp)
+                    .padding(start = 16.dp, top = 8.dp, end = 8.dp)
+                    .background(Color.White)
+                    .onFocusEvent { focusState ->
+                        hasFocusPlace = focusState.isFocused
                     }
             )
 
@@ -250,16 +286,21 @@ fun CreateNewActivityScreen(
                 keyboardActions = KeyboardActions(
                     onDone = { keyboardController?.hide() }),
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(150.dp)
                     .border(
-                        width = 2.dp,
-                        color = Color.Black,
+                        width = 1.dp,
+                        color = if (hasFocusCupos) Color.Red else Color.Gray,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .height(40.dp)
                     .padding(start = 16.dp, top = 8.dp, end = 8.dp)
                     .background(Color.White)
+                    .onFocusEvent { focusState ->
+                        hasFocusCupos = focusState.isFocused
+                    }
             )
+
+
 
 
             // HORARIO
@@ -410,7 +451,7 @@ fun CreateNewActivityScreen(
 
                     if (Patterns.WEB_URL.matcher(imageUrl).matches()) {
                         imageValid = true
-                        // Si imageUrl contiene una URL válida
+                        // Si imageUrl contiene una URL válid
                         Log.d("URL Check", "La imageUrl contiene una URL válida")
                     } else {
                         imageValid = false
@@ -421,10 +462,13 @@ fun CreateNewActivityScreen(
 
                     myNewActivityRequest.nameOfActivity = nameOfActivityInputText
                     myNewActivityRequest.description = descriptionOfActivityInputText
+                    myNewActivityRequest.placeOfActivity = placeOfActivityInputText
 
                     if (myNewActivityRequest.typeOfActivity != null) {
                         val nameOfActivity = myNewActivityRequest.nameOfActivity
                         val descriptionOfActivity = myNewActivityRequest.description
+                        val placeOfActivity = myNewActivityRequest.placeOfActivity
+
 
                         if (
                             myNewActivityRequest.slots == null ||
@@ -460,6 +504,12 @@ fun CreateNewActivityScreen(
                                 "Error: Debes proporcionar una descripción para tu actividad",
                                 Toast.LENGTH_SHORT
                             ).show()
+                        } else if (placeOfActivity != null && placeOfActivity.length <= 4){
+                            Toast.makeText(
+                                context,
+                                "Error: Debes proporcionar un lugar para la actividad",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else if (userId != null) {
                             println("IMAGEN URL" + imageUrl)
                             userModelExpress.createNewActivity(
@@ -482,6 +532,7 @@ fun CreateNewActivityScreen(
                                 saturdayStart = myNewActivityRequest.saturdayStart,
                                 saturdayEnd = myNewActivityRequest.saturdayEnd,
                                 photo = imageUrl,
+                                place = myNewActivityRequest.placeOfActivity
                             )
                             Toast.makeText(
                                 context,

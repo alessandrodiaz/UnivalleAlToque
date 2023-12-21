@@ -201,7 +201,8 @@ class LoginViewModelExpress() : ViewModel() {
         fridayEnd: String? = null, // "00:00",
         saturdayStart: String? = null, // "00:00",
         saturdayEnd: String? = null, // "00:00",
-        photo: String? = null
+        photo: String? = null,
+        place: String? = null
     ) {
 
         viewModelScope.launch {
@@ -232,7 +233,8 @@ class LoginViewModelExpress() : ViewModel() {
                     "friday_end" to fridayEnd,
                     "saturday_start" to saturdayStart,
                     "saturday_end" to saturdayEnd,
-                    "photo" to photo
+                    "photo" to photo,
+                    "place" to place
                 )
                 println("userDataMap"+userDataMap)
                 val gson = GsonBuilder().setPrettyPrinting().create()
