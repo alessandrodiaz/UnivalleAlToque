@@ -229,7 +229,7 @@ fun CreateNewActivityScreen(
 
             // LUGAR
             Text(
-                text = "Lugar",
+                text = stringResource(id = R.string.place),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,

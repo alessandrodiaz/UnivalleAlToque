@@ -167,7 +167,7 @@
 
     <!-- SEMILLEROS Y EVENTOS -->
     <string name="semillero_title">Semillero</string>
-    <string name="event_title">Event</string>
+    <string name="event_title">Evento</string>
     <string name="register_semillero">INSCRIBIRME</string>
     <string name="already_Enrolled_semillero">YA ESTAS INSCRITO</string>
     <string name="semillero_Unrolled">SALIR</string>
@@ -192,4 +192,5 @@
     <string name="schedule">Horario</string>
     <string name="start">Inicio</string>
     <string name="end">Fin</string>
+    <string name="place">Lugar</string>
 </resources>
