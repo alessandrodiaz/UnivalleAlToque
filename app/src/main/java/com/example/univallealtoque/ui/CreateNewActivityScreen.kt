@@ -123,9 +123,9 @@ fun CreateNewActivityScreen(
 
     val context = LocalContext.current
 
-    var hours = Array(24) { i -> "%02d:00".format(i) }
+    var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
     var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
-    var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
+    var typeActivity = arrayOf("",stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
 
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
 
@@ -189,7 +189,7 @@ fun CreateNewActivityScreen(
                     .padding(top = 16.dp, bottom = 0.dp)
             )
             DemoSearchableDropdown(
-                myHint = stringResource(id = R.string.type_of_activity),
+                myHint = stringResource(id = R.string.type_activity),
                 myArrayOptions = typeActivity,
                 { param: String -> myNewActivityRequest.typeOfActivity = param },
                 myComponentWithDP = 210,
@@ -245,7 +245,7 @@ fun CreateNewActivityScreen(
                 keyboardActions = KeyboardActions(
                     onDone = { keyboardController?.hide() }),
                 modifier = Modifier
-                    .width(150.dp)
+                    .fillMaxWidth()
                     .border(
                         width = 1.dp,
                         color = if (hasFocusPlace) Color.Red else Color.Gray,
@@ -510,7 +510,11 @@ fun CreateNewActivityScreen(
                                 "Error: Debes proporcionar un lugar para la actividad",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        } else if (userId != null) {
+                        }
+
+
+
+                        else if (userId != null) {
                             println("IMAGEN URL" + imageUrl)
                             userModelExpress.createNewActivity(
                                 creatorId = userId,
