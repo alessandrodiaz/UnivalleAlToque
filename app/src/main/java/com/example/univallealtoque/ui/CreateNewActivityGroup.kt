@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
 
 data class CreateNewActivityGroupRequest(
     var nameOfActivity: String? = null,
-    var typeOfActivity: String? = null,
+    var typeOfActivity: String? = "Semillero",
     var description: String? = null,
     var numberOfSlotsAvailable: Int? = null,
     var slots: Int? = null,
@@ -138,7 +138,7 @@ fun CreateNewActivityGroupScreen(
             Spacer(modifier = Modifier.height(70.dp))
 
             Text(
-                text = stringResource(id = R.string.add_new_activity),
+                text = stringResource(id = R.string.add_new_group),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayLarge,
                 color = Color.Black
@@ -149,7 +149,7 @@ fun CreateNewActivityGroupScreen(
 
             // NOMBRE DE LA ACTIVIDAD
             Text(
-                text = stringResource(id = R.string.name_of_activity),
+                text = stringResource(id = R.string.name_of_group),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -176,23 +176,6 @@ fun CreateNewActivityGroupScreen(
                     .onFocusEvent { focusState ->
                         hasFocusNameOfActivity = focusState.isFocused
                     }
-            )
-
-
-            // TIPO
-            Text(
-                text = stringResource(id = R.string.type_of_activity),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.displayMedium,
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(top = 16.dp, bottom = 0.dp)
-            )
-            DemoSearchableDropdown(
-                myHint = stringResource(id = R.string.type_activity),
-                myArrayOptions = typeActivity,
-                { param: String -> myNewActivityRequest.typeOfActivity = param },
-                myComponentWithDP = 210,
             )
 
 
