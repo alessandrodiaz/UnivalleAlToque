@@ -1,7 +1,5 @@
 package com.example.univallealtoque.model
 
-import android.app.Activity
-
 data class LoginResponseExpress(
     val userData: UserDataResponseExpress? = null,
     val token: String? = null,
@@ -48,12 +46,12 @@ data class EnrolledActivitiesResponse(
 
 data class ActivitiesList(
     val group_id: Int? = null,
-    val group_name: String?  = null,
-    val group_description: String?  = null,
-    val group_photo: String?  = null,
-    val event_id: Int?  = null,
-    val event_name: String?  = null,
-    val event_description: String?  = null,
+    val group_name: String? = null,
+    val group_description: String? = null,
+    val group_photo: String? = null,
+    val event_id: Int? = null,
+    val event_name: String? = null,
+    val event_description: String? = null,
     val event_photo: String? = null
 )
 
@@ -65,10 +63,10 @@ data class SemilleroResponse(
 )
 
 data class semillerosList(
-    val group_name: String?  = null,
-    val group_description: String?  = null,
-    val slots: String?  = null,
-    val available_slots: String?  = null,
+    val group_name: String? = null,
+    val group_description: String? = null,
+    val slots: String? = null,
+    val available_slots: String? = null,
     val monday_start: String? = null,
     val monday_end: String? = null,
     val tuesday_start: String? = null,
@@ -83,6 +81,7 @@ data class semillerosList(
     val saturday_end: String? = null,
     val photo: String? = null,
     val place: String? = null,
+    val slots_taken: String? = null
 )
 
 data class EventResponse(
@@ -92,10 +91,10 @@ data class EventResponse(
 )
 
 data class eventList(
-    val event_name: String?  = null,
-    val event_description: String?  = null,
-    val slots: String?  = null,
-    val available_slots: String?  = null,
+    val event_name: String? = null,
+    val event_description: String? = null,
+    val slots: String? = null,
+    val available_slots: String? = null,
     val monday_start: String? = null,
     val monday_end: String? = null,
     val tuesday_start: String? = null,
@@ -110,15 +109,17 @@ data class eventList(
     val saturday_end: String? = null,
     val photo: String? = null,
     val place: String? = null,
+    val slots_taken: String? = null
 )
+
 data class EventsListResponse(
     val message: String? = null,
     val events: List<EventsList>
 )
 
 data class EventsList(
-    val event_id: Int?  = null,
-    val event_name: String?  = null,
+    val event_id: Int? = null,
+    val event_name: String? = null,
     val photo: String? = null
 
 )
@@ -130,14 +131,15 @@ data class ErrollmentResponse(
 data class CancelErrollmentResponse(
     val message: String? = null,
 )
-    data class SemillerosListResponse(
+
+data class SemillerosListResponse(
     val message: String? = null,
     val activities: List<SemillerosHomeList>
 )
 
 data class SemillerosHomeList(
-    val group_id: Int?  = null,
-    val group_name: String?  = null,
+    val group_id: Int? = null,
+    val group_name: String? = null,
     val group_description: String? = null,
     val photo: String? = null
 )

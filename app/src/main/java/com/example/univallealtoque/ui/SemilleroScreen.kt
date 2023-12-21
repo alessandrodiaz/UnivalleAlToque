@@ -126,7 +126,7 @@ fun SemilleroScreen(
             ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
         val place = semillerosList.place ?: "Plazoleta"
         var isEnrolled by remember { mutableStateOf(semillerosSatate.isEnrolled) }
-        var availableSlots by remember { mutableIntStateOf(semillerosList.available_slots?.toIntOrNull() ?: 0) }
+        var slotsTaken = semillerosList.slots_taken ?: "null"
 
         data class DayInfo(
             val dayName: String,
@@ -167,36 +167,35 @@ fun SemilleroScreen(
             )
         )
 
-        if (enrollmentState.isRequestSuccessful && !hasDecreasedSlots) {
+        if (enrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.enrollment_satisfied),
                 message = "Gracias por unirte",
                 onDismiss = {
-                    hasDecreasedSlots = true // Marcar como true para que no se vuelva a ejecutar
                     enrollmentViewModel.resetState()
+                    semillerosVIewModel.resetState()
                     isEnrolled = true
-                    availableSlots -= 1
                 }
             )
         }
 
-        if (cancelEnrollmentState.isRequestSuccessful && !addSlots) {
+        if (cancelEnrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = "Has cancelado la inscripción",
                 message = "Puedes unirte de nuevo cuando quieras",
                 onDismiss = {
                     addSlots = true // Marcar como true para que no se vuelva a ejecutar
                     cancelEnrollmentModelView.resetState()
+                    semillerosVIewModel.resetState()
                     isEnrolled = false
-                    availableSlots += 1
                 }
             )
         }
 
         if (fullSlotsDialog) {
             CustomAlertDialog(
-                title = "Ya no hay cupos",
-                message = "prueba con otra actividad",
+                title = "No hay cupos disponibles",
+                message = "Prueba con otra actividad",
                 onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
             )
         }
@@ -261,7 +260,7 @@ fun SemilleroScreen(
                                 tint = Color.Black,
                             )
                             Text(
-                                text = "$availableSlots/$slots",
+                                text = "$slotsTaken inscritos / $slots cupos",
                                 style = TextStyle(fontSize = 16.sp),
                                 modifier = Modifier.padding(
                                     top = 22.dp,
@@ -333,7 +332,7 @@ fun SemilleroScreen(
                     if (!isEnrolled) {
                         Button(
                             onClick = {
-                                if (availableSlots.toInt() == 0) {
+                                if (slotsTaken.toInt() == slots.toInt()) {
                                     fullSlotsDialog = true
                                 }
                                 else {

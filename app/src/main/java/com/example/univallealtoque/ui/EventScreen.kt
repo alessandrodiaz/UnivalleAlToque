@@ -49,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
+import com.example.univallealtoque.UnivalleAlToqueScreen
 import com.example.univallealtoque.activities.CancelEnrollmentModelView
 import com.example.univallealtoque.activities.EnrollmentModelView
 import com.example.univallealtoque.activities.EventViewModel
@@ -88,6 +89,7 @@ fun EventScreen(
     val imageID = appDataFlow.value?.toString() ?: "no_id_provided"
 
     Log.d("ID IMAGEN", imageID)
+    var triggerEffect by remember { mutableStateOf(false) }
 
     //GET ACTIVITIES
     // Utilizando LaunchedEffect para ejecutar la lógica una vez al ingresar a la pantalla
@@ -125,7 +127,7 @@ fun EventScreen(
             ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
         val place = eventList.place ?: "Plazoleta"
         var isEnrolled by remember { mutableStateOf(eventState.isEnrolled) }
-        var availableSlots by remember { mutableIntStateOf(eventList.available_slots?.toIntOrNull() ?: 0) }
+        var slotsTaken = eventList.slots_taken ?: "null"
 
         data class DayInfo(
             val dayName: String,
@@ -166,36 +168,37 @@ fun EventScreen(
             )
         )
 
-        if (enrollmentState.isRequestSuccessful && !hasDecreasedSlots) {
+        if (enrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.enrollment_satisfied),
                 message = "Gracias por unirte",
                 onDismiss = {
                     hasDecreasedSlots = true // Marcar como true para que no se vuelva a ejecutar
                     enrollmentViewModel.resetState()
+                    eventViewModel.resetState()
                     isEnrolled = true
-                    availableSlots -= 1
                 }
             )
+
         }
 
-        if (cancelEnrollmentState.isRequestSuccessful && !addSlots) {
+        if (cancelEnrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = "Has cancelado la inscripción",
                 message = "Puedes unirte de nuevo cuando quieras",
                 onDismiss = {
                     addSlots = true // Marcar como true para que no se vuelva a ejecutar
                     cancelEnrollmentModelView.resetState()
+                    eventViewModel.resetState()
                     isEnrolled = false
-                    availableSlots += 1
                 }
             )
         }
 
         if (fullSlotsDialog) {
             CustomAlertDialog(
-                title = "Ya no hay cupos",
-                message = "prueba con otra actividad",
+                title = "No hay cupos disponibles",
+                message = "Prueba con otra actividad",
                 onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
             )
         }
@@ -268,7 +271,7 @@ fun EventScreen(
                                 tint = Color.Black,
                             )
                             Text(
-                                text = "$availableSlots/$slots",
+                                text = "$slotsTaken inscritos / $slots cupos",
                                 style = TextStyle(fontSize = 16.sp),
                                 modifier = Modifier.padding(
                                     top = 22.dp,
@@ -343,7 +346,7 @@ fun EventScreen(
                     if (!isEnrolled) {
                         Button(
                             onClick = {
-                                if (availableSlots.toInt() == 0) {
+                                if (slotsTaken.toInt() == slots.toInt()) {
                                     fullSlotsDialog = true
                                 }
                                 else {
@@ -399,6 +402,7 @@ fun EventScreen(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )
+
                         }
                     }
                 }
