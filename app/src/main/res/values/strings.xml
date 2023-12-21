@@ -186,7 +186,10 @@
     <!-- CREAR NUEVA ACTIVIDAD -->
     <string name="create_activity_photo">Agregar foto</string>
     <string name="add_new_activity">Agregar nueva actividad</string>
-    <string name="name_of_activity">Nombre de la actividad</string>
+    <string name="add_new_event">Agregar nuevo evento</string>
+    <string name="add_new_group">Agregar nuevo semillero</string>
+    <string name="name_of_group">Nombre del semillero</string>
+    <string name="name_of_event">Nombre del evento</string>
     <string name="type_of_activity">Tipo de actividad</string>
     <string name="type_activity">Tipo actividad</string>
     <string name="number_of_slots">Cupos</string>
