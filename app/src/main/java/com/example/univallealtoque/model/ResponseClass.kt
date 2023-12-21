@@ -123,7 +123,14 @@ data class EventsList(
 
 )
 
-data class SemillerosListResponse(
+data class ErrollmentResponse(
+    val message: String? = null,
+)
+
+data class CancelErrollmentResponse(
+    val message: String? = null,
+)
+    data class SemillerosListResponse(
     val message: String? = null,
     val activities: List<SemillerosHomeList>
 )

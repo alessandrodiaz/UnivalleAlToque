@@ -67,3 +67,17 @@ public class EventModel(
     val user_id: String,
     val event_id: String
 )
+
+@Serializable
+public class EnrollmentModel(
+    val user_id: String,
+    val activity_id: String,
+    val activity_type: String
+)
+
+@Serializable
+public class CancelEnrollmentModel(
+    val user_id: String,
+    val activity_id: String,
+    val activity_type: String
+)

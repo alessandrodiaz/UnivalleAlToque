@@ -1,5 +1,6 @@
 package com.example.univallealtoque.ui
 
+import CustomAlertDialog
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,9 +49,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.univallealtoque.R
+import com.example.univallealtoque.activities.CancelEnrollmentModelView
+import com.example.univallealtoque.activities.EnrollmentModelView
 import com.example.univallealtoque.activities.EventViewModel
 import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
+import com.example.univallealtoque.model.CancelEnrollmentModel
+import com.example.univallealtoque.model.EnrolledActivitiesModel
+import com.example.univallealtoque.model.EnrollmentModel
 import com.example.univallealtoque.model.EventModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +69,15 @@ fun EventScreen(
     val eventState by eventViewModel.state.collectAsState()
     val eventList by eventViewModel.activities.collectAsState()
 
-    val isEnrolled = eventState.isEnrolled
+    val enrollmentViewModel: EnrollmentModelView = viewModel()
+    val enrollmentState by enrollmentViewModel.state.collectAsState()
+
+    val cancelEnrollmentModelView: CancelEnrollmentModelView = viewModel()
+    val cancelEnrollmentState by cancelEnrollmentModelView.state.collectAsState()
+
+    var fullSlotsDialog by remember { mutableStateOf(false) }
+    var hasDecreasedSlots by remember { mutableStateOf(false) }
+    var addSlots by remember { mutableStateOf(false) }
 
     //USER DATA FROM DATASTORE
     val userDataFlow = DataStoreSingleton.getUserData().collectAsState(initial = null)
@@ -103,10 +121,11 @@ fun EventScreen(
         val description = eventList.event_description
             ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
         val slots = eventList.slots ?: "5"
-        val availableSlots = eventList.available_slots ?: "5"
         val photo = eventList.photo
             ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
         val place = eventList.place ?: "Plazoleta"
+        var isEnrolled by remember { mutableStateOf(eventState.isEnrolled) }
+        var availableSlots by remember { mutableIntStateOf(eventList.available_slots?.toIntOrNull() ?: 0) }
 
         data class DayInfo(
             val dayName: String,
@@ -147,7 +166,39 @@ fun EventScreen(
             )
         )
 
+        if (enrollmentState.isRequestSuccessful && !hasDecreasedSlots) {
+            CustomAlertDialog(
+                title = stringResource(id = R.string.enrollment_satisfied),
+                message = "Gracias por unirte",
+                onDismiss = {
+                    hasDecreasedSlots = true // Marcar como true para que no se vuelva a ejecutar
+                    enrollmentViewModel.resetState()
+                    isEnrolled = true
+                    availableSlots -= 1
+                }
+            )
+        }
 
+        if (cancelEnrollmentState.isRequestSuccessful && !addSlots) {
+            CustomAlertDialog(
+                title = "Has cancelado la inscripción",
+                message = "Puedes unirte de nuevo cuando quieras",
+                onDismiss = {
+                    addSlots = true // Marcar como true para que no se vuelva a ejecutar
+                    cancelEnrollmentModelView.resetState()
+                    isEnrolled = false
+                    availableSlots += 1
+                }
+            )
+        }
+
+        if (fullSlotsDialog) {
+            CustomAlertDialog(
+                title = "Ya no hay cupos",
+                message = "prueba con otra actividad",
+                onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
+            )
+        }
 
         Box(
             modifier = Modifier
@@ -288,71 +339,71 @@ fun EventScreen(
                                 )
                             )
                         }
+                    }
+                    if (!isEnrolled) {
+                        Button(
+                            onClick = {
+                                if (availableSlots.toInt() == 0) {
+                                    fullSlotsDialog = true
+                                }
+                                else {
+                                    val dataEnrollment = EnrollmentModel(userCode, activity_id = imageID, activity_type = "event")
+                                    val response = enrollmentViewModel.enrollment(dataEnrollment)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .fillMaxHeight()
+                                .padding(top = 20.dp, bottom = 80.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
 
+                        ) {
+                            Text(
+                                text = stringResource(R.string.register_semillero),
+                                style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .wrapContentSize(Alignment.Center)
+                                .padding(top = 35.dp, bottom = 5.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.already_Enrolled_semillero),
+                                style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                val dataEnrollment = CancelEnrollmentModel(userCode, activity_id = imageID, activity_type = "event")
+                                val response = cancelEnrollmentModelView.cancelEnrollment(dataEnrollment)
+                            },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .fillMaxHeight()
+                                .padding(top = 20.dp, bottom = 80.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
 
-                        // BOTON
-                        if (!isEnrolled) {
-                            Button(
-                                onClick = {
-
-                                },
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .fillMaxHeight()
-                                    .padding(top = 20.dp, bottom = 80.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
-
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.register_semillero),
-                                    style = MaterialTheme.typography.displaySmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .wrapContentSize(Alignment.Center)
-                                    .padding(top = 35.dp, bottom = 5.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.already_Enrolled_semillero),
-                                    style = MaterialTheme.typography.displaySmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.Black,
-                                )
-                            }
-                            Button(
-                                onClick = {
-
-
-                                },
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .fillMaxHeight()
-                                    .padding(top = 20.dp, bottom = 80.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
-
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.semillero_Unrolled),
-                                    style = MaterialTheme.typography.displaySmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
-                            }
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.semillero_Unrolled),
+                                style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
                         }
                     }
-
                 }
             }
         }
     }
 }
-
-
 

@@ -1,9 +1,12 @@
 package com.example.univallealtoque.network
 
+import com.example.univallealtoque.model.CancelEnrollmentModel
+import com.example.univallealtoque.model.CancelErrollmentResponse
 import com.example.univallealtoque.model.ChangePasswordResponse
 import com.example.univallealtoque.model.CreateNewActivityResponseExpress
 import com.example.univallealtoque.model.DeleteAccountResponse
 import com.example.univallealtoque.model.EnrolledActivitiesResponse
+import com.example.univallealtoque.model.ErrollmentResponse
 import com.example.univallealtoque.model.EventResponse
 import com.example.univallealtoque.model.EventsListResponse
 import com.example.univallealtoque.model.LoginResponseExpress
@@ -67,6 +70,11 @@ interface AlToqueService {
 
     @POST("activity/event")
     suspend fun eventInfo(@Body jsonBody: RequestBody): EventResponse
+
+    @POST("activity/enroll")
+    suspend fun makeEnrrollment(@Body jsonBody: RequestBody): ErrollmentResponse
+    @POST("activity/cancel-enroll")
+    suspend fun cancelEnrrollment(@Body jsonBody: RequestBody): CancelErrollmentResponse
 
     @GET("events")
     suspend fun getEvents(): EventsListResponse
