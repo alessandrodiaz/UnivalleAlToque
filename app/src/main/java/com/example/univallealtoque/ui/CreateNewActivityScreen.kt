@@ -1,7 +1,12 @@
 package com.example.univallealtoque.ui
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -52,8 +57,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.univallealtoque.R
 import com.example.univallealtoque.UnivalleAlToqueScreen
+import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
+import com.example.univallealtoque.util.ActivityStorageUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 data class CreateNewActivityRequest(
     var nameOfActivity: String? = null,
@@ -112,12 +122,17 @@ fun CreateNewActivityScreen(
     var hours = Array(24) { i -> "%02d:00".format(i) }
     var weekDays = arrayOf("Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado")
     var typeActivity = arrayOf("Semillero", "Evento")
+
+    val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
+
+
 //    var numberVacancies = arrayOf("3", "5", "10", "20", "30", "1000")
     LazyColumn(
         modifier = modifier
     ) {
         item {
             Spacer(modifier = Modifier.height(70.dp))
+
             Text(
                 text = "Agregar nueva actividad",
                 textAlign = TextAlign.Center,
@@ -366,6 +381,7 @@ fun CreateNewActivityScreen(
                 }
             }
 
+            // AGREGAR FOTO
             Text(
                 text = stringResource(R.string.create_activity_photo),
                 textAlign = TextAlign.Center,
@@ -376,24 +392,40 @@ fun CreateNewActivityScreen(
 
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-            //if (showDialogChoosePhoto) {
-            //    showNewImageOptions(
-            //        true,
-            //        userModelExpress,
-            //        { param: String -> profilePhotoToShow = param },
-            //        { showDialogChoosePhoto = false })
-            //}
+            ActivityImageSelectionScreen()
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             var navigateMyGroups = { navController.navigate(UnivalleAlToqueScreen.MyGroups.name) }
             // BOTÓN AGREGAR ACTIVIDAD
             Button(
                 onClick = {
-                    Log.d("d", "sdnfsdnfsd")
+
                     val userId = userDataFlow.value?.user_id
+                    val imageUrl = appDataFlow.value?.toString() ?: "no_image_provided"
+                    var imageValid = false
+                    Log.d("imageUrl", imageUrl)
+
+                    if (Patterns.WEB_URL.matcher(imageUrl).matches()) {
+                        imageValid = true
+                        // Si imageUrl contiene una URL válida
+                        Log.d("URL Check", "La imageUrl contiene una URL válida")
+                    } else {
+                        imageValid = false
+                        // Si imageUrl no contiene una URL válida
+                        Log.d("URL Check", "La imageUrl no contiene una URL válida")
+                    }
+
+
                     myNewActivityRequest.nameOfActivity = nameOfActivityInputText
                     myNewActivityRequest.description = descriptionOfActivityInputText
 
                     if (myNewActivityRequest.typeOfActivity != null) {
+                        val nameOfActivity = myNewActivityRequest.nameOfActivity
+                        val descriptionOfActivity = myNewActivityRequest.description
+
                         if (
                             myNewActivityRequest.slots == null ||
                             myNewActivityRequest.numberOfSlotsAvailable == null
@@ -403,7 +435,33 @@ fun CreateNewActivityScreen(
                                 "Error: Debes ingresar el numero de cupos primero",
                                 Toast.LENGTH_SHORT
                             ).show()
+                        } else if (imageValid == false) {
+                            Toast.makeText(
+                                context,
+                                "Error: Debes agregar una imagen para tu actividad",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (myNewActivityRequest.nameOfActivity == null) {
+                            Toast.makeText(
+                                context,
+                                "Error: Debes proporcionar un nombre para la actividad",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        } else if (nameOfActivity != null && nameOfActivity.length <= 4) {
+                            Toast.makeText(
+                                context,
+                                "Error: Debes proporcionar un nombre para la actividad más largo",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (descriptionOfActivity!= null && descriptionOfActivity.length <= 4){
+                            Toast.makeText(
+                                context,
+                                "Error: Debes proporcionar una descripción para tu actividad",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else if (userId != null) {
+                            println("IMAGEN URL" + imageUrl)
                             userModelExpress.createNewActivity(
                                 creatorId = userId,
                                 nameOfActivity = myNewActivityRequest.nameOfActivity,
@@ -423,6 +481,7 @@ fun CreateNewActivityScreen(
                                 fridayEnd = myNewActivityRequest.fridayEnd,
                                 saturdayStart = myNewActivityRequest.saturdayStart,
                                 saturdayEnd = myNewActivityRequest.saturdayEnd,
+                                photo = imageUrl,
                             )
                             Toast.makeText(
                                 context,
@@ -431,6 +490,9 @@ fun CreateNewActivityScreen(
                             ).show()
 
                             navigateMyGroups()
+                            CoroutineScope(Dispatchers.Main).launch {
+                                AppDataStoreSingleton.saveAppData("")
+                            }
 
                         } else {
                             Toast.makeText(
@@ -468,6 +530,49 @@ fun CreateNewActivityScreen(
     }
 }
 
+@Composable
+fun ActivityImageSelectionScreen(
+//    viewModelExpress: LoginViewModelExpress,
+//    capturedImageUri: (imageName: String) -> Unit
+) {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri: Uri? ->
+            uri?.let { saveActivityImageToInternalStorage(context, it) }
+        }
+    )
+
+    Button(onClick = { launcher.launch("image/*") }) {
+        Text(text = "Elegir De Galeria")
+    }
+}
+
+
+fun saveActivityImageToInternalStorage(
+//    viewModelExpress: LoginViewModelExpress,
+    context: Context,
+    uri: Uri,
+//    capturedImageUri: (imageName: String) -> Unit
+) {
+    val inputStream = context.contentResolver.openInputStream(uri)
+    val imageName = "image.jpg"
+    val outputStream = context.openFileOutput("image.jpg", Context.MODE_PRIVATE)
+    inputStream?.use { input ->
+        outputStream.use { output ->
+            input.copyTo(output)
+//            capturedImageUri(imageName)
+            println(uri)
+            ActivityStorageUtil.uploadToStorageActivity(
+//                viewModelExpress = viewModelExpress,
+                uri = uri,
+                context = context,
+                type = "image"
+            )
+//            println("url of uploaded image: ${viewModelExpress.stateLoginExpress}")
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
