@@ -282,12 +282,9 @@ fun CreateNewActivityEventScreen(
                     }
             )
 
-
-
-
-            // HORARIO
+// HORARIO
             Text(
-                text = stringResource(id = R.string.schedule),
+                text = "Fecha",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -296,113 +293,91 @@ fun CreateNewActivityEventScreen(
 
             )
 
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
-                weekDays.forEach { item ->
-                    Row {
-                        Text(
-                            text = item,
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp)
-                                .padding(top = 16.dp, end = 10.dp, bottom = 0.dp)
-                                .align(Alignment.CenterVertically)
-                        )
-                        if (item == stringResource(id = R.string.monday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.mondayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.mondayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.tuesday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.tuesdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.tuesdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.wednesday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.wednesdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.wednesdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.thursday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.thursdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.thursdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.friday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.fridayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.fridayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.saturday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.saturdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.saturdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                    }
+                Row{
+                    Text(
+                        text = "Año",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black,
+                        modifier = Modifier
+                            .width(80.dp)
+                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.start),
+                        myArrayOptions = hours,
+                        { param: String -> myNewActivityRequest.mondayStart = param },
+                        myComponentWithDP = 130
+                    )
+                }
+                Row{
+                    Text(
+                        text = "Mes",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black,
+                        modifier = Modifier
+                            .width(80.dp)
+                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.start),
+                        myArrayOptions = hours,
+                        { param: String -> myNewActivityRequest.mondayStart = param },
+                        myComponentWithDP = 130
+                    )
+                }
+                Row{
+                    Text(
+                        text = "Dia",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black,
+                        modifier = Modifier
+                            .width(80.dp)
+                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.start),
+                        myArrayOptions = hours,
+                        { param: String -> myNewActivityRequest.mondayStart = param },
+                        myComponentWithDP = 130
+                    )
+                }
+                Row{
+                    Text(
+                        text = "Hora",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black,
+                        modifier = Modifier
+                            .width(80.dp)
+                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.start),
+                        myArrayOptions = hours,
+                        { param: String -> myNewActivityRequest.mondayStart = param },
+                        myComponentWithDP = 130
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.end),
+                        myArrayOptions = hours,
+                        { param: String -> myNewActivityRequest.mondayEnd = param },
+                        myComponentWithDP = 130
+                    )
                 }
             }
+
+
+
 
             // AGREGAR FOTO
             Text(
