@@ -125,7 +125,7 @@ fun CreateNewActivityScreen(
 
     var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
     var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
-    var typeActivity = arrayOf("",stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
+    var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
 
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
 
