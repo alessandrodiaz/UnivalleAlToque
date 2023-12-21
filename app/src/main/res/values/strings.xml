@@ -186,6 +186,7 @@
     <string name="add_new_activity">Agregar nueva actividad</string>
     <string name="name_of_activity">Nombre de la actividad</string>
     <string name="type_of_activity">Tipo de actividad</string>
+    <string name="type_activity">Tipo actividad</string>
     <string name="number_of_slots">Cupos</string>
     <string name="description">Descripción</string>
     <string name="schedule">Horario</string>
