@@ -166,7 +166,7 @@ fun EventScreen(
         if (fullSlotsDialog) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.sin_cupos),
-                message = stringResource(id = R.string.test_activity),
+                message = stringResource(id = R.string.another_activity),
                 onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
             )
         }
