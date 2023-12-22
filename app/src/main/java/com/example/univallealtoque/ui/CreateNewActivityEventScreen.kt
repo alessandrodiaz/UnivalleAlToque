@@ -61,6 +61,7 @@ import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.util.ActivityStorageUtil
+import com.example.univallealtoque.util.DatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -123,9 +124,19 @@ fun CreateNewActivityEventScreen(
 
     val context = LocalContext.current
 
-    var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
+    var years = arrayOf("","2024","2025","2026")
+    var months = arrayOf("",
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    )
     var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
+    var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
     var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
+    var myYearOfDate by remember { mutableStateOf("") }
+    var myMonthOfDate by remember { mutableStateOf("") }
+    var myDayOfDate by remember { mutableStateOf("") }
+    var myHourStartOfDate by remember { mutableStateOf("") }
+    var myHourEndOfDate by remember { mutableStateOf("") }
 
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
 
@@ -284,7 +295,7 @@ fun CreateNewActivityEventScreen(
 
 // HORARIO
             Text(
-                text = "Fecha",
+                text = "Fecha: ",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -296,62 +307,24 @@ fun CreateNewActivityEventScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                Row{
-                    Text(
-                        text = "Año",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black,
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
-                    )
-                    DemoSearchableDropdown(
-                        myHint = stringResource(id = R.string.start),
-                        myArrayOptions = hours,
-                        { param: String -> myNewActivityRequest.mondayStart = param },
-                        myComponentWithDP = 130
-                    )
-                }
-                Row{
-                    Text(
-                        text = "Mes",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black,
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
-                    )
-                    DemoSearchableDropdown(
-                        myHint = stringResource(id = R.string.start),
-                        myArrayOptions = hours,
-                        { param: String -> myNewActivityRequest.mondayStart = param },
-                        myComponentWithDP = 130
-                    )
-                }
-                Row{
-                    Text(
-                        text = "Dia",
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.Black,
-                        modifier = Modifier
-                            .width(80.dp)
-                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
-                    )
-                    DemoSearchableDropdown(
-                        myHint = stringResource(id = R.string.start),
-                        myArrayOptions = hours,
-                        { param: String -> myNewActivityRequest.mondayStart = param },
-                        myComponentWithDP = 130
-                    )
-                }
-                Row{
+                    Button(onClick = {  }) {
+                        Text(text = "Elegir fecha")
+                    }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(
+                            space = 0.dp,
+                            alignment = Alignment.CenterHorizontally
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
                     Text(
                         text = "Hora",
                         textAlign = TextAlign.Start,
@@ -359,23 +332,34 @@ fun CreateNewActivityEventScreen(
                         color = Color.Black,
                         modifier = Modifier
                             .width(80.dp)
-                            .padding(top = 32.dp, end = 10.dp, bottom = 0.dp)
+                            .padding(top = 8.dp, end = 10.dp, bottom = 0.dp)
                     )
                     DemoSearchableDropdown(
                         myHint = stringResource(id = R.string.start),
                         myArrayOptions = hours,
-                        { param: String -> myNewActivityRequest.mondayStart = param },
+                        { param: String -> myHourStartOfDate = param },
                         myComponentWithDP = 130
                     )
                     DemoSearchableDropdown(
                         myHint = stringResource(id = R.string.end),
                         myArrayOptions = hours,
-                        { param: String -> myNewActivityRequest.mondayEnd = param },
+                        { param: String -> myHourEndOfDate = param },
                         myComponentWithDP = 130
                     )
                 }
+
             }
 
+            var showPicker by remember { mutableStateOf(false) }
+            if (showPicker)
+                DatePicker(onDateSelected = {
+
+                }, onDismissRequest = {
+                    showPicker = false
+                })
+            Button(onClick = { showPicker = true }) {
+                Text(text = "Date picker")
+            }
 
 
 
@@ -541,4 +525,6 @@ fun CreateNewActivityEventScreen(
         }
     }
 }
+
+
 
