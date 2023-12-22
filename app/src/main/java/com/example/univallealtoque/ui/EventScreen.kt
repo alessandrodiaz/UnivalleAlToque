@@ -119,15 +119,15 @@ fun EventScreen(
             )
         }
     } else {
-        val name = eventList.event_name ?: "Seminario 1"
-        val description = eventList.event_description
-            ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
-        val slots = eventList.slots ?: "5"
-        val photo = eventList.photo ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
+        val name = eventList.event_name ?: stringResource(R.string.default_event_name)
+        val description = eventList.event_description ?: stringResource(R.string.default_event_description)
         val date = eventList.date
         val hourStart = eventList.hour_start
         val hourEnd = eventList.hour_end
-        val place = eventList.place ?: "Plazoleta"
+        val slots = eventList.slots ?: stringResource(R.string.default_slots)
+        val photo = eventList.photo ?: stringResource(R.string.default_photo_url)
+        val place = eventList.place ?: stringResource(R.string.default_place)
+
         var isEnrolled by remember { mutableStateOf(eventState.isEnrolled) }
         var slotsTaken = eventList.slots_taken ?: "null"
 
@@ -141,7 +141,7 @@ fun EventScreen(
         if (enrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.enrollment_satisfied),
-                message = "Gracias por unirte",
+                message = stringResource(id = R.string.thanks_message),
                 onDismiss = {
                     hasDecreasedSlots = true // Marcar como true para que no se vuelva a ejecutar
                     enrollmentViewModel.resetState()
@@ -154,8 +154,8 @@ fun EventScreen(
 
         if (cancelEnrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
-                title = "Has cancelado la inscripción",
-                message = "Puedes unirte de nuevo cuando quieras",
+                title = stringResource(id = R.string.cancel_enrollement),
+                message = stringResource(id = R.string.again_message),
                 onDismiss = {
                     addSlots = true // Marcar como true para que no se vuelva a ejecutar
                     cancelEnrollmentModelView.resetState()
@@ -167,8 +167,8 @@ fun EventScreen(
 
         if (fullSlotsDialog) {
             CustomAlertDialog(
-                title = "No hay cupos disponibles",
-                message = "Prueba con otra actividad",
+                title = stringResource(id = R.string.sin_cupos),
+                message = stringResource(id = R.string.another_activity),
                 onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
             )
         }

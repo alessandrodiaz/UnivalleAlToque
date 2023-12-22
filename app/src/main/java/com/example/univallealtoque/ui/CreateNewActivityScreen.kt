@@ -107,7 +107,7 @@ fun CreateNewActivityScreen(
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
-                            text = "CREAR EVENTO",
+                            text = stringResource(id = R.string.createEvents),
                             color = Color.White
                         )
                     }
@@ -121,7 +121,7 @@ fun CreateNewActivityScreen(
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
-                            text = "CREAR SEMILLERO",
+                            text = stringResource(id = R.string.createSemilleros),
                             color = Color.White
                         )
                     }
@@ -146,7 +146,7 @@ fun ActivityImageSelectionScreen(
     )
 
     Button(onClick = { launcher.launch("image/*") }) {
-        Text(text = "Elegir De Galeria")
+        Text(text = stringResource(id = R.string.choose_activitiy),)
     }
 }
 

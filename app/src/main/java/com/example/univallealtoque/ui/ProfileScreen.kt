@@ -348,7 +348,7 @@ fun ProfileScreen(
                 if (showDialogChangePhone) {
                     phoneOfUser?.let {
                         ShowMessageDialog(
-                            titleOfDialog = "Cambiar Celular",
+                            titleOfDialog = stringResource(id = R.string.change_phone),
                             hint = it,
                             show = showDialogChangePhone,
                             viewModelExpress = userModelExpress,
@@ -365,7 +365,7 @@ fun ProfileScreen(
                 if (showDialogChangeProgram) {
                     programOfUser?.let {
                         ShowMessageDialog(
-                            titleOfDialog = "Cambiar Programa",
+                            titleOfDialog = stringResource(id = R.string.change_degree),
                             hint = it,
                             show = showDialogChangeProgram,
                             viewModelExpress = userModelExpress,
@@ -380,8 +380,8 @@ fun ProfileScreen(
 
                 if (booleanResponseSuccessFromUpdateBasicData) {
                     CustomAlertDialog(
-                        title = "Dato actualizado",
-                        message = "Petición exitosa",
+                        title = stringResource(id = R.string.dates_changed),
+                        message = stringResource(id = R.string.peticion_succesfull),
                         onDismiss = { booleanResponseSuccessFromUpdateBasicData = false })
                 }
 
@@ -625,7 +625,7 @@ fun ShowMessageDialog(
 
                     }
                 ) {
-                    Text("Aceptar")
+                    Text(stringResource(id = R.string.acept))
                 }
             },
             dismissButton = {
@@ -634,7 +634,7 @@ fun ShowMessageDialog(
                         onClose()
                     }
                 ) {
-                    Text("Cancelar")
+                    Text(stringResource(id = R.string.cancel))
                 }
             },
             modifier = Modifier
@@ -664,7 +664,7 @@ fun showNewImageOptions(
                 onClose()
             },
             title = {
-                Text("Elegir Nueva Foto De Perfil", color = Color.Black)
+                Text(stringResource(id = R.string.new_profile_picture), color = Color.Black)
             },
             text = {
                 LazyColumn(
@@ -677,12 +677,12 @@ fun showNewImageOptions(
                                 setProfilePhotoToShow("null");
                                 onClose()
                             }) {
-                            Text(text = "Sin Foto")
+                            Text(text = stringResource(id = R.string.without_profile_picture))
                         }
                         imageCaptureFromCamera(viewModelExpress, setProfilePhotoToShow)
                         ImageSelectionScreen(viewModelExpress, setProfilePhotoToShow)
                         Button(onClick = { setShowNewAvatarOptions();onClose() }) {
-                            Text(text = "Elegir Avatar")
+                            Text(text = stringResource(id = R.string.choose_avatar))
                         }
                     }
                 }
@@ -697,7 +697,7 @@ fun showNewImageOptions(
                         onClose()
                     }
                 ) {
-                    Text("Aceptar")
+                    Text(stringResource(id = R.string.acept))
                 }
             },
             modifier = Modifier
@@ -756,7 +756,7 @@ fun imageCaptureFromCamera(
             permissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }) {
-        Text(text = "Tomar Foto")
+        Text(text = stringResource(id = R.string.take_picture))
     }
 
 
@@ -798,7 +798,7 @@ fun ImageSelectionScreen(
     )
 
     Button(onClick = { launcher.launch("image/*") }) {
-        Text(text = "Elegir De Galeria")
+        Text(stringResource(id = R.string.choose_picture))
     }
 }
 
@@ -863,7 +863,7 @@ fun showNewAvatarOptions(
                 onClose()
             },
             title = {
-                Text("Elegir Avatar Como Foto De Perfil", color = Color.Black)
+                Text(stringResource(id = R.string.choose_avatar_final), color = Color.Black)
             },
             text = {
                 LazyColumn(
@@ -1059,7 +1059,7 @@ fun showNewAvatarOptions(
                         onClose()
                     }
                 ) {
-                    Text("Aceptar")
+                    Text(stringResource(id = R.string.acept))
                 }
             },
             modifier = Modifier

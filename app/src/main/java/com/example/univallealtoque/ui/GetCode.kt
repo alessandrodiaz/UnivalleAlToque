@@ -44,7 +44,7 @@ fun GetCodeScreen(
     ) {
 
         Text(
-            text = "Ingresa el código que te mandamos al correo seleccionado",
+            text = stringResource(id = R.string.send_code),
             style = MaterialTheme.typography.displayLarge,
             color = Color.Black,
             modifier = Modifier.padding(bottom = 20.dp)
@@ -81,7 +81,7 @@ fun GetCodeScreen(
                 )
         ) {
             Text(
-                text = "Enviar",
+                text = stringResource(id = R.string.send),
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
             )
