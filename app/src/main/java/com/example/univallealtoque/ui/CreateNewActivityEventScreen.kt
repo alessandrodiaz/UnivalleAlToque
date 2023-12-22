@@ -135,16 +135,9 @@ fun CreateNewActivityEventScreen(
     val fechaActualMasUnDia = fechaActual.time
 
 
-    var years = arrayOf("","2024","2025","2026")
-    var months = arrayOf("",
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    )
-    var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
+  
     var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
-    var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
-    var myYearOfDate by remember { mutableStateOf("") }
-    var myMonthOfDate by remember { mutableStateOf("") }
+
 
     var userChosenDate by remember { mutableStateOf("") }
     var myHourStartOfDate by remember { mutableStateOf("") }
@@ -307,7 +300,7 @@ fun CreateNewActivityEventScreen(
 
 // HORARIO
             Text(
-                text = "Fecha: " + userChosenDate,
+                text = stringResource(id = R.string.date_title) + userChosenDate,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -334,7 +327,7 @@ fun CreateNewActivityEventScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ){
                     Text(
-                        text = "Hora",
+                        text = stringResource(id = R.string.hour_title),
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         color = Color.Black,
@@ -366,7 +359,7 @@ fun CreateNewActivityEventScreen(
                     showPicker = false
                 })
             Button(onClick = { showPicker = true }) {
-                Text(text = "Elegir fecha")
+                Text(text = stringResource(id = R.string.choose_date_title))
             }
 
 
@@ -559,7 +552,7 @@ fun CreateNewActivityEventScreen(
                 shape = RoundedCornerShape(8.dp), // Esquinas redondeadas
             ) {
                 Text(
-                    text = "AGREGAR ACTIVIDAD",
+                    text = stringResource(id = R.string.create_activity),
                     color = Color.White
                 )
             }

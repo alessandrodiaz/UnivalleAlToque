@@ -227,6 +227,9 @@
     <string name="type_activity">Tipo actividad</string>
     <string name="number_of_slots">Cupos</string>
     <string name="description">Descripción</string>
+    <string name="date_title">Fecha: </string>
+    <string name="hour_title">Hora</string>
+    <string name="choose_date_title">Elegir fecha</string>
     <string name="schedule">Horario</string>
     <string name="start">Inicio</string>
     <string name="end">Fin</string>
