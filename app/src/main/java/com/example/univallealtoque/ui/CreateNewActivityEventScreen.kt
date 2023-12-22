@@ -65,6 +65,9 @@ import com.example.univallealtoque.util.DatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 data class CreateNewActivityEventRequest(
     var nameOfActivity: String? = null,
@@ -72,18 +75,9 @@ data class CreateNewActivityEventRequest(
     var description: String? = null,
     var numberOfSlotsAvailable: Int? = null,
     var slots: Int? = null,
-    var mondayStart: String? = null, // "00:00",
-    var mondayEnd: String? = null, // "00:00",
-    var tuesdayStart: String? = null, // "00:00",
-    var tuesdayEnd: String? = null, // "00:00",
-    var wednesdayStart: String? = null, // "00:00",
-    var wednesdayEnd: String? = null, // "00:00",
-    var thursdayStart: String? = null, // "00:00",
-    var thursdayEnd: String? = null, // "00:00",
-    var fridayStart: String? = null, // "00:00",
-    var fridayEnd: String? = null, // "00:00",
-    var saturdayStart: String? = null, // "00:00",
-    var saturdayEnd: String? = null, // "00:00",
+    var hourStart: String? = null, // "00:00",
+    var hourEnd: String? = null, // "00:00",
+    var date: String? = null,
     var placeOfActivity: String? = null
 )
 
@@ -123,6 +117,8 @@ fun CreateNewActivityEventScreen(
     var showDialogChoosePhoto by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    var userChosenDate by remember { mutableStateOf("") }
 
     var years = arrayOf("","2024","2025","2026")
     var months = arrayOf("",
@@ -295,7 +291,7 @@ fun CreateNewActivityEventScreen(
 
 // HORARIO
             Text(
-                text = "Fecha: ",
+                text = "Fecha: " + userChosenDate,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -353,7 +349,7 @@ fun CreateNewActivityEventScreen(
             var showPicker by remember { mutableStateOf(false) }
             if (showPicker)
                 DatePicker(onDateSelected = {
-
+                   userChosenDate = SimpleDateFormat("EEE MMM dd", Locale.ENGLISH).format(it)
                 }, onDismissRequest = {
                     showPicker = false
                 })
@@ -404,6 +400,10 @@ fun CreateNewActivityEventScreen(
                     myNewActivityRequest.nameOfActivity = nameOfActivityInputText
                     myNewActivityRequest.description = descriptionOfActivityInputText
                     myNewActivityRequest.placeOfActivity = placeOfActivityInputText
+
+                    myNewActivityRequest.hourStart = myHourStartOfDate
+                    myNewActivityRequest.hourEnd = myHourEndOfDate
+                    myNewActivityRequest.date = userChosenDate
 
                     if (myNewActivityRequest.typeOfActivity != null) {
                         val nameOfActivity = myNewActivityRequest.nameOfActivity
@@ -464,18 +464,9 @@ fun CreateNewActivityEventScreen(
                                 description = myNewActivityRequest.description,
                                 numberOfSlotsAvailable = myNewActivityRequest.numberOfSlotsAvailable,
                                 slots = myNewActivityRequest.slots,
-                                mondayStart = myNewActivityRequest.mondayStart,
-                                mondayEnd = myNewActivityRequest.mondayEnd,
-                                tuesdayStart = myNewActivityRequest.tuesdayStart,
-                                tuesdayEnd = myNewActivityRequest.tuesdayEnd,
-                                wednesdayStart = myNewActivityRequest.wednesdayStart,
-                                wednesdayEnd = myNewActivityRequest.wednesdayEnd,
-                                thursdayStart = myNewActivityRequest.thursdayStart,
-                                thursdayEnd = myNewActivityRequest.thursdayEnd,
-                                fridayStart = myNewActivityRequest.fridayStart,
-                                fridayEnd = myNewActivityRequest.fridayEnd,
-                                saturdayStart = myNewActivityRequest.saturdayStart,
-                                saturdayEnd = myNewActivityRequest.saturdayEnd,
+                                hourStart = myNewActivityRequest.hourStart,
+                                hourEnd = myNewActivityRequest.hourStart,
+                                date = myNewActivityRequest.date,
                                 photo = imageUrl,
                                 place = myNewActivityRequest.placeOfActivity
                             )
