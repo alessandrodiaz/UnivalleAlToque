@@ -118,7 +118,7 @@ fun CreateNewActivityEventScreen(
 
     val context = LocalContext.current
 
-    var userChosenDate by remember { mutableStateOf("") }
+
 
     var years = arrayOf("","2024","2025","2026")
     var months = arrayOf("",
@@ -130,7 +130,8 @@ fun CreateNewActivityEventScreen(
     var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
     var myYearOfDate by remember { mutableStateOf("") }
     var myMonthOfDate by remember { mutableStateOf("") }
-    var myDayOfDate by remember { mutableStateOf("") }
+
+    var userChosenDate by remember { mutableStateOf("") }
     var myHourStartOfDate by remember { mutableStateOf("") }
     var myHourEndOfDate by remember { mutableStateOf("") }
 
@@ -438,18 +439,40 @@ fun CreateNewActivityEventScreen(
                         } else if (descriptionOfActivity!= null && descriptionOfActivity.length <= 4){
                             Toast.makeText(
                                 context,
-                                "Error: Debes proporcionar una descripción para tu actividad",
+                                "Error: Debes proporcionar una descripción mas larga para tu actividad",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else if (placeOfActivity != null && placeOfActivity.length <= 4){
                             Toast.makeText(
                                 context,
-                                "Error: Debes proporcionar un lugar para la actividad",
+                                "Error: Debes proporcionar un lugar con mas de 4 letras para la actividad",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
 
-
+                        //Checks of time and hour
+                        else if(
+                            (userChosenDate == "") ||
+                            (myHourStartOfDate == "") ||
+                            (myHourEndOfDate == "")
+                            ){
+                            Toast.makeText(
+                                context,
+                                "Error, por favor ingresa fecha y hora",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myHourStartOfDate).after( SimpleDateFormat("HH:mm").parse(myHourEndOfDate)) ||
+                            SimpleDateFormat("HH:mm").parse(myHourStartOfDate).equals( SimpleDateFormat("HH:mm").parse(myHourEndOfDate))
+                        ){
+                            Toast.makeText(
+                                context,
+                                "Hora de inicio y fin no valida",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        //else if ()
 
                         else if (userId != null) {
                             println("IMAGEN URL" + imageUrl)
@@ -461,7 +484,7 @@ fun CreateNewActivityEventScreen(
                                 numberOfSlotsAvailable = myNewActivityRequest.numberOfSlotsAvailable,
                                 slots = myNewActivityRequest.slots,
                                 hourStart = myNewActivityRequest.hourStart,
-                                hourEnd = myNewActivityRequest.hourStart,
+                                hourEnd = myNewActivityRequest.hourEnd,
                                 date = myNewActivityRequest.date,
                                 photo = imageUrl,
                                 place = myNewActivityRequest.placeOfActivity
