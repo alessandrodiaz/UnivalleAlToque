@@ -472,6 +472,8 @@ fun CreateNewActivityEventScreen(
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+                        //CHECK DATE
                         //else if ()
 
                         else if (userId != null) {
