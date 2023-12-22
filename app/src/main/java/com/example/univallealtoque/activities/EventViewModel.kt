@@ -57,7 +57,6 @@ class EventViewModel:ViewModel() {
                             event = response.eventInfoArray,
                             isRequestSuccessful = true,
                             isEnrolled = response.isUserEnrolled
-
                         )
                 }
             } catch (e: Exception) {

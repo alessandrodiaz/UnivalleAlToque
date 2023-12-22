@@ -307,10 +307,6 @@ fun CreateNewActivityEventScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                    Button(onClick = {  }) {
-                        Text(text = "Elegir fecha")
-                    }
-
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

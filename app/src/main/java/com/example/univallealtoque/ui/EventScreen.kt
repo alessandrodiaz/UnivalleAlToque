@@ -120,12 +120,14 @@ fun EventScreen(
         }
     } else {
         val name = eventList.event_name ?: stringResource(R.string.default_event_name)
-        val description = eventList.event_description
-            ?: stringResource(R.string.default_event_description)
+        val description = eventList.event_description ?: stringResource(R.string.default_event_description)
+        val date = eventList.date
+        val hourStart = eventList.hour_start
+        val hourEnd = eventList.hour_end
         val slots = eventList.slots ?: stringResource(R.string.default_slots)
-        val photo = eventList.photo
-            ?: stringResource(R.string.default_photo_url)
+        val photo = eventList.photo ?: stringResource(R.string.default_photo_url)
         val place = eventList.place ?: stringResource(R.string.default_place)
+
         var isEnrolled by remember { mutableStateOf(eventState.isEnrolled) }
         var slotsTaken = eventList.slots_taken ?: "null"
 
@@ -268,23 +270,33 @@ fun EventScreen(
                             )
                             Column {
 
-                                        Row {
-                                            Text(
-                                                text = "Fecha",
-                                                style = TextStyle(fontSize = 16.sp),
-                                                modifier = Modifier.padding(
-                                                    end = 10.dp,
-                                                    start = 10.dp
-                                                )
+                                Row {
+                                    if (date != null) {
+                                        Text(
+                                            text = date,
+                                            style = TextStyle(fontSize = 16.sp),
+                                            modifier = Modifier.padding(
+                                                end = 10.dp,
+                                                start = 10.dp
                                             )
-                                            Text(
-                                                text = "Hora",
-                                                style = TextStyle(fontSize = 16.sp),
-                                            )
-                                        }
+                                        )
+                                    }
+                                }
 
+                                if (hourStart != null) {
+                                    Text(
+                                        text = hourStart+" - "+hourEnd,
+                                        style = TextStyle(fontSize = 16.sp),
+                                        modifier = Modifier.padding(
+                                            end = 10.dp,
+                                            start = 10.dp
+                                        )
+                                    )
+
+                                }
                             }
                         }
+
 
 
                         // LUGAR
