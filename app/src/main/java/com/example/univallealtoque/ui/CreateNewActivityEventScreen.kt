@@ -66,6 +66,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -118,6 +119,20 @@ fun CreateNewActivityEventScreen(
 
     val context = LocalContext.current
 
+    // Obtener la fecha actual
+    val fechaActual = Calendar.getInstance()
+
+    // Obtener el año actual
+    val añoActual = Calendar.getInstance().get(Calendar.YEAR)
+
+
+
+    // Restar un día
+    fechaActual.add(Calendar.DAY_OF_MONTH, 1)
+
+
+    // Convertir Calendar a Date
+    val fechaActualMasUnDia = fechaActual.time
 
 
     var years = arrayOf("","2024","2025","2026")
@@ -351,7 +366,7 @@ fun CreateNewActivityEventScreen(
                     showPicker = false
                 })
             Button(onClick = { showPicker = true }) {
-                Text(text = "Date picker")
+                Text(text = "Elegir fecha")
             }
 
 
@@ -474,7 +489,23 @@ fun CreateNewActivityEventScreen(
                         }
 
                         //CHECK DATE
-                        //else if ()
+                        else if (
+                            SimpleDateFormat("EEE MMM dd:HH:mm z yyyy", Locale.ENGLISH).parse(userChosenDate+":"+myHourStartOfDate+" "+"GMT-05:00"+" "+añoActual).before(fechaActualMasUnDia)
+
+                            ){
+                            Log.d("fechas usuario",
+                                SimpleDateFormat("EEE MMM dd:HH:mm z yyyy", Locale.ENGLISH).parse(userChosenDate+":"+myHourStartOfDate+" "+"GMT-05:00"+" "+añoActual)
+                                    .toString()
+                            )
+                            Log.d("fechas actual mas un dia", fechaActualMasUnDia.toString())
+
+                            Log.d("año actual:", añoActual.toString())
+                            Toast.makeText(
+                                context,
+                                "Fecha no valida: Los eventos deben de tener una anticipacion de minimo 24 horas",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
                         else if (userId != null) {
                             println("IMAGEN URL" + imageUrl)
