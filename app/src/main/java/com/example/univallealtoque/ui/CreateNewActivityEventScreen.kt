@@ -61,6 +61,7 @@ import com.example.univallealtoque.data.AppDataStoreSingleton
 import com.example.univallealtoque.data.DataStoreSingleton
 import com.example.univallealtoque.sign_in_express.LoginViewModelExpress
 import com.example.univallealtoque.util.ActivityStorageUtil
+import com.example.univallealtoque.util.DatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -123,9 +124,19 @@ fun CreateNewActivityEventScreen(
 
     val context = LocalContext.current
 
-    var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
+    var years = arrayOf("","2024","2025","2026")
+    var months = arrayOf("",
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    )
     var weekDays = arrayOf(stringResource(id = R.string.monday), stringResource(id = R.string.tuesday), stringResource(id = R.string.wednesday), stringResource(id = R.string.thursday), stringResource(id = R.string.friday), stringResource(id = R.string.saturday))
+    var hours = Array(1){ ""} +  Array(24) { i -> "%02d:00".format(i) }
     var typeActivity = arrayOf(stringResource(id = R.string.semillero_title), stringResource(id = R.string.event_title))
+    var myYearOfDate by remember { mutableStateOf("") }
+    var myMonthOfDate by remember { mutableStateOf("") }
+    var myDayOfDate by remember { mutableStateOf("") }
+    var myHourStartOfDate by remember { mutableStateOf("") }
+    var myHourEndOfDate by remember { mutableStateOf("") }
 
     val appDataFlow = AppDataStoreSingleton.getAppData().collectAsState(initial = null)
 
@@ -282,12 +293,9 @@ fun CreateNewActivityEventScreen(
                     }
             )
 
-
-
-
-            // HORARIO
+// HORARIO
             Text(
-                text = stringResource(id = R.string.schedule),
+                text = "Fecha: ",
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.Black,
@@ -296,113 +304,64 @@ fun CreateNewActivityEventScreen(
 
             )
 
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
-                weekDays.forEach { item ->
-                    Row {
-                        Text(
-                            text = item,
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.Black,
-                            modifier = Modifier
-                                .width(80.dp)
-                                .padding(top = 16.dp, end = 10.dp, bottom = 0.dp)
-                                .align(Alignment.CenterVertically)
-                        )
-                        if (item == stringResource(id = R.string.monday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.mondayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.mondayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.tuesday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.tuesdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.tuesdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.wednesday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.wednesdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.wednesdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.thursday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.thursdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.thursdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.friday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.fridayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.fridayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
-                        if (item == stringResource(id = R.string.saturday)) {
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.start),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.saturdayStart = param },
-                                myComponentWithDP = 130
-                            )
-                            DemoSearchableDropdown(
-                                myHint = stringResource(id = R.string.end),
-                                myArrayOptions = hours,
-                                { param: String -> myNewActivityRequest.saturdayEnd = param },
-                                myComponentWithDP = 130
-                            )
-                        }
+                    Button(onClick = {  }) {
+                        Text(text = "Elegir fecha")
                     }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(
+                            space = 0.dp,
+                            alignment = Alignment.CenterHorizontally
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ){
+                    Text(
+                        text = "Hora",
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.Black,
+                        modifier = Modifier
+                            .width(80.dp)
+                            .padding(top = 8.dp, end = 10.dp, bottom = 0.dp)
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.start),
+                        myArrayOptions = hours,
+                        { param: String -> myHourStartOfDate = param },
+                        myComponentWithDP = 130
+                    )
+                    DemoSearchableDropdown(
+                        myHint = stringResource(id = R.string.end),
+                        myArrayOptions = hours,
+                        { param: String -> myHourEndOfDate = param },
+                        myComponentWithDP = 130
+                    )
                 }
+
             }
+
+            var showPicker by remember { mutableStateOf(false) }
+            if (showPicker)
+                DatePicker(onDateSelected = {
+
+                }, onDismissRequest = {
+                    showPicker = false
+                })
+            Button(onClick = { showPicker = true }) {
+                Text(text = "Date picker")
+            }
+
+
 
             // AGREGAR FOTO
             Text(
@@ -566,4 +525,6 @@ fun CreateNewActivityEventScreen(
         }
     }
 }
+
+
 

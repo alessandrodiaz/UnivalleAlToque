@@ -116,4 +116,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     // firebase storage
     implementation("com.google.firebase:firebase-storage-ktx")
+
+    //CREATE NEW ACTIVITY EVENT
+    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
 }
