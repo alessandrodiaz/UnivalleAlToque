@@ -118,13 +118,13 @@ fun SemilleroScreen(
             )
         }
     } else {
-        val name = semillerosList.group_name ?: "Seminario 1"
+        val name = semillerosList.group_name ?: stringResource(R.string.default_event_name)
         val description = semillerosList.group_description
-            ?: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin"
-        val slots = semillerosList.slots ?: "1"
+            ?: stringResource(R.string.default_event_description)
+        val slots = semillerosList.slots ?: stringResource(R.string.default_slots)
         val photo = semillerosList.photo
-            ?: "https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg"
-        val place = semillerosList.place ?: "Plazoleta"
+            ?: stringResource(R.string.default_photo_url)
+        val place = semillerosList.place ?: stringResource(R.string.default_place)
         var isEnrolled by remember { mutableStateOf(semillerosSatate.isEnrolled) }
         var slotsTaken = semillerosList.slots_taken ?: "null"
 
@@ -170,7 +170,7 @@ fun SemilleroScreen(
         if (enrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
                 title = stringResource(id = R.string.enrollment_satisfied),
-                message = "Gracias por unirte",
+                message = stringResource(R.string.thanks_message),
                 onDismiss = {
                     enrollmentViewModel.resetState()
                     semillerosVIewModel.resetState()
@@ -181,8 +181,8 @@ fun SemilleroScreen(
 
         if (cancelEnrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
-                title = "Has cancelado la inscripción",
-                message = "Puedes unirte de nuevo cuando quieras",
+                title = stringResource(R.string.cancel_enrollement),
+                message = stringResource(R.string.again_message),
                 onDismiss = {
                     addSlots = true // Marcar como true para que no se vuelva a ejecutar
                     cancelEnrollmentModelView.resetState()
@@ -194,8 +194,8 @@ fun SemilleroScreen(
 
         if (fullSlotsDialog) {
             CustomAlertDialog(
-                title = "No hay cupos disponibles",
-                message = "Prueba con otra actividad",
+                title = stringResource(R.string.sin_cupos),
+                message = stringResource(R.string.another_activity),
                 onDismiss = { enrollmentViewModel.resetState() ; fullSlotsDialog = false }
             )
         }

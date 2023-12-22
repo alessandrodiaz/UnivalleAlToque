@@ -558,7 +558,7 @@ fun CreateNewActivityGroupScreen(
                 shape = RoundedCornerShape(8.dp), // Esquinas redondeadas
             ) {
                 Text(
-                    text = "AGREGAR ACTIVIDAD",
+                    text = stringResource(R.string.create_activity),
                     color = Color.White
                 )
             }
