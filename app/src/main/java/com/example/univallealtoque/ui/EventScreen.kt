@@ -135,38 +135,6 @@ fun EventScreen(
             val endTime: String?
         )
 
-        val daysOfWeek = listOf(
-            DayInfo(
-                stringResource(id = R.string.monday),
-                eventList.monday_start ?: "null",
-                eventList.monday_end ?: "null"
-            ),
-            DayInfo(
-                stringResource(id = R.string.tuesday),
-                eventList.tuesday_start ?: "null",
-                eventList.tuesday_end ?: "null"
-            ),
-            DayInfo(
-                stringResource(id = R.string.wednesday),
-                eventList.wednesday_start ?: "null",
-                eventList.wednesday_end ?: "null"
-            ),
-            DayInfo(
-                stringResource(id = R.string.thursday),
-                eventList.thursday_start ?: "null",
-                eventList.thursday_end ?: "null"
-            ),
-            DayInfo(
-                stringResource(id = R.string.friday),
-                eventList.friday_start ?: "null",
-                eventList.friday_end ?: "null"
-            ),
-            DayInfo(
-                stringResource(id = R.string.saturday),
-                eventList.saturday_start ?: "null",
-                eventList.saturday_end ?: "null"
-            )
-        )
 
         if (enrollmentState.isRequestSuccessful) {
             CustomAlertDialog(
@@ -299,11 +267,10 @@ fun EventScreen(
                                 tint = Color.Black,
                             )
                             Column {
-                                for (day in daysOfWeek) {
-                                    if (day.startTime != "null" && day.endTime != "null") {
+
                                         Row {
                                             Text(
-                                                text = day.dayName,
+                                                text = "Fecha",
                                                 style = TextStyle(fontSize = 16.sp),
                                                 modifier = Modifier.padding(
                                                     end = 10.dp,
@@ -311,12 +278,11 @@ fun EventScreen(
                                                 )
                                             )
                                             Text(
-                                                text = "${day.startTime} - ${day.endTime}",
+                                                text = "Hora",
                                                 style = TextStyle(fontSize = 16.sp),
                                             )
                                         }
-                                    }
-                                }
+
                             }
                         }
 

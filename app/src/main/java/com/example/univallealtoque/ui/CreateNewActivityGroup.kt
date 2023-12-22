@@ -405,6 +405,8 @@ fun CreateNewActivityGroupScreen(
                 }
             }
 
+
+
             // AGREGAR FOTO
             Text(
                 text = stringResource(R.string.create_activity_photo),
