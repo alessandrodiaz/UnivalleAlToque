@@ -93,6 +93,10 @@
     <string name="privacy_policy_6">Tienes derecho a acceder, corregir, actualizar o eliminar tu información personal. Puedes realizar estos cambios en la configuración de tu cuenta o contactándonos directamente.</string>
     <string name="privacy_policy_7_title">7. Cambios en la Política de Privacidad</string>
     <string name="privacy_policy_7">Nos reservamos el derecho de modificar esta Política de Privacidad en cualquier momento. Las modificaciones entrarán en vigencia después de su publicación en la aplicación.</string>
+    <string name="initial_text">Al continuar aceptas nuestra</string>
+    <string name="privacy_policy_text">Política de privacidad</string>
+    <string name="y_text"> y </string>
+    <string name="terms_and_conditions_text">Términos de uso</string>
     <!-- HOME -->
     <string name="greeting_username">Hola, </string>
     <string name="greeting_empty">Hola, ¿qué tal? 👋</string>
@@ -118,6 +122,20 @@
     <string name="messageLogout">¿Estás seguro de que deseas cerrar tu sesión?</string>
     <string name="confirmLogout">Sí</string>
     <string name="cancelLogout">No</string>
+    <string name="change_phone">Cambiar Celular</string>
+    <string name="change_degree">Cambiar Programa</string>
+    <string name="dates_changed">Dato actualizado</string>
+    <string name="peticion_succesfull">Petición exitosa</string>
+    <string name="acept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="new_profile_picture">Elegir Nueva Foto De Perfil</string>
+    <string name="without_profile_picture">Sin Foto</string>
+    <string name="choose_avatar">Elegir Avatar</string>
+    <string name="take_picture">Tomar Foto</string>
+    <string name="choose_picture">Elegir De Galeria</string>
+    <string name="choose_avatar_final">Elegir Avatar Como Foto De Perfil</string>
+    <string name="image_name">image.jpg</string>
+
     <!-- SETTINGS -->
     <string name="settings_title">Configuración de la cuenta</string>
     <string name="settings_delete_account_title">Eliminar cuenta</string>
@@ -158,6 +176,8 @@
     <string name="wrongCodeTitle">Codigo Incorrecto</string>
     <string name="wrongCodeMessage">Intentalo de nuevo</string>
     <string name="code_exists">Ya hemos enviado un código previamente a tu correo</string>
+    <string name="send_code">Ingresa el código que te mandamos al correo seleccionado</string>
+    <string name="send">Enviar</string>
 
     <!-- MY GROUPS -->
     <string name="my_groups">Mis grupos</string>
@@ -181,7 +201,20 @@
     <string name="activity_event_title">Crear Evento</string>
     <string name="activity_group_title">Crear Semillero</string>
     <string name="enrollment_satisfied">Te has inscrito satisfactoriamente</string>
-
+    <string name="createSemilleros">CREAR SEMILLERO</string>
+    <string name="createEvents">CREAR EVENTO</string>
+    <string name="default_event_name">Seminario 1</string>
+    <string name="default_event_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar pulvinar fermentum. Nam tincidunt viverra ligula, in tristique dui condimentum eget. Phasellus id tincidunt mauris, in lacinia ante. Pellentesque eleifend augue sit amet mi suscipit fermentum. Etiam dignissim laoreet sollicitudin. Mauris ut lectus nisin</string>
+    <string name="default_slots">5</string>
+    <string name="default_photo_url">https://www.eltiempo.com/files/image_640_428/uploads/2017/09/10/59b5e27b68ea7.jpeg</string>
+    <string name="default_place">Plazoleta</string>
+    <string name="thanks_message">Gracias por unirte</string>
+    <string name="cancel_enrollement">Has cancelado la inscripción</string>
+    <string name="again_message">Puedes unirte de nuevo cuando quieras</string>
+    <string name="sin_cupos">No hay cupos disponibles</string>
+    <string name="without_title">Sin título</string>
+    <string name="without_description">Sin descripción</string>
+    <string name="another_activity">Prueba con otra actividad</string>
 
     <!-- CREAR NUEVA ACTIVIDAD -->
     <string name="create_activity_photo">Agregar foto</string>
@@ -198,4 +231,6 @@
     <string name="start">Inicio</string>
     <string name="end">Fin</string>
     <string name="place">Lugar</string>
+    <string name="choose_activitiy">Elegir De Galeria</string>
+    <string name="create_activity">AGREGAR ACTIVIDAD</string>
 </resources>

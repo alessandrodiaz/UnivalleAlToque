@@ -134,11 +134,11 @@ fun MyGroupsScreen(
                             ActivityCard(
                                 imagen = activity.group_photo ?: activity.event_photo
                                 ?: "Sin imagen", // Reemplaza con tu lógica para obtener la imagen
-                                titulo = activity.group_name ?: activity.event_name ?: "Sin título",
+                                titulo = activity.group_name ?: activity.event_name ?: stringResource(R.string.without_title),
                                 descripcion = activity.group_description?.limitTextLength(90)
                                     ?: activity.event_description?.limitTextLength(90)
-                                    ?: "Sin descripción",
-                                id = activity.group_id?.toString() ?: activity.event_id?.toString()
+                                    ?: stringResource(R.string.without_description),
+                                    id = activity.group_id?.toString() ?: activity.event_id?.toString()
                                 ?: "null",
                                 tipo = if (activity.group_id != null) "group" else "event",
                                 navController = navController

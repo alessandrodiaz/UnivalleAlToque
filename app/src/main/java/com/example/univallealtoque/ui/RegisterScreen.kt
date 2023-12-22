@@ -471,10 +471,10 @@ fun ClickableTextComponent(
     onTextSelected2: (String) -> Unit
 ) {
 
-    val initialText = "Al continuar aceptas nuestra "
-    val privacyPolicyText = "Política de privacidad"
-    val yText = " y "
-    val termsAndConditions = "Terminos de uso"
+    val initialText = stringResource(R.string.initial_text)
+    val privacyPolicyText = stringResource(R.string.privacy_policy_text)
+    val yText = stringResource(R.string.y_text)
+    val termsAndConditions = stringResource(R.string.terms_and_conditions_text)
 
     val annotatedString = buildAnnotatedString {
         append(initialText)

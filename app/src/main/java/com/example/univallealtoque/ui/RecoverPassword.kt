@@ -233,7 +233,7 @@ fun RecoverPasswordScreen(
                 )
         ) {
             Text(
-                text = "Enviar",
+                text = stringResource(id = R.string.send),
                 style = MaterialTheme.typography.displaySmall,
                 color = Color.White,
             )
