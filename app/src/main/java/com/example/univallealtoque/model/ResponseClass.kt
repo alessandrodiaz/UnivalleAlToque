@@ -96,8 +96,8 @@ data class eventList(
     val slots: String? = null,
     val available_slots: String? = null,
     val date: String? = null,
-    val hourStart: String? = null,
-    val hourEnd: String? = null,
+    val hour_start: String? = null,
+    val hour_end: String? = null,
     val photo: String? = null,
     val place: String? = null,
     val slots_taken: String? = null
