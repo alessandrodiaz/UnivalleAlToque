@@ -258,7 +258,7 @@ fun UnivalleAlToqueApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = UnivalleAlToqueScreen.CreateNewActivity.name,
+            startDestination = UnivalleAlToqueScreen.HomePage.name,
         ) {
 
             composable(route = UnivalleAlToqueScreen.HomePage.name) {
