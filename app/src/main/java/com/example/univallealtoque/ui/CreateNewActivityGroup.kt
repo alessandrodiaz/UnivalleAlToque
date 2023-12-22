@@ -64,6 +64,7 @@ import com.example.univallealtoque.util.ActivityStorageUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 data class CreateNewActivityGroupRequest(
     var nameOfActivity: String? = null,
@@ -71,18 +72,18 @@ data class CreateNewActivityGroupRequest(
     var description: String? = null,
     var numberOfSlotsAvailable: Int? = null,
     var slots: Int? = null,
-    var mondayStart: String? = null, // "00:00",
-    var mondayEnd: String? = null, // "00:00",
-    var tuesdayStart: String? = null, // "00:00",
-    var tuesdayEnd: String? = null, // "00:00",
-    var wednesdayStart: String? = null, // "00:00",
-    var wednesdayEnd: String? = null, // "00:00",
-    var thursdayStart: String? = null, // "00:00",
-    var thursdayEnd: String? = null, // "00:00",
-    var fridayStart: String? = null, // "00:00",
-    var fridayEnd: String? = null, // "00:00",
-    var saturdayStart: String? = null, // "00:00",
-    var saturdayEnd: String? = null, // "00:00",
+    var mondayStart: String? = "", // "00:00",
+    var mondayEnd: String? = "", // "00:00",
+    var tuesdayStart: String? = "", // "00:00",
+    var tuesdayEnd: String? = "", // "00:00",
+    var wednesdayStart: String? = "", // "00:00",
+    var wednesdayEnd: String? = "", // "00:00",
+    var thursdayStart: String? = "", // "00:00",
+    var thursdayEnd: String? = "", // "00:00",
+    var fridayStart: String? = "", // "00:00",
+    var fridayEnd: String? = "", // "00:00",
+    var saturdayStart: String? = "", // "00:00",
+    var saturdayEnd: String? = "", // "00:00",
     var placeOfActivity: String? = null
 )
 
@@ -449,7 +450,165 @@ fun CreateNewActivityGroupScreen(
                     myNewActivityRequest.description = descriptionOfActivityInputText
                     myNewActivityRequest.placeOfActivity = placeOfActivityInputText
 
-                    if (myNewActivityRequest.typeOfActivity != null) {
+
+
+                    var conditionsOfHoursVerified = true
+                    var counterOfDaysVerified = 0
+
+
+
+
+
+
+
+
+
+                    //CHECK HOURS - MONDAY
+                    if (myNewActivityRequest.mondayStart != "" || myNewActivityRequest.mondayEnd != ""){
+                        if (
+                            (myNewActivityRequest.mondayStart == "" || myNewActivityRequest.mondayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.mondayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.mondayEnd)) ||
+                            myNewActivityRequest.mondayStart == myNewActivityRequest.mondayEnd
+                            ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.mondayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.mondayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+                    //CHECK HOURS - TUESDAY
+                    if (myNewActivityRequest.tuesdayStart != "" || myNewActivityRequest.tuesdayEnd != ""){
+                        if (
+                            (myNewActivityRequest.tuesdayStart == "" || myNewActivityRequest.tuesdayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.tuesdayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.tuesdayEnd)) ||
+                            myNewActivityRequest.tuesdayStart == myNewActivityRequest.tuesdayEnd
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.tuesdayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.tuesdayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+                    //CHECK HOURS - WEDNESDAY
+                    if (myNewActivityRequest.wednesdayStart != "" || myNewActivityRequest.wednesdayEnd != ""){
+                        if (
+                            (myNewActivityRequest.wednesdayStart == "" || myNewActivityRequest.wednesdayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.wednesdayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.wednesdayEnd)) ||
+                            myNewActivityRequest.wednesdayStart == myNewActivityRequest.wednesdayEnd
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.wednesdayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.wednesdayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+                    //CHECK HOURS - THURSDAY
+                    if (myNewActivityRequest.thursdayStart != "" || myNewActivityRequest.thursdayEnd != ""){
+                        if (
+                            (myNewActivityRequest.thursdayStart == "" || myNewActivityRequest.thursdayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.thursdayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.thursdayEnd)) ||
+                            myNewActivityRequest.thursdayStart == myNewActivityRequest.thursdayEnd
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.thursdayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.thursdayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+                    //CHECK HOURS - FRIDAY
+                    if (myNewActivityRequest.fridayStart != "" || myNewActivityRequest.fridayEnd != ""){
+                        if (
+                            (myNewActivityRequest.fridayStart == "" || myNewActivityRequest.fridayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.fridayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.fridayEnd)) ||
+                            myNewActivityRequest.fridayStart == myNewActivityRequest.fridayEnd
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.fridayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.fridayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+                    //CHECK HOURS - SATURDAY
+                    if (myNewActivityRequest.saturdayStart != "" || myNewActivityRequest.saturdayEnd != ""){
+                        if (
+                            (myNewActivityRequest.saturdayStart == "" || myNewActivityRequest.saturdayEnd == "")
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.saturdayStart)
+                                .after(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.saturdayEnd)) ||
+                            myNewActivityRequest.saturdayStart == myNewActivityRequest.saturdayEnd
+                        ){
+                            conditionsOfHoursVerified = false
+                        }
+                        else if(
+                            SimpleDateFormat("HH:mm").parse(myNewActivityRequest.saturdayStart)
+                                .before(SimpleDateFormat("HH:mm").parse(myNewActivityRequest.saturdayEnd))
+                        ){
+                            counterOfDaysVerified++
+                        }
+                    }
+
+
+                    if (counterOfDaysVerified > 0 && conditionsOfHoursVerified){
+                        conditionsOfHoursVerified = true
+                    }
+
+
+                    if(conditionsOfHoursVerified == false){
+                        Toast.makeText(
+                            context,
+                            "Error: Debes proporcionar una fecha de inicio y fin validas ( y por lo menos un dia tiene que tener horas )",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else if (myNewActivityRequest.typeOfActivity != null) {
                         val nameOfActivity = myNewActivityRequest.nameOfActivity
                         val descriptionOfActivity = myNewActivityRequest.description
                         val placeOfActivity = myNewActivityRequest.placeOfActivity
@@ -496,6 +655,8 @@ fun CreateNewActivityGroupScreen(
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+
 
 
 
